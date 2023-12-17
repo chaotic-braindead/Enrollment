@@ -1,0 +1,58 @@
+/* Login */
+
+#PLMText {
+    -fx-font-family: Georgia;
+    -fx-font-weight: bold;
+}
+
+#PLMTextEnglish {
+    -fx-font-family: Arial;
+}
+
+.loginContainer {
+    -fx-background-color:  rgba(255, 255, 255, 0.85);
+    -fx-border-style:  solid;
+    -fx-background-radius:  25px;
+}
+
+#welcome {
+    -fx-font-size: 34px;
+}
+
+.loginText {
+    -fx-font-family: Arial;
+}
+
+.onPLMContainer {
+    -fx-background-color:  rgba(255, 255, 255, 0.5);
+    -fx-background-radius: 50px;
+}
+
+
+/* Student Dashboard */
+
+.gridPane {
+    -fx-background-color:  rgba(184, 28, 28, 0.8);
+}
+
+.toggle-button {
+    -fx-background-color:  rgba(184, 28, 28, 0.0);
+    -fx-font-weight: bold;
+    -fx-font-family: Gotham;
+    -fx-cursor: hand;
+}
+
+.toggle-button:hover {
+    -fx-background-color:  rgba(255, 28, 28, 0.2);
+    -fx-font-weight: bold;
+    -fx-font-family: Gotham;
+}
+
+.toggle-button:selected {
+    -fx-background-color:  rgba(255, 28, 28, 0.2);
+    -fx-cursor: default;
+}
+
+.lblDateNow {
+    -fx-font-weight: bold;
+}

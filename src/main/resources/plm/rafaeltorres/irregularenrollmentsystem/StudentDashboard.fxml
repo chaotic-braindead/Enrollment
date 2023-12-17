@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.text.Font?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="plm.rafaeltorres.irregularenrollmentsystem.controllers.StudentDashboardController">
+    <children>
+        <AnchorPane prefHeight="200.0" prefWidth="1163.0" StackPane.alignment="CENTER">
+            <children>
+            <AnchorPane layoutY="124.0" prefWidth="1200.0" style="-fx-background-color: black;">
+               <children>
+                  <ImageView fitHeight="604.0" fitWidth="1200.0" opacity="0.64" pickOnBounds="true">
+                     <image>
+                        <Image url="@assets/img/pamantasan-lungsod-maynila-night.jpg" />
+                     </image>
+                  </ImageView>
+               </children>
+            </AnchorPane>
+                <BorderPane layoutX="153.0" layoutY="160.0" prefHeight="723.0" prefWidth="1233.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <top>
+                        <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="130.0" prefWidth="1200.0" BorderPane.alignment="CENTER">
+                            <children>
+                                <ImageView fitHeight="91.0" fitWidth="83.0" layoutX="70.0" layoutY="17.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@assets/img/PLM_Seal_2013.png" />
+                                    </image>
+                                </ImageView>
+                                <Label id="PLMText" layoutX="162.0" layoutY="39.0" prefHeight="19.0" prefWidth="356.0" stylesheets="@assets/css/styles.css" text="PAMANTASAN NG LUNGSOD NG MAYNILA  " textFill="#c0a23d">
+                                    <font>
+                                        <Font name="Times New Roman" size="13.0" />
+                                    </font>
+                                </Label>
+                                <Label id="PLMTextEnglish" layoutX="162.0" layoutY="59.0" prefHeight="19.0" prefWidth="274.0" stylesheets="@assets/css/styles.css" text="UNIVERSITY OF THE CITY OF MANILA">
+                                    <font>
+                                        <Font size="12.0" />
+                                    </font>
+                                </Label>
+                                <Pane layoutY="110.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="19.0" prefWidth="1200.0" style="-fx-background-color: #fcbe27;" />
+                        <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="847.0" layoutY="39.0" prefHeight="19.0" prefWidth="214.0" text="Logged in as Student No. " textAlignment="RIGHT" textFill="RED">
+                           <font>
+                              <Font name="System Bold" size="13.0" />
+                           </font></Label>
+                        <Label fx:id="lblDateNow" alignment="CENTER_RIGHT" layoutX="811.0" layoutY="59.0" prefHeight="19.0" prefWidth="324.0" styleClass="lblDateNow" stylesheets="@assets/css/styles.css" text="Today is " textFill="#486548" />
+                        <Label fx:id="lblStudentNo" alignment="CENTER_RIGHT" layoutX="1041.0" layoutY="39.0" prefHeight="19.0" prefWidth="94.0" text="2022-34000">
+                           <font>
+                              <Font name="System Bold" size="13.0" />
+                           </font>
+                        </Label>
+                            </children>
+                        </AnchorPane>
+                    </top>
+                    <center>
+
+                    </center>
+               <left>
+                  <GridPane prefHeight="594.0" prefWidth="119.0" styleClass="gridPane" stylesheets="@assets/css/styles.css" BorderPane.alignment="CENTER">
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints maxHeight="243.0" minHeight="10.0" prefHeight="110.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="281.0" minHeight="10.0" prefHeight="107.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="302.0" minHeight="10.0" prefHeight="114.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="280.0" minHeight="10.0" prefHeight="96.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="280.0" minHeight="10.0" prefHeight="114.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="280.0" minHeight="10.0" prefHeight="67.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <ToggleButton fx:id="btnDashboard" alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" prefHeight="125.0" prefWidth="119.0" stylesheets="@assets/css/styles.css" text="Dashboard" textFill="WHITE">
+                           <graphic>
+                              <FontIcon iconColor="WHITE" iconLiteral="mdal-account_circle" iconSize="50" />
+                           </graphic>
+                           <cursor>
+                              <Cursor fx:constant="DEFAULT" />
+                           </cursor></ToggleButton>
+                        <ToggleButton fx:id="btnEnroll" alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" prefHeight="121.0" prefWidth="119.0" text="Enroll" textFill="WHITE" GridPane.rowIndex="1">
+                           <graphic>
+                              <FontIcon iconColor="WHITE" iconLiteral="mdal-assignment" iconSize="50" />
+                           </graphic>
+                        </ToggleButton>
+                        <ToggleButton fx:id="btnSchedule" alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" prefHeight="130.0" prefWidth="119.0" text="Schedule" textFill="WHITE" GridPane.rowIndex="2">
+                           <graphic>
+                              <FontIcon iconColor="WHITE" iconLiteral="mdmz-table_view" iconSize="50" />
+                           </graphic>
+                        </ToggleButton>
+                        <ToggleButton fx:id="btnTuition" alignment="CENTER" contentDisplay="TOP" disable="true" mnemonicParsing="false" prefHeight="103.0" prefWidth="119.0" text="Tuition" textFill="WHITE" GridPane.rowIndex="3">
+                           <graphic>
+                              <FontIcon iconColor="WHITE" iconLiteral="mdal-account_balance_wallet" iconSize="50" />
+                           </graphic>
+                        </ToggleButton>
+                        <ToggleButton fx:id="btnLogout" mnemonicParsing="false" onAction="#onBtnLogoutAction" prefHeight="65.0" prefWidth="119.0" text="Log out" textFill="WHITE" GridPane.rowIndex="5" />
+                        <ToggleButton fx:id="btnGrades" alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" prefHeight="110.0" prefWidth="119.0" text="Grades" textFill="WHITE" GridPane.rowIndex="4">
+                           <graphic>
+                              <FontIcon iconColor="WHITE" iconLiteral="mdal-list_alt" iconSize="50" />
+                           </graphic>
+                        </ToggleButton>
+                     </children>
+                  </GridPane>
+               </left>
+               <center>
+                  <AnchorPane prefHeight="598.0" prefWidth="1063.0" BorderPane.alignment="CENTER">
+                     <children>
+                        <Pane fx:id="dashboardContainer" layoutX="61.0" layoutY="26.0" prefHeight="546.0" prefWidth="958.0" styleClass="loginContainer" stylesheets="@assets/css/styles.css" />
+                     </children>
+                  </AnchorPane>
+               </center>
+                </BorderPane>
+            </children>
+        </AnchorPane>
+    </children>
+</StackPane>
