@@ -29,7 +29,7 @@
                               <Image url="@assets/img/PLM_Seal_2013.png" />
                            </image>
                         </ImageView>
-                        <Label id="PLMText" layoutX="162.0" layoutY="46.0" prefHeight="19.0" prefWidth="356.0" style="-fx-font-weight: BOLD;" stylesheets="@assets/css/styles.css" text="PAMANTASAN NG LUNGSOD NG MAYNILA  " textFill="#c0a23d" />
+                        <Label id="PLMText" layoutX="162.0" layoutY="46.0" prefHeight="19.0" prefWidth="356.0" stylesheets="@assets/css/styles.css" text="PAMANTASAN NG LUNGSOD NG MAYNILA  " textFill="#c0a23d" />
                         <Label id="PLMTextEnglish" layoutX="162.0" layoutY="66.0" prefHeight="19.0" prefWidth="274.0" stylesheets="@assets/css/styles.css" text="UNIVERSITY OF THE CITY OF MANILA">
                            <font>
                               <Font size="12.0" />
