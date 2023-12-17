@@ -22,10 +22,13 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class StudentDashboardController extends Controller {
+    private String currentSY = "2023-2024";
+    private String currentSem = "1";
+    private String studentNo;
     private Connection conn;
     private PreparedStatement ps;
     private ResultSet rs;
-    private String studentNo;
+
     @FXML
     private Label lblStudentNo;
     @FXML
@@ -61,8 +64,6 @@ public class StudentDashboardController extends Controller {
     @FXML
     private Button btnSubmit;
     private Pane currentPane;
-    private String currentSY = "2023-2024";
-    private String currentSem = "1";
 
 
     @Override

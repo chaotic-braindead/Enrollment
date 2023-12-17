@@ -32,8 +32,6 @@ public class LoginController extends Controller {
     private PasswordField txtPassword;
     @FXML
     private Button btnLogin;
-    private SceneSwitcher switcher;
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         conn = Database.connect();
