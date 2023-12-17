@@ -4,10 +4,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import org.w3c.dom.events.Event;
 import plm.rafaeltorres.irregularenrollmentsystem.MainScene;
 import plm.rafaeltorres.irregularenrollmentsystem.controllers.Controller;
-import plm.rafaeltorres.irregularenrollmentsystem.controllers.StudentDashboardController;
 
 import java.io.IOException;
 import java.util.EventObject;
