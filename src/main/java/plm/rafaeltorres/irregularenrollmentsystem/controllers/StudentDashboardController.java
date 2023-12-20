@@ -1,21 +1,41 @@
 package plm.rafaeltorres.irregularenrollmentsystem.controllers;
+import java.awt.Desktop;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
+import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Circle;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+import plm.rafaeltorres.irregularenrollmentsystem.MainScene;
 import plm.rafaeltorres.irregularenrollmentsystem.db.Database;
 import plm.rafaeltorres.irregularenrollmentsystem.model.Schedule;
+import plm.rafaeltorres.irregularenrollmentsystem.model.Student;
+import plm.rafaeltorres.irregularenrollmentsystem.model.User;
 import plm.rafaeltorres.irregularenrollmentsystem.utils.AlertMessage;
 import plm.rafaeltorres.irregularenrollmentsystem.utils.SceneSwitcher;
 import plm.rafaeltorres.irregularenrollmentsystem.utils.TableViewUtils;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.net.URL;
+import java.nio.file.Files;
 import java.sql.*;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Base64;
 import java.util.Date;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -23,7 +43,10 @@ import java.util.ResourceBundle;
 public class StudentDashboardController extends Controller {
     private String currentSY = "2023-2024";
     private String currentSem = "1";
-    private String studentNo;
+    private Student student;
+    private Desktop desktop = Desktop.getDesktop();
+    private Pane currentPane;
+
     private Connection conn;
     private PreparedStatement ps;
     private ResultSet rs;
@@ -45,11 +68,53 @@ public class StudentDashboardController extends Controller {
     @FXML
     private Pane dashboardContainer;
     @FXML
+    private Label lblWelcome;
+    @FXML
+    private Label lblFullName;
+    @FXML
+    private Label lblEmail;
+    @FXML
+    private Label lblSemester;
+    @FXML
+    private Group enrolledGroup;
+    @FXML
+    private Group notEnrolledGroup;
+    @FXML
+    private Label lblFirstName;
+    @FXML
+    private Label lblLastName;
+    @FXML
+    private Label lblBirthday;
+    @FXML
+    private Label lblGender;
+    @FXML
+    private Label lblAge;
+    @FXML
+    private Label lblStudentNoDash;
+    @FXML
+    private Label lblPersonalEmail;
+    @FXML
+    private Label lblPhoneNumber;
+    @FXML
+    private Label lblCollege;
+    @FXML
+    private Label lblCourse;
+    @FXML
+    private Label lblYear;
+    @FXML
+    private Label lblRegistrationStatus;
+    @FXML
     private Pane enrollContainer;
     @FXML
     private Pane scheduleContainer;
     @FXML
     private Pane gradesContainer;
+    @FXML
+    private TableView tblGrades;
+    @FXML
+    private ComboBox<String> choiceSY;
+    @FXML
+    private ComboBox<String> choiceSemester;
     @FXML
     private Pane tuitionContainer;
     @FXML
@@ -62,7 +127,11 @@ public class StudentDashboardController extends Controller {
     private Button btnRemove;
     @FXML
     private Button btnSubmit;
-    private Pane currentPane;
+    @FXML
+    private Circle imgContainer;
+    @FXML
+    private Circle imgDashboardContainer;
+
 
 
     @Override
@@ -73,29 +142,124 @@ public class StudentDashboardController extends Controller {
         btnDashboard.setSelected(true);
         currentPane = dashboardContainer;
 
-    }
-    public void setStudentNo(String studentNo){
-        this.studentNo = studentNo;
-        lblStudentNo.setText(studentNo);
-    }
-    @FXML
-    protected void onBtnLogoutAction(ActionEvent event) throws IOException {
-        Optional<ButtonType> confirm = AlertMessage.showConfirmationAlert("Are you sure you want to log out?");
-        if(confirm.isEmpty() || confirm.get() == ButtonType.NO)
-            return;
+        // display default image
+        File f = new File(MainScene.class.getResource("assets/img/md-person-2.png").getPath());
+        Image defaultImage = new Image(f.toURI().toString(), false);
+        ImagePattern pattern = new ImagePattern(defaultImage);
+        imgContainer.setFill(pattern);
+        imgDashboardContainer.setFill(pattern);
 
-        SceneSwitcher.switchScene(event, "Login.fxml");
-    }
+        // set default text for empty tables
+        tblSchedule.setPlaceholder(new Label("You currently have no subjects in your schedule. Please enroll now."));
+        tblGrades.setPlaceholder(new Label("Select a valid school year and semester from the drop down boxes provided."));
 
-    private void onBtnClick(ActionEvent event) throws IllegalAccessException{
-        Field[] fields = this.getClass().getDeclaredFields();
-        for(Field f : fields){
-            if(f.getType().equals(ToggleButton.class) && !event.getSource().equals(f.get(this))){
-                ToggleButton btn = (ToggleButton)f.get(this);
-                btn.setSelected(false);
+    }
+    public void setUser(User user){
+        Student student = (Student) user;
+        this.student = student;
+//        if(student.getEnrollmentStatus().equals("NOT ENROLLED")){
+//            enrolledGroup.setVisible(false);
+//            notEnrolledGroup.setVisible(true);
+//        } else{
+//            notEnrolledGroup.setVisible(false);
+//            enrolledGroup.setVisible(true);
+//        }
+        lblWelcome.setText("Welcome, "+student.getFirstName()+"!");
+        lblStudentNo.setText(student.getStudentNo());
+
+        lblFullName.setText(student.getFirstName() +
+                " " + student.getLastName());
+        lblEmail.setText(student.getPLMEmail());
+        lblFirstName.setText(student.getFirstName());
+        lblLastName.setText(student.getLastName());
+        lblGender.setText(student.getGender());
+
+        SimpleDateFormat format = new SimpleDateFormat("MMMMM dd, yyyy");
+
+        lblBirthday.setText(format.format(student.getBirthday()));
+
+        lblAge.setText(student.getAge()+"");
+        lblPersonalEmail.setText(student.getPersonalEmail());
+        lblPhoneNumber.setText(student.getCellphoneNumber());
+        lblStudentNoDash.setText(student.getStudentNo());
+        lblCollege.setText(student.getCollege());
+        lblCourse.setText(student.getCourse());
+        lblYear.setText(String.valueOf(1+Integer.parseInt(currentSY.substring(0, 4))-Integer.parseInt(student.getStudentNo().substring(0, 4))));
+        lblRegistrationStatus.setText(student.getRegistrationStatus());
+
+
+        // initialize grade comboboxes
+        try{
+            ps = conn.prepareStatement("SELECT DISTINCT SY FROM GRADE WHERE STUDENT_NO = ?");
+            ps.setString(1, student.getStudentNo());
+            rs = ps.executeQuery();
+            ObservableList<String> sy = FXCollections.observableArrayList();
+            while(rs.next()){
+                sy.add(rs.getString(1));
             }
+            choiceSY.setItems(sy);
+        }catch(Exception e){
+            System.out.println(e);
+        }
+
+
+        if(student.getImage() != null){
+            setImage(student.getImage());
         }
     }
+    public void setImage(Blob img){;
+        Image newImg = null;
+        try{
+            byte[] imgBytes = img.getBytes(1, (int)img.length());
+            newImg = new Image((new ByteArrayInputStream(imgBytes)));
+        } catch(Exception e){
+            System.out.println(e);
+        }
+
+        if(newImg != null){
+            ImagePattern ip = new ImagePattern(newImg);
+            imgDashboardContainer.setFill(ip);
+            imgContainer.setFill(ip);
+        }
+    }
+    public void onChangePictureAction(ActionEvent event) {
+        Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        FileChooser fc = new FileChooser();
+        fc.setSelectedExtensionFilter(
+                new FileChooser.ExtensionFilter("Image formats",
+                        "*.jpg", "*.jpeg", "*.png"));
+        fc.setTitle("Select Image");
+        File img = fc.showOpenDialog(stage);
+        try{
+            byte[] imgBytes = Files.readAllBytes(img.toPath());
+            String b64Img = Base64.getEncoder().encodeToString(imgBytes);
+            System.out.println(b64Img);
+            ps = conn.prepareStatement(Database.Query.updateImage);
+            Blob blob = conn.createBlob();
+            blob.setBytes(1, imgBytes);
+            ps.setBlob(1, blob);
+            ps.setString(2, student.getStudentNo());
+            ps.executeUpdate();
+            setImage(blob);
+        } catch(Exception e){
+            System.out.println(e);
+        }
+    }
+
+    @FXML
+    protected void onClickToEnrollMouseClicked(Event event) throws Exception {
+        onBtnEnrollAction(event);
+        btnEnroll.setSelected(true);
+    }
+    @FXML
+    protected void onBtnChangePasswordAction(ActionEvent event) {
+
+    }
+    @FXML
+    protected void btnDownloadOnMouseClicked(MouseEvent event) {
+
+    }
+
     private void displayAvailableScheds() {
         try{
             ps = conn.prepareStatement("select sc.subject_code, su.description, sc.section, sc.time_slot, sc.room, su.units, sc.total_students from schedule sc" +
@@ -121,10 +285,10 @@ public class StudentDashboardController extends Controller {
                     ")");
             ps.setString(1, currentSem);
             ps.setString(2, currentSY);
-            ps.setString(3, studentNo);
-            ps.setString(4, studentNo);
-            ps.setString(5, studentNo);
-            ps.setString(6, studentNo);
+            ps.setString(3, student.getStudentNo());
+            ps.setString(4, student.getStudentNo());
+            ps.setString(5, student.getStudentNo());
+            ps.setString(6, student.getStudentNo());
             rs = ps.executeQuery();
             TableViewUtils.generateTableFromResultSet(tblSubjects, rs);
         }catch (Exception e){
@@ -140,7 +304,7 @@ public class StudentDashboardController extends Controller {
         onBtnClick(event);
     }
     @FXML
-    protected void onBtnEnrollAction(ActionEvent event) throws Exception{
+    protected void onBtnEnrollAction(Event event) throws Exception{
         currentPane.setVisible(false);
         currentPane = enrollContainer;
         currentPane.setVisible(true);
@@ -149,12 +313,21 @@ public class StudentDashboardController extends Controller {
     }
     private void displaySched() {
         try{
-            ps = conn.prepareStatement("select sched.subject_code, s.description, sched.section, sched.time_slot, sched.room, s.units, sched.total_students from schedule sched " +
-                    "right join studentschedule ss on sched.subject_code = ss.subject_code " +
-                    "and sched.section = ss.section " +
-                    "inner join subject s on sched.subject_code = s.SUBJECT_CODE where ss.student_no = ?" +
-                    " group by sched.subject_code, s.description, sched.section, sched.time_slot, sched.room, s.units, sched.total_students");
-            ps.setString(1, studentNo);
+            ps = conn.prepareStatement("select " +
+                    "v.`SUBJECT CODE`, " +
+                    "v.`SUBJECT DESCRIPTION`, " +
+                    "v.SECTION, " +
+                    "v.SCHEDULE, " +
+                    "v.CREDITS " +
+                    "from student_schedule s " +
+                    "inner join vwSubjectSchedules v on " +
+                    "s.subject_code = v.`SUBJECT CODE` " +
+                    "and s.sy = v.`SCHOOL YEAR` " +
+                    "and s.semester = v.`SEMESTER` " +
+                    "and s.block_no = v.`SECTION` where student_no = ? and s.sy = ? and s.semester = ? ");
+            ps.setString(1, student.getStudentNo());
+            ps.setString(2, currentSY);
+            ps.setString(3, currentSem);
             rs = ps.executeQuery();
             TableViewUtils.generateTableFromResultSet(tblSchedule, rs);
 
@@ -188,7 +361,7 @@ public class StudentDashboardController extends Controller {
             return;
         try{
             ps = conn.prepareStatement("delete from studentschedule where student_no = ? and subject_code = ?");
-            ps.setString(1, studentNo);
+            ps.setString(1, student.getStudentNo());
             ps.setString(2, sched.getSubjectCode());
             ps.executeUpdate();
             tblSchedule.getItems().clear();
@@ -213,6 +386,9 @@ public class StudentDashboardController extends Controller {
         currentPane = gradesContainer;
         currentPane.setVisible(true);
         onBtnClick(event);
+
+
+
     }
     @FXML
     protected void onTblSubjectsMouseClicked(MouseEvent event) {
@@ -228,7 +404,7 @@ public class StudentDashboardController extends Controller {
         try{
             ps = conn.prepareStatement("INSERT INTO STUDENTSCHEDULE VALUES(?, ?, ?, ?)");
             ps.setString(1, currentSY);
-            ps.setString(2, studentNo);
+            ps.setString(2, student.getStudentNo());
             ps.setString(3, sched.getSubjectCode());
             ps.setString(4, sched.getSection());
             ps.executeUpdate();
@@ -240,5 +416,75 @@ public class StudentDashboardController extends Controller {
             System.out.println(e);
             AlertMessage.showErrorAlert("An error as occurred while adding subject: "+e.toString());
         }
+    }
+
+    @FXML
+    protected void onSYComboAction(ActionEvent event){
+        String sy = choiceSY.getSelectionModel().getSelectedItem();
+        String semester = choiceSemester.getSelectionModel().getSelectedItem();
+        if(sy == null)
+            return;
+        if(semester != null){
+            try{
+                ps = conn.prepareStatement("select " +
+                        "ss.subject_code as `SUBJECT CODE`," +
+                        "    ss.description as `SUBJECT DESCRIPTION`," +
+                        "    ss.units as UNITS," +
+                        "    ss.grade as GRADE " +
+                        "from vwStudentGradeForSYAndSem ss where ss.student_no = ? and ss.sy = ? and ss.semester = ?");
+                ps.setString(1, student.getStudentNo());
+                ps.setString(2, choiceSY.getSelectionModel().getSelectedItem());
+                ps.setString(3, semester);
+                rs = ps.executeQuery();
+                if(rs.getRow() == 0)
+                    tblSubjects.getItems().clear();
+
+                TableViewUtils.generateTableFromResultSet(tblGrades, rs);
+
+            }catch(Exception e){
+                AlertMessage.showErrorAlert("An error occurred while fetching your grades.");
+            }
+        }
+
+        try{
+            ps = conn.prepareStatement("SELECT DISTINCT SEMESTER FROM GRADE WHERE STUDENT_NO = ? AND SY = ?");
+            ps.setString(1, student.getStudentNo());
+            ps.setString(2, sy);
+            rs = ps.executeQuery();
+            ObservableList<String> sem = FXCollections.observableArrayList();
+            while(rs.next()){
+                sem.add(rs.getString(1));
+            }
+            choiceSemester.setItems(sem);
+        } catch(Exception e){
+            System.out.println(e);
+        }
+        choiceSemester.setDisable(false);
+    }
+    @FXML
+    protected void onSemesterComboAction(ActionEvent event){
+        String semester = choiceSemester.getSelectionModel().getSelectedItem();
+        if(semester == null)
+            return;
+        try{
+            ps = conn.prepareStatement("select " +
+                    "ss.subject_code as `SUBJECT CODE`," +
+                    "    ss.description as `SUBJECT DESCRIPTION`," +
+                    "    ss.units as UNITS," +
+                    "    ss.grade as GRADE " +
+                    "from vwStudentGradeForSYAndSem ss where ss.student_no = ? and ss.sy = ? and ss.semester = ?");
+            ps.setString(1, student.getStudentNo());
+            ps.setString(2, choiceSY.getSelectionModel().getSelectedItem());
+            ps.setString(3, semester);
+            rs = ps.executeQuery();
+            if(rs.getRow() == 0)
+                tblSubjects.getItems().clear();
+
+            TableViewUtils.generateTableFromResultSet(tblGrades, rs);
+
+        }catch(Exception e){
+            AlertMessage.showErrorAlert("An error occurred while fetching your grades.");
+        }
+
     }
 }

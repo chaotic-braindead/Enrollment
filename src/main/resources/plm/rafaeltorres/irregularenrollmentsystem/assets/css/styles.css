@@ -7,11 +7,12 @@
 
 #PLMTextEnglish {
     -fx-font-family: Arial;
+    -fx-font-weight: normal;
 }
 
 .loginContainer {
     -fx-background-color:  rgba(255, 255, 255, 0.85);
-    -fx-background-radius:  25px;
+    -fx-background-radius:  15px;
 }
 
 #welcome {
@@ -31,20 +32,18 @@
 /* Student Dashboard */
 
 .gridPane {
-    -fx-background-color:  rgba(184, 28, 28, 0.8);
+    -fx-background-color:  rgba(156, 0, 0, 0.8);
 }
 
 .toggle-button {
-    -fx-background-color:  rgba(184, 28, 28, 0.0);
+    -fx-background-color:  rgba(156, 0, 0, 0.0);
     -fx-font-weight: bold;
-    -fx-font-family: Gotham;
+    -fx-font-family: "Noto Sans";
     -fx-cursor: hand;
 }
 
 .toggle-button:hover {
     -fx-background-color:  rgba(255, 28, 28, 0.2);
-    -fx-font-weight: bold;
-    -fx-font-family: Gotham;
 }
 
 .toggle-button:selected {
@@ -62,8 +61,67 @@
 
 .button {
     -fx-background-color: grey;
-    -fx-font-family: Gotham;
+    -fx-font-family: "Noto Sans";
     -fx-font-weight: bold;
     -fx-background-radius: 5px;
     -fx-cursor: hand;
+}
+
+#cameraButton {
+    -fx-background-radius: 50px;
+}
+
+.dashboardText {
+    -fx-font-family: "Noto Sans";
+    -fx-font-weight: bold;
+}
+
+#emailText {
+    -fx-font-family: "Noto Sans";
+    -fx-font-style: italic;
+    -fx-text-fill: grey;
+    -fx-font-weight: normal;
+    -fx-wrap-text: true;
+}
+
+.dashboardPanes {
+    -fx-background-color: white;
+    -fx-background-radius: 10px;
+    -fx-effect:  dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0.1, 0, 2.0);
+}
+
+.dashboardPaneText {
+    -fx-font-family: "Noto Sans";
+    -fx-font-weight: bold;
+    -fx-text-fill: #9c0000;
+}
+
+.label {
+    -fx-font-family: "Noto Sans";
+    -fx-font-weight: bold;
+}
+
+#semesterCurrent {
+    -fx-font-weight: normal;
+    -fx-font-style: italic;
+    -fx-text-fill: #9c0000;
+}
+
+#dashPaneSubText {
+    -fx-background-color: transparent;
+    -fx-font-weight: normal;
+    -fx-font-style: italic;
+    -fx-font-size: 10px;
+}
+
+.fields {
+    -fx-font-weight: normal;
+    -fx-font-size: 11px;
+}
+
+.titleText {
+    -fx-font-family: "Noto Sans";
+    -fx-font-weight: bold;
+    -fx-text-fill: #9c0000;
+    -fx-font-size: 35px;
 }

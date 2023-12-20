@@ -3,14 +3,19 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.text.Text;
 import javafx.util.Callback;
+import plm.rafaeltorres.irregularenrollmentsystem.model.Student;
+import plm.rafaeltorres.irregularenrollmentsystem.model.User;
 
 import java.sql.ResultSet;
 
 public class TableViewUtils {
+
     public static void generateTableFromResultSet(TableView tbl, ResultSet rs){
         try{
             tbl.getColumns().clear();
@@ -38,15 +43,14 @@ public class TableViewUtils {
             double[] cols = new double[tbl.getColumns().size()];
             for(int i = 0; i < tbl.getColumns().size(); ++i){
                 TableColumn col = (TableColumn) tbl.getColumns().get(i);
-                Text txtCol = new Text(col.getText());
-                cols[i] = txtCol.getLayoutBounds().getWidth() + 10.0d;
+                cols[i] = col.getWidth();
             }
 
             for(int i = 0; i < tbl.getItems().size(); ++i) {
                 ObservableList ob = (ObservableList) tbl.getItems().get(i);
                 for (int j = 0; j < ob.size(); ++j) {
-                    Text txtItem = new Text(ob.get(j) == null ? "null" : ob.get(j).toString());
-                    cols[j] = Math.max(txtItem.getLayoutBounds().getWidth() + 10.0d, cols[j]);
+                    Label txtItem = new Label(ob.get(j) == null ? "-" : ob.get(j).toString());
+                    cols[j] = Math.max(txtItem.getLayoutBounds().getWidth(), cols[j]);
                 }
             }
             double total = 0;
@@ -59,12 +63,6 @@ public class TableViewUtils {
                 for(int i = 0; i < tbl.getColumns().size(); ++i){
                     TableColumn col = (TableColumn) tbl.getColumns().get(i);
                     col.setPrefWidth(col.getPrefWidth() + (tbl.getWidth() - total) / tbl.getColumns().size());
-                }
-            }
-            else if(total > tbl.getWidth()){
-                for(int i = 0; i < tbl.getColumns().size(); ++i){
-                    TableColumn col = (TableColumn) tbl.getColumns().get(i);
-                    col.setPrefWidth(col.getPrefWidth() - (total - tbl.getWidth()) / tbl.getColumns().size());
                 }
             }
 
