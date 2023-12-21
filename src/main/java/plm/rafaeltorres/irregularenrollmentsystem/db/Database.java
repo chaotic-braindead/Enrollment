@@ -9,7 +9,8 @@ import java.util.Random;
 
 public final class Database {
     public static final class Query {
-        public static final String getAllStudents = "SELECT * FROM VWSTUDENTINFO";
+        public static final String getAllStudents = "SELECT * FROM STUDENT";
+        public static final String getAllStudentInfo = "SELECT * FROM VWSTUDENT INFO";
         public static final String getStudent = "SELECT * FROM VWSTUDENTINFO WHERE STUDENT_NO = ?";
         public static final String getAccount = "SELECT * FROM ACCOUNT WHERE ACCOUNT_NO = ?";
         public static final String getAllAccounts = "SELECT * FROM ACCOUNT";
@@ -40,7 +41,7 @@ public final class Database {
     public static Connection connect(){
         Connection conn = null;
         Map<String, String> env = System.getenv();
-        String db = "ooptest";
+        String db = "clean";
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/"+db,
@@ -55,11 +56,21 @@ public final class Database {
     public static void generatePassword(){
         Connection conn = connect();
         try {
-            PreparedStatement ps = conn.prepareStatement(Query.getAllEmployees);
+            PreparedStatement ps = conn.prepareStatement(Query.getAllStudents);
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
                 ps = conn.prepareStatement("INSERT INTO ACCOUNT(account_no, password, type) VALUES (?, ?, ?)");
-                ps.setString(1, rs.getString("EMPLOYEE_ID"));
+                ps.setString(1, rs.getString("student_no"));
+                ps.setString(2, BCrypt.hashpw("password", BCrypt.gensalt()));
+                ps.setString(3, "S");
+                ps.executeUpdate();
+            }
+
+            ps = conn.prepareStatement(Query.getAllEmployees);
+            rs = ps.executeQuery();
+            while(rs.next()){
+                ps = conn.prepareStatement("INSERT INTO ACCOUNT(account_no, password, type) VALUES (?, ?, ?)");
+                ps.setString(1, rs.getString("employee_id"));
                 ps.setString(2, BCrypt.hashpw("password", BCrypt.gensalt()));
                 ps.setString(3, "A");
                 ps.executeUpdate();
@@ -112,6 +123,20 @@ public final class Database {
         } catch(Exception e){
             System.out.println(e);
         }
+    }
+    public static List<String> fetch(String query){
+        List<String> res = new ArrayList<>();
+        try{
+            Connection conn = connect();
+            PreparedStatement ps = conn.prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                res.add(rs.getString(1));
+            }
+        } catch(Exception e){
+            System.out.println(e);
+        }
+        return res;
     }
 }
 

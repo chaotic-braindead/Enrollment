@@ -28,9 +28,7 @@ public abstract class User {
                     conn.close();
                 }
                 else{
-                    Method method = this.getClass().getMethod("set"+StringUtils.snakeCaseToCamelCase(f.getName()), String.class);
-                    method.setAccessible(true);
-                    method.invoke(this, rs.getString(f.getName()));
+                    f.set(this, o);
                 }
             }
         } catch(Exception e){

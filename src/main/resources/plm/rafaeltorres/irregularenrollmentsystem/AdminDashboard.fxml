@@ -3,7 +3,6 @@
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.Group?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
@@ -117,23 +116,28 @@
                                     <children>
                                         <AnchorPane fx:id="enrollContainer" prefHeight="200.0" prefWidth="200.0" styleClass="solid-container" stylesheets="@assets/css/styles.css" visible="false">
                                             <children>
-                                                <TableView fx:id="tblSubjects" layoutX="7.0" layoutY="197.0" onMouseClicked="#onTblSubjectsMouseClicked" prefHeight="356.0" prefWidth="1050.0">
+                                                <TableView fx:id="tblSubjects" layoutX="7.0" layoutY="197.0" onMouseClicked="#onTblSubjectsMouseClicked" prefHeight="380.0" prefWidth="1050.0">
                                                     <columns>
-                                                        <TableColumn prefWidth="75.0" text="C1" />
-                                                        <TableColumn prefWidth="75.0" text="C2" />
+                                                        <TableColumn prefWidth="129.0" text="SUBJECT_CODE" />
+                                                        <TableColumn prefWidth="242.0" text="DESCRIPTION" />
+                                          <TableColumn prefWidth="67.0" text="SECTION" />
+                                          <TableColumn prefWidth="324.0" text="SCHEDULE" />
+                                          <TableColumn prefWidth="91.0" text="CREDITS" />
+                                          <TableColumn prefWidth="196.0" text="PROFESSOR" />
                                                     </columns>
                                                 </TableView>
-                                    <TextField disable="true" editable="false" layoutX="136.0" layoutY="59.0" prefHeight="25.0" prefWidth="263.0" />
-                                    <TextField disable="true" editable="false" layoutX="136.0" layoutY="103.0" prefHeight="25.0" prefWidth="263.0" />
-                                    <TextField disable="true" editable="false" layoutX="137.0" layoutY="146.0" prefHeight="25.0" prefWidth="261.0" />
-                                    <Label layoutX="25.0" layoutY="17.0" prefHeight="34.0" prefWidth="123.0" text="Student Number" wrapText="true" />
-                                    <Label layoutX="87.0" layoutY="63.0" prefHeight="17.0" prefWidth="49.0" text="Name" />
-                                    <Label layoutX="81.0" layoutY="107.0" prefHeight="17.0" prefWidth="55.0" text="College" />
-                                    <Label layoutX="85.0" layoutY="150.0" prefHeight="17.0" prefWidth="53.0" text="Course" />
-                                    <ChoiceBox layoutX="136.0" layoutY="22.0" prefHeight="25.0" prefWidth="263.0" />
-                                    <ChoiceBox layoutX="694.0" layoutY="35.0" prefWidth="150.0" />
-                                    <ComboBox layoutX="694.0" layoutY="91.0" prefWidth="150.0" />
-                                    <ComboBox layoutX="694.0" layoutY="146.0" prefWidth="150.0" />
+                                    <Label fx:id="txtName" layoutX="138.0" layoutY="146.0" prefHeight="25.0" prefWidth="263.0" />
+                                    <Label layoutX="25.0" layoutY="99.0" prefHeight="34.0" prefWidth="123.0" text="Student Number:" wrapText="true" />
+                                    <Label layoutX="87.0" layoutY="150.0" prefHeight="17.0" prefWidth="49.0" text="Name:" />
+                                    <Label layoutX="84.0" layoutY="23.0" prefHeight="17.0" prefWidth="55.0" text="College:" />
+                                    <Label layoutX="85.0" layoutY="61.0" prefHeight="17.0" prefWidth="53.0" text="Course:" />
+                                    <ComboBox fx:id="comboBoxBlock" disable="true" layoutX="695.0" layoutY="91.0" onAction="#onComboBoxBlockAction" prefWidth="150.0" />
+                                    <Label fx:id="txtCurrentSYandSem" layoutX="695.0" layoutY="35.0" prefHeight="17.0" prefWidth="152.0" />
+                                    <ComboBox fx:id="comboBoxCollege" layoutX="138.0" layoutY="19.0" onAction="#onComboBoxCollegeAction" prefHeight="25.0" prefWidth="262.0" promptText="Filter enrollees by college" />
+                                    <ComboBox fx:id="comboBoxCourse" layoutX="138.0" layoutY="60.0" onAction="#onComboBoxCourseAction" prefHeight="25.0" prefWidth="262.0" promptText="Filter enrollees by course" />
+                                    <ComboBox fx:id="comboBoxStudentNo" layoutX="136.0" layoutY="104.0" onAction="#onComboBoxStudentNoAction" prefHeight="25.0" prefWidth="265.0" promptText="Select a student number" />
+                                    <Button fx:id="btnEnrollStudent" disable="true" layoutX="695.0" layoutY="167.0" mnemonicParsing="false" onAction="#onBtnEnrollStudentAction" text="Enroll" />
+                                    <Button fx:id="btnPrintPreview" disable="true" layoutX="758.0" layoutY="167.0" mnemonicParsing="false" text="Print Preview" />
                                             </children>
                                         </AnchorPane>
                                         <AnchorPane prefHeight="200.0" prefWidth="200.0" visible="false">
@@ -157,9 +161,9 @@
                                                         <Label fx:id="lblCurrentMasterlist" layoutX="119.0" layoutY="26.0" styleClass="titleText" stylesheets="@assets/css/styles.css" text="STUDENT MASTERLIST" />
                                                         <FontIcon iconColor="#9c0000" iconLiteral="mdal-list_alt" iconSize="50" layoutX="50.0" layoutY="76.0" />
                                           <Button fx:id="btnAddStudent" layoutX="775.0" layoutY="38.0" mnemonicParsing="false" onAction="#onBtnAddStudentAction" text="Add" />
-                                          <Button fx:id="btnEditStudent" disable="true" layoutX="843.0" layoutY="38.0" mnemonicParsing="false" text="Edit" />
+                                          <ToggleButton fx:id="btnEditStudent" layoutX="843.0" layoutY="38.0" mnemonicParsing="false" onAction="#onBtnEditStudentAction" text="Edit" />
                                           <Button fx:id="btnDeleteStudent" disable="true" layoutX="907.0" layoutY="38.0" mnemonicParsing="false" text="Delete" />
-                                          <TableView fx:id="tblStudents" layoutX="22.0" layoutY="138.0" onMouseClicked="#onTblStudentsMouseClicked" prefHeight="407.0" prefWidth="981.0">
+                                          <TableView fx:id="tblStudents" editable="true" layoutX="22.0" layoutY="138.0" onMouseClicked="#onTblStudentsMouseClicked" prefHeight="407.0" prefWidth="981.0">
                                             <columns>
                                               <TableColumn prefWidth="75.0" text="C1" />
                                               <TableColumn prefWidth="75.0" text="C2" />
@@ -176,7 +180,7 @@
                                                     <top>
                                                         <AnchorPane prefHeight="90.0" prefWidth="1028.0" BorderPane.alignment="CENTER">
                                                             <children>
-                                                                <Label id="studentDashboardText" layoutX="92.0" layoutY="11.0" prefHeight="73.0" prefWidth="496.0" stylesheets="@assets/css/styles.css" text="STUDENT DASHBOARD" textFill="#9c0000">
+                                                                <Label id="studentDashboardText" layoutX="92.0" layoutY="11.0" prefHeight="73.0" prefWidth="496.0" stylesheets="@assets/css/styles.css" text="ADMIN DASHBOARD" textFill="#9c0000">
                                                                     <font>
                                                                         <Font size="35.0" />
                                                                     </font>

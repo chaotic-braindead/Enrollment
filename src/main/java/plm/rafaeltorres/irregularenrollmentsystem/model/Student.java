@@ -24,6 +24,8 @@ public class Student extends User {
     private String address;
     private String status;
     private String registration_status;
+    private String course_code;
+    private String bday;
     private Blob image;
 
     public Student(ResultSet rs) {
