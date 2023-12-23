@@ -131,11 +131,17 @@ public class StudentDashboardController extends Controller {
     private Circle imgContainer;
     @FXML
     private Circle imgDashboardContainer;
+    @FXML
+    private ToggleGroup sideBar;
 
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        sideBar.selectedToggleProperty().addListener((obsVal, oldVal, newVal) -> {
+            if (newVal == null)
+                oldVal.setSelected(true);
+        });
         conn = Database.connect();
         SimpleDateFormat formatter = new SimpleDateFormat("EEEEE, MMMMM dd, yyyy");
         lblDateNow.setText("Today is "+ formatter.format(new Date()));

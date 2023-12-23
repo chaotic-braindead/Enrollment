@@ -9,6 +9,7 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -90,31 +91,91 @@
                                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                             </columnConstraints>
                             <rowConstraints>
-                                <RowConstraints maxHeight="243.0" minHeight="10.0" prefHeight="110.0" vgrow="SOMETIMES" />
-                                <RowConstraints maxHeight="281.0" minHeight="10.0" prefHeight="107.0" vgrow="SOMETIMES" />
-                                <RowConstraints maxHeight="302.0" minHeight="10.0" prefHeight="114.0" vgrow="SOMETIMES" />
-                                <RowConstraints maxHeight="280.0" minHeight="10.0" prefHeight="72.0" vgrow="SOMETIMES" />
-                                <RowConstraints maxHeight="280.0" minHeight="10.0" prefHeight="87.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="280.0" minHeight="10.0" prefHeight="109.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="280.0" minHeight="10.0" prefHeight="114.33331298828125" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="280.0" minHeight="10.0" prefHeight="80.33331298828125" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="280.0" minHeight="10.0" prefHeight="61.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="243.0" minHeight="10.0" prefHeight="57.0" vgrow="SOMETIMES" />
+                                <RowConstraints maxHeight="243.0" minHeight="10.0" prefHeight="51.0" vgrow="SOMETIMES" />
+                                <RowConstraints maxHeight="281.0" minHeight="10.0" prefHeight="50.33331298828125" vgrow="SOMETIMES" />
+                                <RowConstraints maxHeight="280.0" minHeight="10.0" prefHeight="48.66668701171875" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="302.0" minHeight="10.0" prefHeight="58.0" vgrow="SOMETIMES" />
+                                <RowConstraints maxHeight="302.0" minHeight="10.0" prefHeight="51.66668701171875" vgrow="SOMETIMES" />
+                                <RowConstraints maxHeight="280.0" minHeight="10.0" prefHeight="36.66668701171875" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="280.0" minHeight="10.0" prefHeight="63.33331298828125" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="280.0" minHeight="10.0" prefHeight="35.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="280.0" minHeight="10.0" prefHeight="36.6666259765625" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="280.0" minHeight="10.0" prefHeight="35.3333740234375" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="280.0" minHeight="10.0" prefHeight="48.33331298828125" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="280.0" minHeight="10.0" prefHeight="35.3333740234375" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="280.0" minHeight="10.0" prefHeight="44.6666259765625" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="280.0" minHeight="10.0" prefHeight="43.66668701171875" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="280.0" minHeight="10.0" prefHeight="28.33331298828125" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="280.0" minHeight="10.0" prefHeight="44.66668701171875" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="280.0" minHeight="10.0" prefHeight="86.33331298828125" vgrow="SOMETIMES" />
                                 <RowConstraints maxHeight="280.0" minHeight="10.0" prefHeight="66.0" vgrow="SOMETIMES" />
                             </rowConstraints>
                             <children>
-                                <ToggleButton fx:id="btnDashboard" alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#onBtnDashboardAction" prefHeight="63.0" prefWidth="200.0" stylesheets="@assets/css/styles.css" text="Dashboard" textFill="WHITE" GridPane.rowIndex="8">
+                                <ToggleButton fx:id="btnDashboard" alignment="CENTER" mnemonicParsing="false" onAction="#onBtnDashboardAction" prefHeight="63.0" prefWidth="166.0" selected="true" stylesheets="@assets/css/styles.css" text="DASHBOARD" textFill="WHITE" GridPane.rowIndex="17">
                                     <cursor>
                                         <Cursor fx:constant="DEFAULT" />
-                                    </cursor></ToggleButton>
-                                <ToggleButton fx:id="btnEnrollment" alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#onBtnEnrollAction" prefHeight="90.0" prefWidth="208.0" text="Enrollment Module" textAlignment="CENTER" textFill="WHITE" wrapText="true" />
-                                <ToggleButton fx:id="btnClass" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#onBtnClassAction" prefHeight="76.0" prefWidth="204.0" text="Class Masterlist" textAlignment="CENTER" textFill="WHITE" wrapText="true" GridPane.rowIndex="3" />
-                                <ToggleButton fx:id="btnSchedule" alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#onBtnScheduleAction" prefHeight="66.0" prefWidth="192.0" text="Schedule Masterlist" textAlignment="CENTER" textFill="WHITE" wrapText="true" GridPane.rowIndex="4" />
-                                <ToggleButton fx:id="btnLogout" mnemonicParsing="false" onAction="#onBtnLogoutAction" prefHeight="31.0" prefWidth="197.0" text="Log out" textFill="WHITE" GridPane.rowIndex="9" />
-                                <ToggleButton fx:id="btnGrades" alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#onBtnGradesAction" prefHeight="68.0" prefWidth="215.0" text="Grades Masterlist" textAlignment="CENTER" textFill="WHITE" wrapText="true" GridPane.rowIndex="5" />
-                        <ToggleButton fx:id="btnStudent" mnemonicParsing="false" onAction="#onBtnStudentAction" prefHeight="94.0" prefWidth="208.0" text="Student Masterlist" textAlignment="CENTER" textFill="WHITE" wrapText="true" GridPane.rowIndex="2" />
-                        <ToggleButton fx:id="btnSYandSem" mnemonicParsing="false" onAction="#onBtnSYandSemAction" prefHeight="74.0" prefWidth="166.0" text="School Year/Semester Masterlists" textAlignment="CENTER" textFill="WHITE" wrapText="true" GridPane.rowIndex="6" />
-                        <ToggleButton fx:id="btnEmployee" mnemonicParsing="false" onAction="#onBtnEmployeeAction" prefHeight="70.0" prefWidth="166.0" stylesheets="@assets/css/styles.css" text="Employee Masterlist" textAlignment="CENTER" textFill="WHITE" wrapText="true" GridPane.rowIndex="7" />
-                        <ToggleButton fx:id="btnApproval" mnemonicParsing="false" onAction="#onBtnApprovalAction" prefHeight="87.0" prefWidth="208.0" stylesheets="@assets/css/styles.css" text="Enrollment Approval Module" textAlignment="CENTER" textFill="WHITE" wrapText="true" GridPane.rowIndex="1" />
+                                    </cursor>
+                           <graphic>
+                              <FontIcon iconColor="WHITE" iconLiteral="mdal-dashboard" iconSize="20" />
+                           </graphic>
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                           <toggleGroup>
+                              <ToggleGroup fx:id="sideBar" />
+                           </toggleGroup></ToggleButton>
+                                <ToggleButton fx:id="btnEnrollment" alignment="CENTER" mnemonicParsing="false" onAction="#onBtnEnrollAction" prefHeight="67.0" prefWidth="177.0" text="Enrollment" textAlignment="CENTER" textFill="WHITE" toggleGroup="$sideBar" wrapText="true" GridPane.rowIndex="1" />
+                                <ToggleButton fx:id="btnClass" alignment="CENTER" mnemonicParsing="false" onAction="#onBtnClassAction" prefHeight="60.0" prefWidth="166.0" text="Class List" textAlignment="CENTER" textFill="WHITE" toggleGroup="$sideBar" wrapText="true" GridPane.rowIndex="6" />
+                                <ToggleButton fx:id="btnSchedule" alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#onBtnScheduleAction" prefHeight="69.0" prefWidth="166.0" text="Scheduling" textAlignment="CENTER" textFill="WHITE" toggleGroup="$sideBar" wrapText="true" GridPane.rowIndex="3" />
+                                <ToggleButton fx:id="btnLogout" mnemonicParsing="false" onAction="#onBtnLogoutAction" prefHeight="88.0" prefWidth="166.0" text="Log out" textFill="WHITE" GridPane.rowIndex="18" />
+                                <ToggleButton fx:id="btnStudentEntry" alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#onBtnStudentEntryAction" prefHeight="98.0" prefWidth="166.0" text="Student" textAlignment="CENTER" textFill="WHITE" toggleGroup="$sideBar" wrapText="true" GridPane.rowIndex="8" />
+                        <ToggleButton fx:id="btnStudentRecords" mnemonicParsing="false" onAction="#onBtnStudentRecordsAction" prefHeight="58.0" prefWidth="166.0" text="Student Records" textAlignment="CENTER" textFill="WHITE" toggleGroup="$sideBar" wrapText="true" GridPane.rowIndex="5" />
+                        <ToggleButton fx:id="btnEmployeeEntry" mnemonicParsing="false" onAction="#onBtnEmployeeEntryAction" prefHeight="163.0" prefWidth="166.0" text="Employee" textAlignment="CENTER" textFill="WHITE" toggleGroup="$sideBar" wrapText="true" GridPane.rowIndex="9" />
+                        <ToggleButton fx:id="btnGradesEntry" mnemonicParsing="false" onAction="#onBtnGradesEntryAction" prefHeight="35.0" prefWidth="166.0" stylesheets="@assets/css/styles.css" text="Grades" textAlignment="CENTER" textFill="WHITE" toggleGroup="$sideBar" wrapText="true" GridPane.rowIndex="10" />
+                        <ToggleButton fx:id="btnApproval" mnemonicParsing="false" onAction="#onBtnApprovalAction" prefHeight="104.0" prefWidth="166.0" stylesheets="@assets/css/styles.css" text="Schedule Approval" textAlignment="CENTER" textFill="WHITE" toggleGroup="$sideBar" wrapText="true" GridPane.rowIndex="2">
+                           <font>
+                              <Font size="10.0" />
+                           </font>
+                        </ToggleButton>
+                        <Label alignment="CENTER" prefHeight="48.0" prefWidth="166.0" text="TRANSACTION" textAlignment="CENTER" textFill="WHITE">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                           <graphic>
+                              <FontIcon iconColor="WHITE" iconLiteral="mdal-credit_card" iconSize="20" />
+                           </graphic>
+                        </Label>
+                        <Label alignment="CENTER" prefHeight="25.0" prefWidth="180.0" text="RECORDS" textFill="WHITE" GridPane.rowIndex="4">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                           <graphic>
+                              <FontIcon iconColor="WHITE" iconLiteral="mdmz-receipt" iconSize="20" />
+                           </graphic>
+                        </Label>
+                        <FontIcon GridPane.rowIndex="6" />
+                        <Label alignment="CENTER" prefHeight="25.0" prefWidth="165.0" text="DATA ENTRY" textFill="WHITE" GridPane.rowIndex="7">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                           <graphic>
+                              <FontIcon iconColor="WHITE" iconLiteral="mdoal-calendar_today" iconSize="18" />
+                           </graphic>
+                        </Label>
+                        <Label alignment="CENTER" prefHeight="21.0" prefWidth="165.0" text="MAINTENANCE" textFill="WHITE" GridPane.rowIndex="11">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                           <graphic>
+                              <FontIcon iconColor="WHITE" iconLiteral="eli-wrench" iconSize="15" />
+                           </graphic>
+                        </Label>
+                        <ToggleButton fx:id="btnSY" mnemonicParsing="false" onAction="#onBtnSYAction" prefHeight="31.0" prefWidth="164.0" text="School Year" textFill="WHITE" toggleGroup="$sideBar" GridPane.rowIndex="12" />
+                        <ToggleButton fx:id="btnSubject" mnemonicParsing="false" onAction="#onBtnSubjectAction" prefHeight="31.0" prefWidth="168.0" text="Subject" textFill="WHITE" toggleGroup="$sideBar" GridPane.rowIndex="16" />
+                        <ToggleButton fx:id="btnSemester" mnemonicParsing="false" onAction="#onBtnSemesterAction" prefHeight="31.0" prefWidth="183.0" text="Semester" textFill="WHITE" toggleGroup="$sideBar" GridPane.rowIndex="13" />
+                        <ToggleButton fx:id="btnCollege" mnemonicParsing="false" onAction="#onBtnCollegeAction" prefHeight="31.0" prefWidth="181.0" text="College" textFill="WHITE" toggleGroup="$sideBar" GridPane.rowIndex="14" />
+                        <ToggleButton fx:id="btnCourse" mnemonicParsing="false" onAction="#onBtnCourseAction" prefHeight="31.0" prefWidth="165.0" text="Course" textFill="WHITE" toggleGroup="$sideBar" GridPane.rowIndex="15" />
                             </children>
                         </GridPane>
                     </left>
@@ -146,9 +207,19 @@
                                           <Label fx:id="txtCurrentSYandSem" layoutX="695.0" layoutY="35.0" prefHeight="17.0" prefWidth="152.0" />
                                           <ComboBox fx:id="comboBoxCollege" layoutX="138.0" layoutY="19.0" onAction="#onComboBoxCollegeAction" prefHeight="25.0" prefWidth="262.0" promptText="Filter enrollees by college" />
                                           <ComboBox fx:id="comboBoxCourse" layoutX="138.0" layoutY="60.0" onAction="#onComboBoxCourseAction" prefHeight="25.0" prefWidth="262.0" promptText="Filter enrollees by course" />
-                                          <ComboBox fx:id="comboBoxStudentNo" disable="true" editable="true" layoutX="136.0" layoutY="104.0" onAction="#onComboBoxStudentNoAction" prefHeight="25.0" prefWidth="265.0" promptText="Select a student number" />
-                                          <Button fx:id="btnEnrollStudent" disable="true" layoutX="1495.0" layoutY="134.0" mnemonicParsing="false" onAction="#onBtnEnrollStudentAction" text="Enroll" />
-                                          <Button fx:id="btnPrintPreview" disable="true" layoutX="1575.0" layoutY="134.0" mnemonicParsing="false" text="Print Preview" />
+                                          <ComboBox fx:id="comboBoxStudentNo" disable="true" layoutX="136.0" layoutY="104.0" prefHeight="25.0" prefWidth="265.0" promptText="Select a student number" />
+                                          <HBox alignment="CENTER_RIGHT" layoutX="1366.0" layoutY="134.0" prefHeight="25.0" prefWidth="314.0" spacing="20.0">
+                                             <children>
+                                                <Button fx:id="btnApprove" mnemonicParsing="false" text="Approve" visible="false" />
+                                                <StackPane>
+                                                   <children>
+                                                      <Button fx:id="btnEnrollStudent" disable="true" mnemonicParsing="false" onAction="#onBtnEnrollStudentAction" text="Enroll" />
+                                                      <Button fx:id="btnDisapprove" mnemonicParsing="false" text="Disapprove" visible="false" />
+                                                   </children>
+                                                </StackPane>
+                                                <Button fx:id="btnPrintPreview" disable="true" mnemonicParsing="false" text="Print Preview" />
+                                             </children>
+                                          </HBox>
                                           <TableView fx:id="tblEnrollees" layoutX="13.0" layoutY="184.0" onMouseClicked="#onTblEnrolleesMouseClicked" prefHeight="647.0" prefWidth="659.0">
                                             <columns>
                                               <TableColumn prefWidth="133.66665649414062" text="STUDENT_NUMBER" />
@@ -163,39 +234,56 @@
                                               </AnchorPane>
                                  </children>
                               </AnchorPane>
-                                        <AnchorPane prefHeight="200.0" prefWidth="200.0" visible="false">
+                                        <AnchorPane fx:id="studentEntryContainer" prefHeight="551.0" prefWidth="1014.0" stylesheets="@assets/css/styles.css" visible="false">
                                             <children>
-                                                <VBox alignment="CENTER" layoutX="231.0" layoutY="85.0" prefHeight="598.0" prefWidth="1020.0" spacing="10.0" styleClass="solid-container" stylesheets="@assets/css/styles.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                <AnchorPane layoutX="27.0" layoutY="18.0" prefHeight="836.0" prefWidth="1696.0" styleClass="loginContainer" stylesheets="@assets/css/styles.css">
                                                     <children>
-                                                        <TableView fx:id="tblSchedule" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#onTblScheduleMouseClicked" prefHeight="501.0" prefWidth="980.0">
-                                                            <columns>
-                                                                <TableColumn prefWidth="75.0" text="C1" />
-                                                                <TableColumn prefWidth="75.0" text="C2" />
-                                                            </columns>
-                                                        </TableView>
-                                                    </children>
-                                                </VBox>
-                                            </children>
-                                        </AnchorPane>
-                                        <AnchorPane fx:id="studentContainer" prefHeight="551.0" prefWidth="1014.0" stylesheets="@assets/css/styles.css" visible="false">
-                                            <children>
-                                                <AnchorPane layoutX="27.0" layoutY="18.0" prefHeight="561.0" prefWidth="1027.0" styleClass="loginContainer" stylesheets="@assets/css/styles.css">
-                                                    <children>
-                                                        <Label fx:id="lblCurrentMasterlist" layoutX="119.0" layoutY="26.0" styleClass="titleText" stylesheets="@assets/css/styles.css" text="STUDENT MASTERLIST" />
+                                                        <Label fx:id="lblCurrentMasterlist" layoutX="119.0" layoutY="26.0" styleClass="titleText" stylesheets="@assets/css/styles.css" text="STUDENT TABLE" />
                                                         <FontIcon iconColor="#9c0000" iconLiteral="mdal-list_alt" iconSize="50" layoutX="50.0" layoutY="76.0" />
-                                          <Button fx:id="btnAddStudent" layoutX="775.0" layoutY="38.0" mnemonicParsing="false" onAction="#onBtnAddStudentAction" text="Add" />
-                                          <ToggleButton fx:id="btnEditStudent" layoutX="843.0" layoutY="38.0" mnemonicParsing="false" onAction="#onBtnEditStudentAction" text="Edit" />
-                                          <Button fx:id="btnDeleteStudent" disable="true" layoutX="907.0" layoutY="38.0" mnemonicParsing="false" text="Delete" />
-                                          <TableView fx:id="tblStudents" layoutX="22.0" layoutY="138.0" onMouseClicked="#onTblStudentsMouseClicked" prefHeight="407.0" prefWidth="981.0">
+                                          <HBox layoutX="759.0" layoutY="91.0">
+                                             <children>
+                                                <Button fx:id="btnAddStudent" mnemonicParsing="false" onAction="#onBtnAddStudentAction" text="Add" />
+                                                <ToggleButton fx:id="btnEditStudent" mnemonicParsing="false" onAction="#onBtnEditStudentAction" text="Edit" />
+                                                <Button fx:id="btnDeleteStudent" disable="true" mnemonicParsing="false" text="Delete" />
+                                             </children>
+                                          </HBox>
+                                          <TableView fx:id="tblStudents" layoutX="22.0" layoutY="138.0" onMouseClicked="#onTblStudentsMouseClicked" prefHeight="679.0" prefWidth="1656.0">
                                             <columns>
                                               <TableColumn prefWidth="75.0" text="C1" />
                                               <TableColumn prefWidth="75.0" text="C2" />
                                             </columns>
                                           </TableView>
-                                          <TextField fx:id="txtStudentSearch" layoutX="206.0" layoutY="106.0" onKeyTyped="#onTxtStudentSearchKeyTyped" prefHeight="25.0" prefWidth="605.0" promptText="Search for a student number or name" />
+                                          <TextField fx:id="txtStudentSearch" layoutX="49.0" layoutY="94.0" onKeyTyped="#onTxtStudentSearchKeyTyped" prefHeight="25.0" prefWidth="400.0" promptText="Search for a student number or name" />
                                                     </children>
                                                 </AnchorPane>
                                             </children>
+                                        </AnchorPane>
+                                        <AnchorPane fx:id="gradesEntryContainer" prefHeight="200.0" prefWidth="200.0" visible="false">
+                                 <children>
+                                    <AnchorPane layoutX="26.0" layoutY="19.0" prefHeight="835.0" prefWidth="1701.0" styleClass="loginContainer" stylesheets="@assets/css/styles.css">
+                                       <children>
+                                          <FontIcon iconColor="#9c0000" iconLiteral="mdal-list_alt" iconSize="50" layoutX="28.0" layoutY="77.0" />
+                                          <Label fx:id="lblCurrentMasterlist1" layoutX="87.0" layoutY="24.0" styleClass="titleText" stylesheets="@assets/css/styles.css" text="GRADE ENTRY" />
+                                          <TableView fx:id="tblStudentGrades" editable="true" layoutX="377.0" layoutY="159.0" prefHeight="645.0" prefWidth="907.0">
+                                            <columns>
+                                              <TableColumn prefWidth="150.0" text="STUDENT NUMBER" />
+                                              <TableColumn minWidth="0.0" prefWidth="391.3333740234375" text="NAME" />
+                                                <TableColumn prefWidth="133.6666259765625" text="GRADE" />
+                                                <TableColumn prefWidth="231.66668701171875" text="REMARK" />
+                                            </columns>
+                                          </TableView>
+                                          <ComboBox fx:id="comboBoxSubjectCode" disable="true" layoutX="472.0" layoutY="118.0" onAction="#onComboBoxSubjectCodeAction" prefHeight="25.0" prefWidth="172.0" promptText="Select subject code" />
+                                          <ComboBox fx:id="comboBoxYearBlock" disable="true" layoutX="305.0" layoutY="116.0" onAction="#onComboBoxYearBlockAction" prefWidth="150.0" promptText="Select year/block" />
+                                          <Label layoutX="43.0" layoutY="116.0" prefHeight="21.0" prefWidth="70.0" text="Filter by:">
+                                             <font>
+                                                <Font size="15.0" />
+                                             </font>
+                                          </Label>
+                                          <Button fx:id="btnLoadData" disable="true" layoutX="663.0" layoutY="118.0" mnemonicParsing="false" onAction="#onBtnLoadDataAction" text="Load Data" />
+                                          <ComboBox fx:id="comboBoxCollegeGrade" layoutX="138.0" layoutY="117.0" onAction="#onComboBoxCollegeGradeAction" prefWidth="150.0" promptText="Select college" />
+                                       </children>
+                                    </AnchorPane>
+                                 </children>
                                         </AnchorPane>
                                         <AnchorPane fx:id="dashboardContainer" prefHeight="200.0" prefWidth="981.0">
                                             <children>
@@ -261,12 +349,11 @@
                                                                             </Label>
                                                                             <Group fx:id="enrolledGroup" layoutX="53.0" layoutY="33.0">
                                                                                 <children>
-                                                                                    <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="90.0" layoutY="4.0" text="Officially Enrolled" textAlignment="RIGHT" textFill="#227f19">
+                                                                                    <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="1.0" layoutY="-10.0" prefHeight="50.0" prefWidth="230.0" text="500 Total Students" textAlignment="RIGHT" textFill="#9c0000" wrapText="true">
                                                                                         <font>
                                                                                             <Font size="16.0" />
                                                                                         </font>
                                                                                     </Label>
-                                                                                    <FontIcon iconColor="#227f19" iconLiteral="mdal-check" iconSize="35" layoutX="40.0" layoutY="30.0" wrappingWidth="31.00006103515625" />
                                                                                 </children>
                                                                             </Group>
                                                                             <Group fx:id="notEnrolledGroup" layoutX="53.0" layoutY="24.0" visible="false">

@@ -9,6 +9,7 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -98,30 +99,33 @@
                         <RowConstraints maxHeight="280.0" minHeight="10.0" prefHeight="67.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <ToggleButton fx:id="btnDashboard" alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#onBtnDashboardAction" prefHeight="125.0" prefWidth="119.0" stylesheets="@assets/css/styles.css" text="Dashboard" textFill="WHITE">
+                        <ToggleButton fx:id="btnDashboard" alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#onBtnDashboardAction" prefHeight="168.0" prefWidth="119.0" selected="true" stylesheets="@assets/css/styles.css" text="Dashboard" textFill="WHITE">
                            <cursor>
                               <Cursor fx:constant="DEFAULT" />
                            </cursor>
                            <graphic>
                               <Circle fx:id="imgDashboardContainer" fill="DODGERBLUE" radius="36.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="3.0" />
-                           </graphic></ToggleButton>
-                        <ToggleButton fx:id="btnEnroll" alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#onBtnEnrollAction" prefHeight="164.0" prefWidth="119.0" text="Enroll" textFill="WHITE" GridPane.rowIndex="1">
+                           </graphic>
+                           <toggleGroup>
+                              <ToggleGroup fx:id="sideBar" />
+                           </toggleGroup></ToggleButton>
+                        <ToggleButton fx:id="btnEnroll" alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#onBtnEnrollAction" prefHeight="164.0" prefWidth="119.0" text="Enroll" textFill="WHITE" toggleGroup="$sideBar" GridPane.rowIndex="1">
                            <graphic>
                               <FontIcon iconColor="WHITE" iconLiteral="mdoal-assignment" iconSize="55" />
                            </graphic>
                         </ToggleButton>
-                        <ToggleButton fx:id="btnSchedule" alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#onBtnScheduleAction" prefHeight="182.0" prefWidth="119.0" text="Schedule" textFill="WHITE" GridPane.rowIndex="2">
+                        <ToggleButton fx:id="btnSchedule" alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#onBtnScheduleAction" prefHeight="182.0" prefWidth="119.0" text="Schedule" textFill="WHITE" toggleGroup="$sideBar" GridPane.rowIndex="2">
                            <graphic>
                               <FontIcon iconColor="WHITE" iconLiteral="mdmz-table_view" iconSize="55" />
                            </graphic>
                         </ToggleButton>
-                        <ToggleButton fx:id="btnTuition" alignment="CENTER" contentDisplay="TOP" disable="true" mnemonicParsing="false" onAction="#onBtnTuitionAction" prefHeight="148.0" prefWidth="119.0" text="Tuition" textFill="WHITE" GridPane.rowIndex="3">
+                        <ToggleButton fx:id="btnTuition" alignment="CENTER" contentDisplay="TOP" disable="true" mnemonicParsing="false" onAction="#onBtnTuitionAction" prefHeight="148.0" prefWidth="119.0" text="Tuition" textFill="WHITE" toggleGroup="$sideBar" GridPane.rowIndex="3">
                            <graphic>
                               <FontIcon iconColor="WHITE" iconLiteral="mdal-account_balance_wallet" iconSize="55" />
                            </graphic>
                         </ToggleButton>
-                        <ToggleButton fx:id="btnLogout" mnemonicParsing="false" onAction="#onBtnLogoutAction" prefHeight="65.0" prefWidth="119.0" text="Log out" textFill="WHITE" GridPane.rowIndex="5" />
-                        <ToggleButton fx:id="btnGrades" alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#onBtnGradesAction" prefHeight="156.0" prefWidth="119.0" text="Grades" textFill="WHITE" GridPane.rowIndex="4">
+                        <ToggleButton fx:id="btnLogout" mnemonicParsing="false" onAction="#onBtnLogoutAction" prefHeight="65.0" prefWidth="119.0" text="Log out" textFill="WHITE" toggleGroup="$sideBar" GridPane.rowIndex="5" />
+                        <ToggleButton fx:id="btnGrades" alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#onBtnGradesAction" prefHeight="156.0" prefWidth="119.0" text="Grades" textFill="WHITE" toggleGroup="$sideBar" GridPane.rowIndex="4">
                            <graphic>
                               <FontIcon iconColor="WHITE" iconLiteral="mdal-list_alt" iconSize="55" />
                            </graphic>
