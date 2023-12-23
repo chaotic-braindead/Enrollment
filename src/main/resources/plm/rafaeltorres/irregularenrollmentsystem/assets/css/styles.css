@@ -11,12 +11,12 @@
 }
 
 .loginContainer {
-    -fx-background-color:  rgba(255, 255, 255, 0.85);
+    -fx-background-color:  rgba(255, 255, 255, 0.90);
     -fx-background-radius:  15px;
 }
 
 #welcome {
-    -fx-font-size: 34px;
+    -fx-font-size: 40px;
 }
 
 .loginText {
@@ -28,6 +28,9 @@
     -fx-background-radius: 50px;
 }
 
+#loginButton {
+    -fx-background-color: black;
+}
 
 /* Student Dashboard */
 
@@ -40,6 +43,7 @@
     -fx-font-weight: bold;
     -fx-font-family: "Noto Sans";
     -fx-cursor: hand;
+    -fx-font-size: 15px;
 }
 
 .toggle-button:hover {
@@ -111,13 +115,19 @@
     -fx-background-color: transparent;
     -fx-font-weight: normal;
     -fx-font-style: italic;
-    -fx-font-size: 10px;
+    -fx-font-size: 13px;
 }
 
 .fields {
     -fx-font-weight: normal;
-    -fx-font-size: 11px;
+    -fx-font-size: 15px;
 }
+
+.profileFields {
+    -fx-font-weight: normal;
+    -fx-font-size: 20px;
+}
+
 
 .titleText {
     -fx-font-family: "Noto Sans";
@@ -125,3 +135,6 @@
     -fx-text-fill: #9c0000;
     -fx-font-size: 35px;
 }
+
+
+/* admin page */

@@ -27,12 +27,11 @@ public final class Database {
                 "s.cellphone_number," +
                 "s.personal_email," +
                 "s.plm_email," +
-                "s.college," +
-                "s.course," +
+                "s.college_code," +
+                "s.course_code," +
                 "s.status," +
                 "s.registration_status," +
-                "a.image, " +
-                "s.status " +
+                "a.image " +
                 "from account a " +
                 "inner join vwstudentinfo s on a.account_no = s.student_number where s.student_number = ?";
 
@@ -41,13 +40,13 @@ public final class Database {
     public static Connection connect(){
         Connection conn = null;
         Map<String, String> env = System.getenv();
-        String db = "clean";
+        String db = "enrollment_system";
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/"+db,
                     env.get("mysqluser"),
                     env.get("mysqlpass"));
-            System.out.println("[Database]: Successfully connected to "+db);
+//            System.out.println("[Database]: Successfully connected to "+db);
         } catch(Exception e) {
             System.out.println(e);
         }

@@ -237,6 +237,7 @@ public class TableViewUtils {
                     cols[j] = Math.max(txtItem.getLayoutBounds().getWidth(), cols[j]);
                 }
             }
+
             double total = 0;
             for(int i = 0; i < tbl.getColumns().size(); ++i){
                 TableColumn col = (TableColumn) tbl.getColumns().get(i);

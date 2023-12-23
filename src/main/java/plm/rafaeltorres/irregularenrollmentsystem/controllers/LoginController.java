@@ -1,15 +1,12 @@
 package plm.rafaeltorres.irregularenrollmentsystem.controllers;
 
 import javafx.fxml.Initializable;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import plm.rafaeltorres.irregularenrollmentsystem.db.Database;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import plm.rafaeltorres.irregularenrollmentsystem.model.Employee;
 import plm.rafaeltorres.irregularenrollmentsystem.model.Student;
@@ -34,6 +31,10 @@ public class LoginController implements Initializable {
     private Button btnLogin;
     @FXML
     private Label lblDateNow;
+    @FXML
+    private CheckBox showPassword;
+    @FXML
+    private TextField txtShowPassword;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
@@ -44,12 +45,13 @@ public class LoginController implements Initializable {
 
     @FXML
     protected void onBtnLoginAction(ActionEvent event) {
+        String password = (showPassword.isSelected()) ? txtShowPassword.getText() : txtPassword.getText();
         try {
             ps = conn.prepareStatement(Database.Query.getAccount);
             ps.setString(1, txtStudentNo.getText());
             rs = ps.executeQuery();
 
-            if(!rs.next() || !BCrypt.checkpw(txtPassword.getText(), rs.getString("password"))){
+            if(!rs.next() || !BCrypt.checkpw(password, rs.getString("password"))){
                 AlertMessage.showErrorAlert("Incorrect student number/password.");
                 return;
             }
@@ -79,8 +81,27 @@ public class LoginController implements Initializable {
         }
     }
     @FXML
+    protected void onTxtPasswordKeyTyped(KeyEvent event){
+        txtShowPassword.setText(txtPassword.getText());
+        onTxtFieldAction(event);
+    }
+    @FXML
+    protected void onTxtShowPasswordKeyTyped(KeyEvent event){
+        txtPassword.setText(txtShowPassword.getText());
+        onTxtFieldAction(event);
+    }
+    @FXML
     protected void onTxtFieldAction(KeyEvent event) {
-        btnLogin.setDisable(txtStudentNo.getText().isBlank() || txtPassword.getText().isBlank());
+        btnLogin.setDisable(txtStudentNo.getText().isBlank() || txtPassword.getText().isBlank() || txtShowPassword.getText().isBlank());
+    }
+    @FXML
+    protected void onShowPasswordSelectedAction(ActionEvent event){
+        if(showPassword.isSelected())
+            txtShowPassword.setText(txtPassword.getText());
+        else
+            txtPassword.setText(txtShowPassword.getText());
+        txtShowPassword.setVisible(showPassword.isSelected());
+        txtPassword.setVisible(!showPassword.isSelected());
     }
 
 }

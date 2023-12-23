@@ -20,6 +20,7 @@ public abstract class User {
             for(Field f : fields){
                 f.setAccessible(true);
                 Object o = rs.getObject(f.getName());
+                System.out.println(o);
                 if(o == null) continue;
                 if(o.getClass().equals(byte[].class)){
                     Blob blob = conn.createBlob();

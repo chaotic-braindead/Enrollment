@@ -2,6 +2,7 @@ package plm.rafaeltorres.irregularenrollmentsystem.utils;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.MonthDay;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -12,9 +13,10 @@ import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
-import javafx.scene.control.ContentDisplay;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.DatePicker;
+import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 
 public class DatePickerTableCell<S, T> extends TableCell<S, T> {
 
@@ -28,18 +30,37 @@ public class DatePickerTableCell<S, T> extends TableCell<S, T> {
             createDatePicker();
         }
         datePicker.getEditor().setDisable(true);
-        datePicker.onMouseClickedProperty(
-
-        );
         setGraphic(datePicker);
         setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
 
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                datePicker.requestFocus();
+        datePicker.addEventFilter(KeyEvent.KEY_PRESSED, (KeyEvent event) -> {
+            if (event.getCode() == KeyCode.ENTER || event.getCode() == KeyCode.TAB) {
+                datePicker.setValue(datePicker.getConverter().fromString(datePicker.getEditor().getText()));
+                commitEdit((T)(datePicker.getValue().toString()));
+            }
+            if (event.getCode() == KeyCode.ESCAPE) {
+                cancelEdit();
             }
         });
+
+        datePicker.setDayCellFactory(picker -> {
+            DateCell cell = new DateCell();
+            cell.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
+                datePicker.setValue(cell.getItem());
+                if (event.getClickCount() == 2) {
+                    datePicker.hide();
+                    commitEdit((T)(cell.getItem().toString()));
+                }
+                event.consume();
+            });
+            cell.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+                if (event.getCode() == KeyCode.ENTER) {
+                    commitEdit((T)(cell.getItem().toString()));
+                }
+            });
+            return cell ;
+        });
+
     }
 
     @Override
@@ -64,18 +85,16 @@ public class DatePickerTableCell<S, T> extends TableCell<S, T> {
         if (empty) {
             setText(null);
             setGraphic(null);
-        } else {
-            if (isEditing()) {
-                setContentDisplay(ContentDisplay.TEXT_ONLY);
-
-            } else {
-                setDatePickerDate(smp.format((T)d));
-                setText(smp.format((T)d));
-                setGraphic(this.datePicker);
-                setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-
-            }
+            return;
         }
+        if (isEditing()) {
+            setContentDisplay(ContentDisplay.TEXT_ONLY);
+            return;
+        }
+        setDatePickerDate(smp.format((T)d));
+        setText(smp.format((T)d));
+        setGraphic(this.datePicker);
+        setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
     }
 
 
@@ -101,10 +120,29 @@ public class DatePickerTableCell<S, T> extends TableCell<S, T> {
     private void createDatePicker() {
         this.datePicker = new DatePicker();
         datePicker.setPromptText("jj/mm/aaaa");
-        datePicker.setEditable(true);
+//        datePicker.getEditor().setDisable(true);
+//        datePicker.setDisable(true);
+//        datePicker.editorProperty().bind(getTableColumn().editableProperty());
+
+        datePicker.setOnShowing(event -> {
+            System.out.println("showing");
+            final TableView table = getTableView();
+            table.getSelectionModel().select(getTableRow().getIndex());
+            table.edit(table.getSelectionModel().getSelectedIndex(), getTableColumn());
+        });
+
+        datePicker.valueProperty().addListener((observable, oldValue, newValue) -> {
+            System.out.println(isEditing());
+
+            commitEdit((T)newValue.toString());
+            this.setItem((T)newValue.toString());
+        });
 
         datePicker.setOnAction(new EventHandler() {
             public void handle(Event t) {
+                datePicker.getEditor().setDisable(!getTableView().isEditable());
+//                datePicker.setDisable(!getTableView().isEditable());
+
                 LocalDate date = datePicker.getValue();
 
                 SimpleDateFormat smp = new SimpleDateFormat("dd/MM/yyyy");
@@ -115,6 +153,7 @@ public class DatePickerTableCell<S, T> extends TableCell<S, T> {
 
                 setText(smp.format(cal.getTime()));
                 commitEdit((T)(cal.getTime()).toString());
+
                 ObservableList<String> row = (ObservableList<String>) getTableView().getItems().get(getTableRow().getIndex());
 
                 int idx = -1;

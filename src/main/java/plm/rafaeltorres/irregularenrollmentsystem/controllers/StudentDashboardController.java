@@ -157,6 +157,29 @@ public class StudentDashboardController extends Controller {
     public void setUser(User user){
         Student student = (Student) user;
         this.student = student;
+        if(student.getRegistrationStatus().toUpperCase().equals("REGULAR")) {
+            btnEnroll.setDisable(true);
+            btnSubmit.setVisible(false);
+            btnRemove.setVisible(false);
+        }
+        try{
+            ps = conn.prepareStatement("select * from enrollment where student_no = ? and sy = ? and semester = ?");
+            ps.setString(1, student.getStudentNo());
+            ps.setString(2, currentSY);
+            ps.setString(3, currentSem);
+            rs = ps.executeQuery();
+            if(rs.next()){
+                notEnrolledGroup.setVisible(false);
+                enrolledGroup.setVisible(true);
+            }
+            else{
+                enrolledGroup.setVisible(false);
+                notEnrolledGroup.setVisible(true);
+            }
+
+        }catch(Exception e){
+
+        }
 //        if(student.getEnrollmentStatus().equals("NOT ENROLLED")){
 //            enrolledGroup.setVisible(false);
 //            notEnrolledGroup.setVisible(true);
@@ -261,6 +284,7 @@ public class StudentDashboardController extends Controller {
     }
 
     private void displayAvailableScheds() {
+
         try{
             ps = conn.prepareStatement("select sc.subject_code, su.description, sc.section, sc.time_slot, sc.room, su.units, sc.total_students from schedule sc" +
                     " inner join subject su on sc.subject_code = su.SUBJECT_CODE" +
@@ -313,18 +337,20 @@ public class StudentDashboardController extends Controller {
     }
     private void displaySched() {
         try{
+            System.out.println("here");
             ps = conn.prepareStatement("select " +
-                    "v.`SUBJECT CODE`, " +
-                    "v.`SUBJECT DESCRIPTION`, " +
-                    "v.SECTION, " +
+                    "v.subject_code, " +
+                    "v.description, " +
+                    "v.block, " +
                     "v.SCHEDULE, " +
-                    "v.CREDITS " +
+                    "v.CREDITS, " +
+                    "v.professor "+
                     "from student_schedule s " +
                     "inner join vwSubjectSchedules v on " +
-                    "s.subject_code = v.`SUBJECT CODE` " +
-                    "and s.sy = v.`SCHOOL YEAR` " +
-                    "and s.semester = v.`SEMESTER` " +
-                    "and s.block_no = v.`SECTION` where student_no = ? and s.sy = ? and s.semester = ? ");
+                    "s.subject_code = v.subject_code " +
+                    "and s.sy = v.sy " +
+                    "and s.semester = v.semester " +
+                    "and s.block_no = concat(v.course, v.year, v.block) where s.student_no = ? and s.sy = ? and s.semester = ? ");
             ps.setString(1, student.getStudentNo());
             ps.setString(2, currentSY);
             ps.setString(3, currentSem);

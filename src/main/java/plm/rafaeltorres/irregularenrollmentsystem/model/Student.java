@@ -14,9 +14,9 @@ public class Student extends User {
     private String first_name;
     private String last_name;
     private String personal_email;
-    private String college;
+    private String college_code;
     private String plm_email;
-    private String course;
+    private String course_code;
     private String gender;
     private Date birthday;
     private String cellphone_number;
@@ -24,8 +24,6 @@ public class Student extends User {
     private String address;
     private String status;
     private String registration_status;
-    private String course_code;
-    private String bday;
     private Blob image;
 
     public Student(ResultSet rs) {
@@ -33,7 +31,7 @@ public class Student extends User {
     }
 
     public String getCollege() {
-        return college;
+        return course_code;
     }
 
     public String getAddress() {
@@ -65,7 +63,7 @@ public class Student extends User {
     }
 
     public String getCourse() {
-        return course;
+        return course_code;
     }
 
     public String getFirstName() {
