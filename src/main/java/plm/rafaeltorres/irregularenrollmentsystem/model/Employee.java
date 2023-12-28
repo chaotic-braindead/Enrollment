@@ -10,9 +10,9 @@ public class Employee extends User {
     private String firstname;
     private String email;
     private String gender;
-    private String cellphone_number;
+    private String cp_num;
     private String address;
-    private Date birthday;
+    private Date bday;
     private long age;
     private Blob image;
     public Employee(ResultSet rs) {
@@ -44,11 +44,11 @@ public class Employee extends User {
     }
 
     public Date getBirthday() {
-        return birthday;
+        return bday;
     }
 
     public String getCellphoneNumber() {
-        return cellphone_number;
+        return cp_num;
     }
 
     public long getAge() {

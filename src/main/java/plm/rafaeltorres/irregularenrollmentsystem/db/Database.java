@@ -17,15 +17,15 @@ public final class Database {
         public static final String getAllEmployees = "SELECT * FROM EMPLOYEE";
         public static final String getEmployee = "SELECT * FROM EMPLOYEE WHERE EMPLOYEE_ID = ?";
         public static final String updateImage = "UPDATE ACCOUNT SET IMAGE = ? WHERE ACCOUNT_NO = ?";
-        public static final String getStudentAccount = "select s.student_number," +
-                "s.first_name," +
-                "s.last_name," +
+        public static final String getStudentAccount = "select s.student_no," +
+                "s.firstname," +
+                "s.lastname," +
                 "s.gender," +
-                "s.birthday," +
+                "s.bday," +
                 "s.age," +
                 "s.address," +
-                "s.cellphone_number," +
-                "s.personal_email," +
+                "s.cp_num," +
+                "s.email," +
                 "s.plm_email," +
                 "s.college_code," +
                 "s.course_code," +
@@ -33,7 +33,7 @@ public final class Database {
                 "s.registration_status," +
                 "a.image " +
                 "from account a " +
-                "inner join vwstudentinfo s on a.account_no = s.student_number where s.student_number = ?";
+                "inner join vwstudentinfo s on a.account_no = s.student_no where s.student_no = ?";
 
         public static final String getEmployeeAccount = "SELECT * FROM VWEMPLOYEEACCOUNT WHERE EMPLOYEE_ID = ?";
     }

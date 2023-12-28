@@ -10,16 +10,16 @@ import java.sql.Date;
 import java.sql.ResultSet;
 
 public class Student extends User {
-    private String student_number;
-    private String first_name;
-    private String last_name;
-    private String personal_email;
+    private String student_no;
+    private String firstname;
+    private String lastname;
+    private String email;
     private String college_code;
     private String plm_email;
     private String course_code;
     private String gender;
-    private Date birthday;
-    private String cellphone_number;
+    private Date bday;
+    private String cp_num;
     private long age;
     private String address;
     private String status;
@@ -43,7 +43,7 @@ public class Student extends User {
     }
 
     public String getPersonalEmail() {
-        return personal_email;
+        return email;
     }
 
     public String getPLMEmail() {
@@ -51,7 +51,7 @@ public class Student extends User {
     }
 
     public String getCellphoneNumber() {
-        return cellphone_number;
+        return cp_num;
     }
 
     public String getStatus() {
@@ -59,7 +59,7 @@ public class Student extends User {
     }
 
     public Date getBirthday() {
-        return birthday;
+        return bday;
     }
 
     public String getCourse() {
@@ -67,7 +67,7 @@ public class Student extends User {
     }
 
     public String getFirstName() {
-        return first_name;
+        return firstname;
     }
 
     public String getGender() {
@@ -79,11 +79,11 @@ public class Student extends User {
     }
 
     public String getLastName() {
-        return last_name;
+        return lastname;
     }
 
     public String getStudentNo() {
-        return student_number;
+        return student_no;
     }
 
     public String getRegistrationStatus() {

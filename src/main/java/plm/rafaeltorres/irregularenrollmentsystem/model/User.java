@@ -35,6 +35,7 @@ public abstract class User {
         } catch(Exception e){
             System.out.println(e);
         }
+        System.out.println(this);
     }
 
 

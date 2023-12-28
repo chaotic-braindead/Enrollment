@@ -194,7 +194,7 @@
                                                    <children>
                                                       <Pane prefHeight="96.0" prefWidth="299.0" styleClass="dashboardPanes" stylesheets="@assets/css/styles.css">
                                                          <children>
-                                                            <Label id="semesterCurrent" fx:id="lblSemester" layoutX="133.0" layoutY="71.0" stylesheets="@assets/css/styles.css" text="First Semester A.Y. 2023-2024" />
+                                                            <Label id="semesterCurrent" fx:id="lblSemester" alignment="CENTER_RIGHT" layoutX="112.0" layoutY="71.0" prefHeight="19.0" prefWidth="167.0" stylesheets="@assets/css/styles.css" text="1st Semester A.Y. 2023-2024" textAlignment="RIGHT" />
                                                             <FontIcon iconColor="#9c0000" iconLiteral="mdmz-person" iconSize="55" layoutX="12.0" layoutY="74.0" />
                                                             <Label layoutX="150.0" layoutY="9.0" styleClass="dashboardPaneText" stylesheets="@assets/css/styles.css" text="Enrollment Status">
                                                                <font>

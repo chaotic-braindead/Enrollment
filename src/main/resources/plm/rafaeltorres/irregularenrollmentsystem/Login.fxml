@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
+<?import javafx.scene.Group?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
@@ -11,7 +12,10 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
@@ -24,25 +28,42 @@
                <top>
                   <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="133.0" prefWidth="1916.0" BorderPane.alignment="CENTER">
                      <children>
-                        <ImageView fitHeight="91.0" fitWidth="83.0" layoutX="70.0" layoutY="24.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@assets/img/PLM_Seal_2013.png" />
-                           </image>
-                        </ImageView>
-                        <Label id="PLMText" layoutX="162.0" layoutY="46.0" prefHeight="19.0" prefWidth="356.0" stylesheets="@assets/css/styles.css" text="PAMANTASAN NG LUNGSOD NG MAYNILA  " textFill="#c0a23d">
-                           <font>
-                              <Font size="15.0" />
-                           </font></Label>
-                        <Label id="PLMTextEnglish" layoutX="162.0" layoutY="66.0" prefHeight="19.0" prefWidth="274.0" stylesheets="@assets/css/styles.css" text="UNIVERSITY OF THE CITY OF MANILA">
-                           <font>
-                              <Font size="13.0" />
-                           </font>
-                        </Label>
-                        <Label fx:id="lblDateNow" alignment="CENTER_RIGHT" layoutX="1531.0" layoutY="56.0" prefHeight="19.0" prefWidth="324.0" styleClass="lblDateNow" stylesheets="@assets/css/styles.css" text="Today is " textFill="#486548">
-                           <font>
-                              <Font name="System Bold" size="15.0" />
-                           </font></Label>
-                        <Pane layoutY="117.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="19.0" prefWidth="1920.0" style="-fx-background-color: #fcbe27;" />
+                        <GridPane layoutX="70.0" layoutY="24.0" prefHeight="84.0" prefWidth="1821.0">
+                           <columnConstraints>
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="1470.0362703988576" minWidth="10.0" prefWidth="1470.0362703988576" />
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="839.9272392739543" minWidth="10.0" prefWidth="351.20006642239196" />
+                           </columnConstraints>
+                           <rowConstraints>
+                              <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                           </rowConstraints>
+                           <children>
+                              <Group>
+                                 <children>
+                                    <ImageView fitHeight="91.0" fitWidth="83.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@assets/img/PLM_Seal_2013.png" />
+                                       </image>
+                                    </ImageView>
+                                    <Label id="PLMText" layoutX="92.0" layoutY="22.0" prefHeight="19.0" prefWidth="356.0" stylesheets="@assets/css/styles.css" text="PAMANTASAN NG LUNGSOD NG MAYNILA  " textFill="#c0a23d">
+                                       <font>
+                                          <Font size="15.0" />
+                                       </font>
+                                    </Label>
+                                    <Label id="PLMTextEnglish" layoutX="92.0" layoutY="42.0" prefHeight="19.0" prefWidth="274.0" stylesheets="@assets/css/styles.css" text="UNIVERSITY OF THE CITY OF MANILA">
+                                       <font>
+                                          <Font size="13.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                              </Group>
+                              <Label fx:id="lblDateNow" alignment="CENTER_RIGHT" prefHeight="19.0" prefWidth="324.0" styleClass="lblDateNow" stylesheets="@assets/css/styles.css" text="Today is " textFill="#486548" GridPane.columnIndex="1">
+                                 <font>
+                                    <Font name="System Bold" size="15.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </GridPane>
+                        <Pane layoutX="-2.0" layoutY="117.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="19.0" prefWidth="1920.0" style="-fx-background-color: #fcbe27;" />
                      </children>
                   </AnchorPane>
                </top>
@@ -133,7 +154,7 @@
                         </BorderPane>
                         <Pane layoutX="1132.0" layoutY="176.0" prefHeight="463.0" prefWidth="478.0" styleClass="onPLMContainer" stylesheets="@assets/css/styles.css">
                            <children>
-                              <VBox alignment="CENTER" layoutX="12.0" layoutY="21.0" prefHeight="428.0" prefWidth="451.0">
+                              <VBox alignment="CENTER" layoutX="12.0" layoutY="21.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="428.0" prefWidth="451.0">
                                  <children>
                                     <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="70.0" prefWidth="323.0" style="-fx-font-weight: bold; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0.5, 0, 3.0);" text="ONPLM" textFill="WHITE">
                                        <font>

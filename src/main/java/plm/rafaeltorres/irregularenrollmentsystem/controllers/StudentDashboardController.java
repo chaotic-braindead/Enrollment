@@ -23,6 +23,7 @@ import plm.rafaeltorres.irregularenrollmentsystem.model.Student;
 import plm.rafaeltorres.irregularenrollmentsystem.model.User;
 import plm.rafaeltorres.irregularenrollmentsystem.utils.AlertMessage;
 import plm.rafaeltorres.irregularenrollmentsystem.utils.SceneSwitcher;
+import plm.rafaeltorres.irregularenrollmentsystem.utils.StringUtils;
 import plm.rafaeltorres.irregularenrollmentsystem.utils.TableViewUtils;
 
 import java.io.ByteArrayInputStream;
@@ -148,6 +149,13 @@ public class StudentDashboardController extends Controller {
         btnDashboard.setSelected(true);
         currentPane = dashboardContainer;
 
+        try{
+            Integer.parseInt(currentSem);
+            lblSemester.setText(StringUtils.integerToPlace(Integer.parseInt(currentSem)) + " Semester A.Y. " + currentSY);
+        }catch(NumberFormatException e){
+            lblSemester.setText("Summer Semester A.Y. " + currentSY);
+        }
+
         // display default image
         File f = new File(MainScene.class.getResource("assets/img/md-person-2.png").getPath());
         Image defaultImage = new Image(f.toURI().toString(), false);
@@ -163,7 +171,7 @@ public class StudentDashboardController extends Controller {
     public void setUser(User user){
         Student student = (Student) user;
         this.student = student;
-        if(student.getRegistrationStatus().toUpperCase().equals("REGULAR")) {
+        if(student.getRegistrationStatus().equalsIgnoreCase("REGULAR")) {
             btnEnroll.setDisable(true);
             btnSubmit.setVisible(false);
             btnRemove.setVisible(false);
