@@ -201,7 +201,7 @@
                                                                   <Font size="15.0" />
                                                                </font>
                                                             </Label>
-                                                            <Group fx:id="enrolledGroup" layoutX="53.0" layoutY="33.0">
+                                                            <Group fx:id="enrolledGroup" layoutX="53.0" layoutY="33.0" visible="false">
                                                                <children>
                                                                   <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="90.0" layoutY="5.0" text="Officially Enrolled" textAlignment="RIGHT" textFill="#227f19">
                                                                      <font>
@@ -211,15 +211,15 @@
                                                                   <FontIcon iconColor="#227f19" iconLiteral="mdal-check" iconSize="35" layoutX="40.0" layoutY="31.0" wrappingWidth="31.00006103515625" />
                                                                </children>
                                                             </Group>
-                                                            <Group fx:id="notEnrolledGroup" layoutX="109.0" layoutY="24.0" visible="false">
+                                                            <Group fx:id="notEnrolledGroup" layoutX="109.0" layoutY="24.0">
                                                                <children>
-                                                                  <Label layoutX="77.0" layoutY="8.0" prefHeight="22.0" prefWidth="109.0" text="Not Enrolled">
+                                                                  <Label layoutX="74.0" layoutY="8.0" prefHeight="22.0" prefWidth="109.0" text="Not Enrolled">
                                                                      <font>
                                                                         <Font size="16.0" />
                                                                      </font>
                                                                   </Label>
                                                                   <FontIcon iconLiteral="mdal-error" iconSize="35" layoutX="3.0" layoutY="42.0" />
-                                                                  <Label layoutX="71.0" layoutY="30.0" onMouseClicked="#onClickToEnrollMouseClicked" style="-fx-font-style: italic;" text="CLICK HERE TO ENROLL" textFill="#227f19" underline="true">
+                                                                  <Label layoutX="59.0" layoutY="30.0" onMouseClicked="#onClickToEnrollMouseClicked" style="-fx-font-style: italic;" text="CLICK HERE TO ENROLL" textFill="#227f19" underline="true">
                                                                      <font>
                                                                         <Font size="10.0" />
                                                                      </font>
@@ -246,10 +246,10 @@
                                                             </Button>
                                                          </children>
                                                       </Pane>
-                                                      <Pane disable="true" onMouseClicked="#btnDownloadOnMouseClicked" prefHeight="96.0" prefWidth="284.0" styleClass="dashboardPanes" stylesheets="@assets/css/styles.css">
+                                                      <Pane fx:id="btnDownloadSER" disable="true" onMouseClicked="#btnDownloadOnMouseClicked" prefHeight="96.0" prefWidth="284.0" styleClass="dashboardPanes" stylesheets="@assets/css/styles.css">
                                                          <children>
                                                             <FontIcon iconColor="#9c0000" iconLiteral="eli-download-alt" iconSize="40" layoutX="19.0" layoutY="66.0" />
-                                                            <Label layoutX="162.0" layoutY="10.0" text="Download SER" textFill="#227f19">
+                                                            <Label alignment="CENTER_RIGHT" layoutX="159.0" layoutY="10.0" prefHeight="21.0" prefWidth="109.0" text="Download SER" textAlignment="RIGHT" textFill="#227f19">
                                                                <font>
                                                                   <Font size="15.0" />
                                                                </font></Label>
@@ -405,9 +405,9 @@
                                     </BorderPane>
                                  </children>
                               </AnchorPane>
-                              <AnchorPane visible="false">
+                              <AnchorPane fx:id="enrollContainer" visible="false">
                                  <children>
-                                    <AnchorPane fx:id="enrollContainer" layoutX="28.0" layoutY="21.0" prefHeight="835.0" prefWidth="1742.0" styleClass="loginContainer" stylesheets="@assets/css/styles.css">
+                                    <AnchorPane layoutX="28.0" layoutY="21.0" prefHeight="835.0" prefWidth="1742.0" styleClass="loginContainer" stylesheets="@assets/css/styles.css">
                                        <children>
                                           <TableView fx:id="tblSubjects" layoutX="57.0" layoutY="54.0" onMouseClicked="#onTblSubjectsMouseClicked" prefHeight="694.0" prefWidth="1635.0">
                                             <columns>
@@ -415,7 +415,12 @@
                                               <TableColumn prefWidth="75.0" text="C2" />
                                             </columns>
                                           </TableView>
-                                          <Button fx:id="btnAdd" disable="true" layoutX="867.0" layoutY="778.0" mnemonicParsing="false" onAction="#onBtnAddAction" prefHeight="36.0" prefWidth="84.0" text="Add" />
+                                          <StackPane layoutX="867.0" layoutY="778.0">
+                                             <children>
+                                                <Button fx:id="btnAdd" disable="true" mnemonicParsing="false" onAction="#onBtnAddAction" prefHeight="36.0" prefWidth="84.0" text="Add" />
+                                                <Button fx:id="btnEnrollRegular" mnemonicParsing="false" onAction="#onBtnEnrollRegularAction" prefHeight="27.0" prefWidth="76.0" text="Enroll" />
+                                             </children>
+                                          </StackPane>
                                        </children>
                                     </AnchorPane>
                                  </children>

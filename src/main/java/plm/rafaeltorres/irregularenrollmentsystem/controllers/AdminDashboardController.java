@@ -210,14 +210,13 @@ public class AdminDashboardController extends Controller {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        currentSY = Maintenance.getInstance().getCurrentSY();
+        currentSem = Maintenance.getInstance().getCurrentSem();
         sideBar.selectedToggleProperty().addListener((obsVal, oldVal, newVal) -> {
             if (newVal == null)
                 oldVal.setSelected(true);
         });
-        if(!currentSem.equals("1"))
-            currentSY = (Integer.parseInt(DateTimeFormatter.ofPattern("yyyy").format(LocalDate.now()))-1) + "-" + DateTimeFormatter.ofPattern("yyyy").format(LocalDate.now());
-        else
-            currentSY = DateTimeFormatter.ofPattern("yyyy").format(LocalDate.now()) + "-" + (Integer.parseInt(DateTimeFormatter.ofPattern("yyyy").format(LocalDate.now()))+1);
+
         System.out.println(currentSY);
         conn = Database.connect();
         SimpleDateFormat formatter = new SimpleDateFormat("EEEEE, MMMMM dd, yyyy");
@@ -290,7 +289,7 @@ public class AdminDashboardController extends Controller {
     public void setUser(User user){
         Employee employee = (Employee) user;
         this.employee = employee;
-        lblWelcome.setText(employee.getFirstName());
+        lblWelcome.setText("Welcome, " + employee.getFirstName() + "!");
         lblFullName.setText(employee.getFirstName() + " " + employee.getLastName());
         lblFirstName.setText(employee.getFirstName());
         lblLastName.setText(employee.getLastName());
@@ -560,6 +559,7 @@ public class AdminDashboardController extends Controller {
         }
     }
 
+
     @FXML
     protected void onBtnEnrollStudentAction(Event event){
         Optional<ButtonType> confirmation = AlertMessage.showConfirmationAlert("Are you sure you want to enroll the student?");
@@ -580,7 +580,7 @@ public class AdminDashboardController extends Controller {
                 ps.executeUpdate();
             }
             AlertMessage.showInformationAlert( comboBoxStudentNo.getPromptText() + " was successfully enrolled");
-            ps = conn.prepareStatement("INSERT INTO ENROLLMENT VALUES(?, ?, ?)");
+            ps = conn.prepareStatement("INSERT INTO ENROLLMENT VALUES(?, ?, ?, 'Pending')");
             ps.setString(1, currentSY);
             ps.setString(2, currentSem);
             ps.setString(3, comboBoxStudentNo.getPromptText());
@@ -757,11 +757,11 @@ public class AdminDashboardController extends Controller {
                                 .validate(RegexValidator.forPattern("^[0-9]{4}-[0-9]{5}", "Must have a valid student number format (year-nnnnn) ex: 2022-00000")),
                         Field.ofStringType(student.last_nameProperty()).bind(student.last_nameProperty())
                                 .required("Student must have a last name.")
-                                .validate(RegexValidator.forPattern("^[A-Z]{1}[a-z]+( )?([A-Z]{1}[a-z]+)?", "Must have a valid name format ex: Dela Cruz"))
+                                .validate(RegexValidator.forPattern("^[A-Z]{1}([a-z]+)?( )?([A-Z]{1}[a-z]+)?", "Must have a valid name format ex: Dela Cruz"))
                                 .label("Last Name"),
                         Field.ofStringType(student.first_nameProperty()).bind(student.first_nameProperty())
                                 .required("Student must have a first name.")
-                                .validate(RegexValidator.forPattern("^[A-Z]{1}[a-z]+( )?([A-Z]{1}[a-z]+)?", "Must have a valid name format (uppercase start of name/s) ex: Juan"))
+                                .validate(RegexValidator.forPattern("^[A-Z]{1}([a-z]+)?( )?([A-Z]{1}[a-z]+)?", "Must have a valid name format (uppercase start of name/s) ex: Juan"))
                                 .label("First Name"),
                         gender,
                         Field.ofDate(LocalDate.now())
@@ -954,8 +954,10 @@ public class AdminDashboardController extends Controller {
             return;
         try{
             ObservableList<String> subjects = FXCollections.observableArrayList();
-            ps = conn.prepareStatement("select distinct subject_code from vwgradereport where block = ?");
+            ps = conn.prepareStatement("select distinct subject_code from student_schedule where block_no = ? and sy = ? and semester = ?");
             ps.setString(1, comboBoxYearBlock.getSelectionModel().getSelectedItem());
+            ps.setString(2, currentSY);
+            ps.setString(3, currentSem);
             rs = ps.executeQuery();
             while(rs.next()){
                 subjects.add(rs.getString(1));
@@ -1096,6 +1098,7 @@ public class AdminDashboardController extends Controller {
                     }
                     o.set(1, t.getNewValue());
                     currentSY = o.get(0);
+                    Maintenance.getInstance().setCurrentSY(currentSY);
                     for(int i = 0; i < tblManage.getItems().size(); ++i){
                         if(!tblManage.getItems().get(i).get(0).equals(currentSY))
                             tblManage.getItems().get(i).set(1, "Closed");
@@ -1166,6 +1169,8 @@ public class AdminDashboardController extends Controller {
                     }
                     o.set(1, t.getNewValue());
                     currentSem = o.get(0);
+                    Maintenance.getInstance().setCurrentSem(currentSem);
+
                     for(int i = 0; i < tblManage.getItems().size(); ++i){
                         if(!tblManage.getItems().get(i).get(0).equals(currentSem))
                             tblManage.getItems().get(i).set(1, "Closed");

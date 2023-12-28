@@ -21,10 +21,7 @@ import plm.rafaeltorres.irregularenrollmentsystem.db.Database;
 import plm.rafaeltorres.irregularenrollmentsystem.model.Schedule;
 import plm.rafaeltorres.irregularenrollmentsystem.model.Student;
 import plm.rafaeltorres.irregularenrollmentsystem.model.User;
-import plm.rafaeltorres.irregularenrollmentsystem.utils.AlertMessage;
-import plm.rafaeltorres.irregularenrollmentsystem.utils.SceneSwitcher;
-import plm.rafaeltorres.irregularenrollmentsystem.utils.StringUtils;
-import plm.rafaeltorres.irregularenrollmentsystem.utils.TableViewUtils;
+import plm.rafaeltorres.irregularenrollmentsystem.utils.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -134,11 +131,18 @@ public class StudentDashboardController extends Controller {
     private Circle imgDashboardContainer;
     @FXML
     private ToggleGroup sideBar;
+    @FXML
+    private Button btnEnrollRegular;
+    @FXML
+    private Pane btnDownloadSER;
 
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        currentSY = Maintenance.getInstance().getCurrentSY();
+        currentSem = Maintenance.getInstance().getCurrentSem();
+
         sideBar.selectedToggleProperty().addListener((obsVal, oldVal, newVal) -> {
             if (newVal == null)
                 oldVal.setSelected(true);
@@ -163,6 +167,8 @@ public class StudentDashboardController extends Controller {
         imgContainer.setFill(pattern);
         imgDashboardContainer.setFill(pattern);
 
+
+
         // set default text for empty tables
         tblSchedule.setPlaceholder(new Label("You currently have no subjects in your schedule. Please enroll now."));
         tblGrades.setPlaceholder(new Label("Select a valid school year and semester from the drop down boxes provided."));
@@ -172,35 +178,34 @@ public class StudentDashboardController extends Controller {
         Student student = (Student) user;
         this.student = student;
         if(student.getRegistrationStatus().equalsIgnoreCase("REGULAR")) {
-            btnEnroll.setDisable(true);
             btnSubmit.setVisible(false);
             btnRemove.setVisible(false);
+            btnSchedule.setDisable(true);
+            tblSubjects.setPlaceholder(new Label("Please wait for your department chairperson to assign your schedule."));
+        }
+        else{
+            btnSubmit.setVisible(true);
+            btnRemove.setVisible(true);
+            btnSchedule.setDisable(false);
+            tblSubjects.setPlaceholder(new Label("No schedules to display."));
         }
         try{
-            ps = conn.prepareStatement("select * from enrollment where student_no = ? and sy = ? and semester = ?");
+            ps = conn.prepareStatement("select * from enrollment where student_no = ? and sy = ? and semester = ? and status = 'Enrolled'");
             ps.setString(1, student.getStudentNo());
             ps.setString(2, currentSY);
             ps.setString(3, currentSem);
             rs = ps.executeQuery();
-            if(rs.next()){
-                notEnrolledGroup.setVisible(false);
-                enrolledGroup.setVisible(true);
-            }
-            else{
-                enrolledGroup.setVisible(false);
-                notEnrolledGroup.setVisible(true);
-            }
+            boolean res = rs.next();
+            btnSchedule.setDisable(!res);
+            btnEnroll.setDisable(res);
+            btnTuition.setDisable(!res);
+            notEnrolledGroup.setVisible(!res);
+            enrolledGroup.setVisible(res);
+            btnDownloadSER.setDisable(!res);
 
         }catch(Exception e){
-
+            AlertMessage.showErrorAlert("An error occurred while initializing the student dashboard controller: " + e);
         }
-//        if(student.getEnrollmentStatus().equals("NOT ENROLLED")){
-//            enrolledGroup.setVisible(false);
-//            notEnrolledGroup.setVisible(true);
-//        } else{
-//            notEnrolledGroup.setVisible(false);
-//            enrolledGroup.setVisible(true);
-//        }
         lblWelcome.setText("Welcome, "+student.getFirstName()+"!");
         lblStudentNo.setText(student.getStudentNo());
 
@@ -339,15 +344,68 @@ public class StudentDashboardController extends Controller {
         currentPane.setVisible(false);
         currentPane = dashboardContainer;
         currentPane.setVisible(true);
-        onBtnClick(event);
+        try{
+            ps = conn.prepareStatement("select * from enrollment where student_no = ? and sy = ? and semester = ? and status = 'Enrolled'");
+            ps.setString(1, student.getStudentNo());
+            ps.setString(2, currentSY);
+            ps.setString(3, currentSem);
+            rs = ps.executeQuery();
+            boolean res = rs.next();
+            btnSchedule.setDisable(!res);
+            btnEnroll.setDisable(res);
+            btnTuition.setDisable(!res);
+            notEnrolledGroup.setVisible(!res);
+            enrolledGroup.setVisible(res);
+            btnDownloadSER.setDisable(!res);
+
+        }catch(Exception e){
+            AlertMessage.showErrorAlert("An error occurred while initializing the student dashboard controller: " + e);
+        }
     }
     @FXML
     protected void onBtnEnrollAction(Event event) throws Exception{
         currentPane.setVisible(false);
         currentPane = enrollContainer;
         currentPane.setVisible(true);
-        onBtnClick(event);
-        displayAvailableScheds();
+        if(student.getRegistrationStatus().equals("Irregular")){
+            btnAdd.setVisible(true);
+            displayAvailableScheds();
+        }
+        else {
+            btnAdd.setVisible(false);
+            try {
+                ps = conn.prepareStatement("select v.subject_code, v.description, v.block, v.SCHEDULE, v.CREDITS, v.PROFESSOR from vwsubjectschedules v inner join student_schedule s on v.sy = s.sy and v.semester = s.semester and concat(v.course, v.year, v.block) = s.block_no and v.subject_code = s.subject_code "
+                     +  "where s.student_no = ? and v.sy = ? and v.semester = ?");
+                ps.setString(1, student.getStudentNo());
+                ps.setString(2, currentSY);
+                ps.setString(3, currentSem);
+                TableViewUtils.generateTableFromResultSet(tblSubjects, ps.executeQuery());
+            }catch(Exception e){
+                AlertMessage.showErrorAlert("An error occurred while displaying your subjects: " + e);
+            }
+        }
+
+    }
+
+    @FXML
+    protected void onBtnEnrollRegularAction(ActionEvent event){
+        try{
+            ps = conn.prepareStatement("UPDATE ENROLLMENT SET status = 'Enrolled' where sy = ? and semester = ? and student_no = ?");
+            ps.setString(1, currentSY);
+            ps.setString(2, currentSem);
+            ps.setString(3, student.getStudentNo());
+            ps.executeUpdate();
+            AlertMessage.showInformationAlert("You have been successfully enrolled! Click on 'Schedule' or 'Tuition' to view more details about your enrollment.");
+            btnDashboard.setSelected(true);
+            btnEnroll.setSelected(false);
+            btnEnroll.setDisable(true);
+            btnTuition.setDisable(false);
+            btnSchedule.setDisable(false);
+            btnDownloadSER.setDisable(false);
+            onBtnDashboardAction(event);
+        }catch(Exception e){
+            AlertMessage.showErrorAlert("An error occurred while processing your enrollment: " + e);
+        }
     }
     private void displaySched() {
         try{
@@ -381,7 +439,8 @@ public class StudentDashboardController extends Controller {
         currentPane.setVisible(false);
         currentPane = scheduleContainer;
         currentPane.setVisible(true);
-        onBtnClick(event);
+        tblSchedule.getItems().clear();
+        btnSchedule.setDisable(false);
         displaySched();
     }
     @FXML
@@ -418,16 +477,12 @@ public class StudentDashboardController extends Controller {
         currentPane.setVisible(false);
         currentPane = tuitionContainer;
         currentPane.setVisible(true);
-        onBtnClick(event);
     }
     @FXML
     protected void onBtnGradesAction(ActionEvent event) throws IllegalAccessException{
         currentPane.setVisible(false);
         currentPane = gradesContainer;
         currentPane.setVisible(true);
-        onBtnClick(event);
-
-
 
     }
     @FXML

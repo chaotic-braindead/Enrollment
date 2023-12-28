@@ -5,11 +5,15 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import plm.rafaeltorres.irregularenrollmentsystem.db.Database;
+import plm.rafaeltorres.irregularenrollmentsystem.utils.Maintenance;
 
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class MainScene extends Application {
+
     @Override
     public void start(Stage stage) throws IOException {
 //        Database.generatePassword();
