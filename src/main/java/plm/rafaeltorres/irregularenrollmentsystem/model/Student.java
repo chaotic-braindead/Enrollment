@@ -31,7 +31,7 @@ public class Student extends User {
     }
 
     public String getCollege() {
-        return course_code;
+        return college_code;
     }
 
     public String getAddress() {

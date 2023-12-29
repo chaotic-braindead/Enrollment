@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.Group?>
 <?import javafx.scene.control.Button?>
@@ -409,12 +408,7 @@
                                  <children>
                                     <AnchorPane layoutX="28.0" layoutY="21.0" prefHeight="835.0" prefWidth="1742.0" styleClass="loginContainer" stylesheets="@assets/css/styles.css">
                                        <children>
-                                          <TableView fx:id="tblSubjects" layoutX="57.0" layoutY="54.0" onMouseClicked="#onTblSubjectsMouseClicked" prefHeight="694.0" prefWidth="1635.0">
-                                            <columns>
-                                              <TableColumn prefWidth="75.0" text="C1" />
-                                              <TableColumn prefWidth="75.0" text="C2" />
-                                            </columns>
-                                          </TableView>
+                                          <TableView fx:id="tblSubjects" layoutX="57.0" layoutY="54.0" onMouseClicked="#onTblSubjectsMouseClicked" prefHeight="694.0" prefWidth="1635.0" />
                                           <StackPane layoutX="867.0" layoutY="778.0">
                                              <children>
                                                 <Button fx:id="btnAdd" disable="true" mnemonicParsing="false" onAction="#onBtnAddAction" prefHeight="36.0" prefWidth="84.0" text="Add" />
@@ -427,26 +421,23 @@
                               </AnchorPane>
                               <AnchorPane fx:id="scheduleContainer" prefHeight="200.0" prefWidth="200.0" visible="false">
                                  <children>
-                                    <VBox alignment="CENTER" layoutX="231.0" layoutY="85.0" prefHeight="598.0" prefWidth="1020.0" spacing="10.0" styleClass="solid-container" stylesheets="@assets/css/styles.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                    <AnchorPane layoutX="38.0" layoutY="29.0" prefHeight="827.0" prefWidth="1721.0" styleClass="loginContainer" stylesheets="@assets/css/styles.css" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="38.0" AnchorPane.rightAnchor="44.0" AnchorPane.topAnchor="29.0">
                                        <children>
-                                          <TableView fx:id="tblSchedule" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#onTblScheduleMouseClicked" prefHeight="501.0" prefWidth="980.0">
+                                          <HBox alignment="CENTER" prefHeight="47.0" prefWidth="1300.0" />
+                                          <TableView fx:id="tblSchedule" layoutX="170.0" layoutY="73.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#onTblScheduleMouseClicked" prefHeight="549.0" prefWidth="1308.0">
                                             <columns>
                                               <TableColumn prefWidth="75.0" text="C1" />
                                               <TableColumn prefWidth="75.0" text="C2" />
                                             </columns>
+                                             <columnResizePolicy>
+                                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                             </columnResizePolicy>
                                           </TableView>
-                                          <HBox alignment="CENTER" prefHeight="41.0" prefWidth="1081.0">
-                                             <children>
-                                                <Button fx:id="btnSubmit" mnemonicParsing="false" onAction="#onBtnSubmitAction" prefHeight="27.0" prefWidth="70.0" text="Submit">
-                                                   <HBox.margin>
-                                                      <Insets right="20.0" />
-                                                   </HBox.margin>
-                                                </Button>
-                                                <Button fx:id="btnRemove" alignment="CENTER" contentDisplay="CENTER" disable="true" mnemonicParsing="false" onAction="#onBtnRemoveAction" prefHeight="25.0" prefWidth="84.0" text="Remove" />
-                                             </children>
-                                          </HBox>
+                                          <Button fx:id="btnRemove" alignment="CENTER" contentDisplay="CENTER" disable="true" layoutX="876.0" layoutY="701.0" mnemonicParsing="false" onAction="#onBtnRemoveAction" prefHeight="25.0" prefWidth="84.0" text="Remove" />
+                                          <Button fx:id="btnSubmit" layoutX="791.0" layoutY="701.0" mnemonicParsing="false" onAction="#onBtnSubmitAction" prefHeight="27.0" prefWidth="70.0" text="Submit" />
+                                          <Label fx:id="lblTotalUnits" layoutX="832.0" layoutY="640.0" text="Total Units: 15" textFill="#9c0000" />
                                        </children>
-                                    </VBox>
+                                    </AnchorPane>
                                  </children>
                               </AnchorPane>
                               <AnchorPane fx:id="gradesContainer" prefHeight="551.0" prefWidth="1014.0" stylesheets="@assets/css/styles.css" visible="false">
@@ -460,6 +451,9 @@
                                                 <TableColumn minWidth="0.0" prefWidth="184.0" text="UNITS" />
                                                 <TableColumn minWidth="0.0" prefWidth="244.0" text="GRADE" />
                                             </columns>
+                                             <columnResizePolicy>
+                                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                             </columnResizePolicy>
                                           </TableView>
                                           <Label layoutX="119.0" layoutY="26.0" styleClass="titleText" stylesheets="@assets/css/styles.css" text="STUDENT GRADE REPORT" />
                                           <FontIcon iconColor="#9c0000" iconLiteral="mdal-list_alt" iconSize="50" layoutX="50.0" layoutY="76.0" />

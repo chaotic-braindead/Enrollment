@@ -195,6 +195,9 @@
                                                 <TableColumn minWidth="0.0" prefWidth="87.6666259765625" text="CREDITS" />
                                                 <TableColumn prefWidth="223.3333740234375" text="PROFESSOR" />
                                                           </columns>
+                                             <columnResizePolicy>
+                                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                             </columnResizePolicy>
                                                       </TableView>
                                           <Label fx:id="txtName" layoutX="138.0" layoutY="146.0" prefHeight="25.0" prefWidth="263.0" />
                                           <Label layoutX="25.0" layoutY="99.0" prefHeight="34.0" prefWidth="123.0" text="Student Number:" wrapText="true" />
@@ -208,11 +211,11 @@
                                           <ComboBox fx:id="comboBoxStudentNo" disable="true" layoutX="136.0" layoutY="104.0" prefHeight="25.0" prefWidth="265.0" promptText="Select a student number" />
                                           <HBox alignment="CENTER_RIGHT" layoutX="1366.0" layoutY="134.0" prefHeight="25.0" prefWidth="314.0" spacing="20.0">
                                              <children>
-                                                <Button fx:id="btnApprove" mnemonicParsing="false" text="Approve" visible="false" />
+                                                <Button fx:id="btnApprove" mnemonicParsing="false" onAction="#onBtnApproveAction" text="Approve" visible="false" />
                                                 <StackPane>
                                                    <children>
                                                       <Button fx:id="btnEnrollStudent" disable="true" mnemonicParsing="false" onAction="#onBtnEnrollStudentAction" text="Enroll" />
-                                                      <Button fx:id="btnDisapprove" mnemonicParsing="false" text="Disapprove" visible="false" />
+                                                      <Button fx:id="btnDisapprove" mnemonicParsing="false" onAction="#onBtnDisapproveAction" text="Disapprove" visible="false" />
                                                    </children>
                                                 </StackPane>
                                                 <Button fx:id="btnPrintPreview" disable="true" mnemonicParsing="false" text="Print Preview" />
@@ -225,11 +228,37 @@
                                                 <TableColumn prefWidth="162.0" text="COURSE" />
                                                 <TableColumn prefWidth="208.0" text="REGISTRATION STATUS" />
                                             </columns>
+                                             <columnResizePolicy>
+                                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                             </columnResizePolicy>
                                           </TableView>
                                           <ComboBox fx:id="comboBoxYear" layoutX="465.0" layoutY="20.0" onAction="#onComboBoxYearAction" prefWidth="150.0" promptText="Any" />
                                           <Label layoutX="426.0" layoutY="24.0" text="Year:" />
                                                   </children>
                                               </AnchorPane>
+                                 </children>
+                              </AnchorPane>
+                              <AnchorPane fx:id="studentRecordsContainer" prefHeight="200.0" prefWidth="200.0" visible="false">
+                                 <children>
+                                    <AnchorPane layoutX="14.0" layoutY="23.0" prefHeight="837.0" prefWidth="1719.0" styleClass="loginContainer" stylesheets="@assets/css/styles.css">
+                                       <children>
+                                          <TableView fx:id="tblStudentRecord" layoutX="47.0" layoutY="129.0" onMouseClicked="#onTblStudentRecordMouseClicked" prefHeight="661.0" prefWidth="743.0">
+                                            <columns>
+                                              <TableColumn prefWidth="75.0" text="C1" />
+                                              <TableColumn prefWidth="75.0" text="C2" />
+                                            </columns>
+                                          </TableView>
+                                          <TableView fx:id="tblStudentGradeRecord" editable="true" layoutX="832.0" layoutY="127.0" prefHeight="663.0" prefWidth="848.0">
+                                            <columns>
+                                              <TableColumn prefWidth="75.0" text="C1" />
+                                              <TableColumn prefWidth="75.0" text="C2" />
+                                            </columns>
+                                          </TableView>
+                                          <TextField fx:id="txtStudentRecordSearch" layoutX="47.0" layoutY="71.0" onKeyTyped="#onTxtStudentRecordSearchKeyTyped" prefHeight="27.0" prefWidth="305.0" promptText="Search for a student number or name" />
+                                          <ComboBox fx:id="choiceSYRecords" disable="true" layoutX="1413.0" layoutY="71.0" onAction="#onChoiceSYRecordsAction" prefHeight="27.0" prefWidth="178.0" promptText="Select a school year" />
+                                          <Button fx:id="btnLoadStudentRecord" disable="true" layoutX="1609.0" layoutY="71.0" mnemonicParsing="false" onAction="#onBtnLoadStudentRecordAction" text="Load" />
+                                       </children>
+                                    </AnchorPane>
                                  </children>
                               </AnchorPane>
                                         <AnchorPane fx:id="studentEntryContainer" prefHeight="551.0" prefWidth="1014.0" stylesheets="@assets/css/styles.css" visible="false">
@@ -249,6 +278,9 @@
                                               <TableColumn prefWidth="75.0" text="C1" />
                                               <TableColumn prefWidth="75.0" text="C2" />
                                             </columns>
+                                             <columnResizePolicy>
+                                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                             </columnResizePolicy>
                                           </TableView>
                                           <TextField fx:id="txtStudentSearch" layoutX="49.0" layoutY="94.0" onKeyTyped="#onTxtStudentSearchKeyTyped" prefHeight="25.0" prefWidth="400.0" promptText="Search for a student number or name" />
                                                     </children>
@@ -268,6 +300,9 @@
                                                 <TableColumn prefWidth="133.6666259765625" text="GRADE" />
                                                 <TableColumn prefWidth="231.66668701171875" text="REMARK" />
                                             </columns>
+                                             <columnResizePolicy>
+                                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                             </columnResizePolicy>
                                           </TableView>
                                           <ComboBox fx:id="comboBoxSubjectCode" disable="true" layoutX="472.0" layoutY="118.0" onAction="#onComboBoxSubjectCodeAction" prefHeight="25.0" prefWidth="172.0" promptText="Select subject code" />
                                           <ComboBox fx:id="comboBoxYearBlock" disable="true" layoutX="305.0" layoutY="116.0" onAction="#onComboBoxYearBlockAction" prefWidth="150.0" promptText="Select year/block" />
@@ -293,6 +328,9 @@
                                               <TableColumn prefWidth="75.0" text="C1" />
                                               <TableColumn prefWidth="75.0" text="C2" />
                                             </columns>
+                                             <columnResizePolicy>
+                                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                             </columnResizePolicy>
                                           </TableView>
                                           <Button fx:id="btnManageAdd" layoutX="751.0" layoutY="103.0" mnemonicParsing="false" text="Add" />
                                           <Button fx:id="btnManageDelete" disable="true" layoutX="839.0" layoutY="101.0" mnemonicParsing="false" text="Delete" />

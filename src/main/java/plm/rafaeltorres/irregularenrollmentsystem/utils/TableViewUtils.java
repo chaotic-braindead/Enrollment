@@ -21,6 +21,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Map;
+import java.util.Optional;
 
 public class TableViewUtils {
     public static void generateEditableTableFromResultSet(TableView tbl, ResultSet rs, String[] args, Runnable callback){
@@ -39,15 +40,34 @@ public class TableViewUtils {
                 col.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent>() {
                     @Override public void handle(TableColumn.CellEditEvent t) {
                         ObservableList<String> o = (ObservableList<String>) t.getRowValue();
-                        o.set(j, t.getNewValue().toString());
-                        System.out.println(o);
-
+                        Connection conn = Database.connect();
+                        PreparedStatement ps = null;
                         try{
-                            Connection conn = Database.connect();
-                            PreparedStatement ps = conn.prepareStatement("UPDATE " + args[0] + " SET " + rs.getMetaData().getColumnName(j+1) + " = ? "+ "WHERE "+ args[1] +" = ?");
+                            if(rs.getMetaData().getColumnName(j+1).equalsIgnoreCase("COURSE_CODE") && args[0].equalsIgnoreCase("STUDENT")){
+                                Optional<ButtonType> confirm = AlertMessage.showConfirmationAlert("Warning: Changing the course of the student will result in he/she being irregular. This action is irreversible. Do you wish to continue?");
+                                if(confirm.isEmpty() || (confirm.get().equals(ButtonType.NO))){
+                                    AlertMessage.showInformationAlert("Cancelled transaction.");
+                                    callback.run();
+                                    return;
+                                }
+                                try{
+                                    ps = conn.prepareStatement("insert into grade values (?, ?, ?, '00000', '', 5.00)");
+                                    ps.setString(1, Maintenance.getInstance().getCurrentSY());
+                                    ps.setString(2, Maintenance.getInstance().getCurrentSem());
+                                    ps.setString(3, o.get(0));
+                                    ps.executeUpdate();
+                                }catch(Exception e){
+                                    AlertMessage.showErrorAlert("An error occurred while shifting courses: " + e);
+                                }
+                            }
+                            o.set(j, t.getNewValue().toString());
+                            System.out.println(o);
+
+                            ps = conn.prepareStatement("UPDATE " + args[0] + " SET " + rs.getMetaData().getColumnName(j+1) + " = ? "+ "WHERE "+ args[1] +" = ?");
                             ps.setString(1, o.get(j));
                             ps.setString(2, o.get(0));
                             ps.executeUpdate();
+
                             if(rs.getMetaData().getColumnName(j+1).equalsIgnoreCase("STATUS") && !args[0].equalsIgnoreCase("STUDENT")){
                                 String query = "UPDATE " + args[0] + " SET DATE_CLOSED = '" + DateTimeFormatter.ISO_LOCAL_DATE.format(LocalDate.now()) + "' WHERE " + args[1] + " = ?";
                                 if(o.get(j).equalsIgnoreCase("A"))
@@ -74,6 +94,7 @@ public class TableViewUtils {
                     case "STUDENT NO":
                     case "DATE CLOSED":
                     case "EMPLOYEE ID":
+                    case "COLLEGE CODE":
                         break;
                     case "GENDER":
                         col.setCellFactory(
@@ -104,20 +125,24 @@ public class TableViewUtils {
                                 }
                         );
                         break;
-                    case "COLLEGE CODE":
-                    case "COLLEGE":
-                        ObservableList<String> comboBoxItems = FXCollections.observableArrayList(Database.fetch("SELECT COLLEGE_CODE FROM COLLEGE"));
-                        col.setCellFactory(
-                                new Callback<TableColumn, TableCell>() {
-                                    public TableCell call(TableColumn p) {
-                                        return new ComboBoxTableCell(new DefaultStringConverter(), comboBoxItems);
-                                    }
-                                }
-                        );
-                        break;
+//                    case "COLLEGE CODE":
+//                    case "COLLEGE":
+//                        if(args[0].equalsIgnoreCase("COLLEGE") || args[0].equalsIgnoreCase("COURSE"))
+//                            break;
+//                        ObservableList<String> comboBoxItems = FXCollections.observableArrayList(Database.fetch("SELECT COLLEGE_CODE FROM COLLEGE"));
+//                        col.setCellFactory(
+//                                new Callback<TableColumn, TableCell>() {
+//                                    public TableCell call(TableColumn p) {
+//                                        return new ComboBoxTableCell(new DefaultStringConverter(), comboBoxItems);
+//                                    }
+//                                }
+//                        );
+//                        break;
                     case "COURSE CODE":
                     case "COURSE":
-                        comboBoxItems = FXCollections.observableArrayList(Database.fetch("SELECT COURSE_CODE FROM COURSE"));
+                        if(args[0].equalsIgnoreCase("COLLEGE") || args[0].equalsIgnoreCase("COURSE"))
+                            break;
+                        ObservableList<String> comboBoxItems = FXCollections.observableArrayList(Database.fetch("SELECT COURSE_CODE FROM COURSE"));
                         col.setCellFactory(
                                 new Callback<TableColumn, TableCell>() {
                                     public TableCell call(TableColumn p) {
@@ -177,7 +202,6 @@ public class TableViewUtils {
 
             tbl.setRowFactory(tblView -> {
                 final TableRow<ObservableList<String>> r = new TableRow<>();
-
                 r.hoverProperty().addListener((observable) -> {
                     final ObservableList<String> current = r.getItem();
                     if (r.isHover() && current != null) {
@@ -425,10 +449,9 @@ public class TableViewUtils {
             if(total < tbl.getWidth()){
                 for(int i = 0; i < tbl.getColumns().size(); ++i){
                     TableColumn col = (TableColumn) tbl.getColumns().get(i);
-                    col.setPrefWidth(col.getPrefWidth() + (tbl.getWidth() - total) / tbl.getColumns().size());
+                    col.setPrefWidth(col.getPrefWidth() + ((tbl.getWidth() - total) / tbl.getColumns().size()));
                 }
             }
-
 
         }catch(Exception e){
             System.out.println(e);

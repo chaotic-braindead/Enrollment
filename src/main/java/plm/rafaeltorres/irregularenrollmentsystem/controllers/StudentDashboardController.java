@@ -33,10 +33,8 @@ import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Base64;
+import java.util.*;
 import java.util.Date;
-import java.util.Optional;
-import java.util.ResourceBundle;
 
 public class StudentDashboardController extends Controller {
     private String currentSY = "2023-2024";
@@ -108,7 +106,7 @@ public class StudentDashboardController extends Controller {
     @FXML
     private Pane gradesContainer;
     @FXML
-    private TableView tblGrades;
+    private TableView<ObservableList<String>> tblGrades;
     @FXML
     private ComboBox<String> choiceSY;
     @FXML
@@ -116,11 +114,11 @@ public class StudentDashboardController extends Controller {
     @FXML
     private Pane tuitionContainer;
     @FXML
-    private TableView tblSubjects;
+    private TableView<ObservableList<String>> tblSubjects;
     @FXML
     private Button btnAdd;
     @FXML
-    private TableView tblSchedule;
+    private TableView<ObservableList<String>> tblSchedule;
     @FXML
     private Button btnRemove;
     @FXML
@@ -135,6 +133,8 @@ public class StudentDashboardController extends Controller {
     private Button btnEnrollRegular;
     @FXML
     private Pane btnDownloadSER;
+    @FXML
+    private Label lblTotalUnits;
 
 
 
@@ -172,7 +172,6 @@ public class StudentDashboardController extends Controller {
         // set default text for empty tables
         tblSchedule.setPlaceholder(new Label("You currently have no subjects in your schedule. Please enroll now."));
         tblGrades.setPlaceholder(new Label("Select a valid school year and semester from the drop down boxes provided."));
-
     }
     public void setUser(User user){
         Student student = (Student) user;
@@ -188,20 +187,36 @@ public class StudentDashboardController extends Controller {
             btnRemove.setVisible(true);
             btnSchedule.setDisable(false);
             tblSubjects.setPlaceholder(new Label("No schedules to display."));
+
+            try{
+                ps = conn.prepareStatement("SELECT * FROM student_schedule where student_no = ? and sy = ? and semester = ?");
+                ps.setString(1, student.getStudentNo());
+                ps.setString(2, currentSY);
+                ps.setString(3, currentSem);
+                rs = ps.executeQuery();
+                btnSchedule.setDisable(!rs.next());
+                System.out.println(btnSchedule.isDisabled());
+            }catch(Exception e){
+                System.out.println(e);
+            }
         }
         try{
-            ps = conn.prepareStatement("select * from enrollment where student_no = ? and sy = ? and semester = ? and status = 'Enrolled'");
+            ps = conn.prepareStatement("select status from enrollment where student_no = ? and sy = ? and semester = ?");
             ps.setString(1, student.getStudentNo());
             ps.setString(2, currentSY);
             ps.setString(3, currentSem);
             rs = ps.executeQuery();
             boolean res = rs.next();
-            btnSchedule.setDisable(!res);
-            btnEnroll.setDisable(res);
-            btnTuition.setDisable(!res);
-            notEnrolledGroup.setVisible(!res);
-            enrolledGroup.setVisible(res);
-            btnDownloadSER.setDisable(!res);
+            String status = "";
+            if(res)
+                status = rs.getString(1);
+
+            btnTuition.setDisable(status.equalsIgnoreCase("PENDING"));
+            btnEnroll.setDisable(status.equalsIgnoreCase("ENROLLED"));
+            btnSchedule.setDisable(status.equalsIgnoreCase("PENDING"));
+            notEnrolledGroup.setVisible(status.equalsIgnoreCase("PENDING"));
+            enrolledGroup.setVisible(status.equalsIgnoreCase("ENROLLED"));
+            btnDownloadSER.setDisable(!status.equalsIgnoreCase("ENROLLED"));
 
         }catch(Exception e){
             AlertMessage.showErrorAlert("An error occurred while initializing the student dashboard controller: " + e);
@@ -226,6 +241,7 @@ public class StudentDashboardController extends Controller {
         lblStudentNoDash.setText(student.getStudentNo());
         lblCollege.setText(student.getCollege());
         lblCourse.setText(student.getCourse());
+
         lblYear.setText(String.valueOf(1+Integer.parseInt(currentSY.substring(0, 4))-Integer.parseInt(student.getStudentNo().substring(0, 4))));
         lblRegistrationStatus.setText(student.getRegistrationStatus());
 
@@ -303,35 +319,70 @@ public class StudentDashboardController extends Controller {
     }
 
     private void displayAvailableScheds() {
+        try{
+            ps = conn.prepareStatement("SELECT * FROM ENROLLMENT WHERE STUDENT_NO = ? AND SY = ? AND SEMESTER = ? AND STATUS = 'Pending'");
+            ps.setString(1, student.getStudentNo());
+            ps.setString(2, currentSY);
+            ps.setString(3, currentSem);
+            rs = ps.executeQuery();
+            if(rs.next()){
+                tblSubjects.getItems().clear();
+                AlertMessage.showInformationAlert("Please wait for your department chairperson to approve your schedule.");
+                return;
+            }
+        }catch (Exception e) {
+            AlertMessage.showErrorAlert("An error occurred while displaying your subjects: " + e);
+        }
 
         try{
-            ps = conn.prepareStatement("select sc.subject_code, su.description, sc.section, sc.time_slot, sc.room, su.units, sc.total_students from schedule sc" +
-                    " inner join subject su on sc.subject_code = su.SUBJECT_CODE" +
-                    " where" +
-                    "((su.semester in(?, 'Any')) and sc.SY = ?)" +
-                    "and" +
-                    "(" +
-                    "    sc.subject_code in (" +
-                    "    select p.subject_code" +
-                    "     from prerequisite p" +
-                    "       where prerequisite_code in" +
-                    "            (select subject_code" +
-                    "             from vwgradereport" +
-                    "             where student_number = ?" +
-                    "               and COURSE_GRADE <> '5.00')" +
-                    "         and subject_code not in" +
-                    "            (select subject_code from studentschedule where student_no = ?)" +
-                    "     )" +
-                    "    or (sc.subject_code not in(select subject_code from prerequisite)" +
-                    "        and sc.subject_code not in(select subject_code from grade where student_no = ?))" +
-                    "        and sc.subject_code not in (select subject_code from studentschedule where student_no = ?)" +
+            ps = conn.prepareStatement("select subject_code, course, year, block, description, schedule, credits, professor from vwsubjectschedules " +
+                    "where (sy = ? and semester = ? and course = ?) and subject_code not in (select subject_code from student_schedule where student_no = ?)" +
+                    "and( " +
+                    "( " +
+                    "    subject_code not in " +
+                    "    ( " +
+                    "        select distinct s.subject_code from subject_schedule s inner join " +
+                    "        ( " +
+                    "            select g.subject_code from grade g " +
+                    "            where g.STUDENT_NO = ? and grade <> 5.00 and g.subject_code <> '00000' " +
+                    "        ) a on s.SUBJECT_CODE = a.SUBJECT_CODE " +
+                    "    ) " +
+                    "    and subject_code in " +
+                    "    ( " +
+                    "        select subject_code from grade where student_no = ? " +
+                    "    ) " +
+                    ") " +
+                    "or " +
+                    "( " +
+                    "        subject_code not in " +
+                    "            (select subject_code from grade where student_no = ?) " +
+                    "        and " +
+                    "        ( " +
+                    "            subject_code in " +
+                    "            ( " +
+                    "                select p.subject_code " +
+                    "                from grade g " +
+                    "                inner join prerequisite p on g.SUBJECT_CODE = p.prerequisite_code " +
+                    "                inner join subject s on p.subject_code = s.subject_code " +
+                    "                where student_no = ? " +
+                    "                and g.subject_code <> '00000' " +
+                    "                and p.course_code = ? " +
+                    "                and g.grade <> 5.00 " +
+                    "            ) " +
+                    "            or (subject_code not in (select subject_code from prerequisite) and year = ?) " +
+                    "        ) " +
+                    "    ) " +
                     ")");
-            ps.setString(1, currentSem);
-            ps.setString(2, currentSY);
-            ps.setString(3, student.getStudentNo());
+            ps.setString(1, currentSY);
+            ps.setString(2, currentSem);
+            ps.setString(3, student.getCourse().replace("BS", ""));
             ps.setString(4, student.getStudentNo());
             ps.setString(5, student.getStudentNo());
             ps.setString(6, student.getStudentNo());
+            ps.setString(7, student.getStudentNo());
+            ps.setString(8, student.getStudentNo());
+            ps.setString(9, student.getCourse());
+            ps.setString(10, String.valueOf(1+Integer.parseInt(currentSY.substring(0, 4))-Integer.parseInt(student.getStudentNo().substring(0, 4))));
             rs = ps.executeQuery();
             TableViewUtils.generateTableFromResultSet(tblSubjects, rs);
         }catch (Exception e){
@@ -369,10 +420,12 @@ public class StudentDashboardController extends Controller {
         currentPane.setVisible(true);
         if(student.getRegistrationStatus().equals("Irregular")){
             btnAdd.setVisible(true);
+            btnEnrollRegular.setVisible(false);
             displayAvailableScheds();
         }
         else {
             btnAdd.setVisible(false);
+            btnEnrollRegular.setVisible(true);
             try {
                 ps = conn.prepareStatement("select v.subject_code, v.description, v.block, v.SCHEDULE, v.CREDITS, v.PROFESSOR from vwsubjectschedules v inner join student_schedule s on v.sy = s.sy and v.semester = s.semester and concat(v.course, v.year, v.block) = s.block_no and v.subject_code = s.subject_code "
                      +  "where s.student_no = ? and v.sy = ? and v.semester = ?");
@@ -408,8 +461,29 @@ public class StudentDashboardController extends Controller {
         }
     }
     private void displaySched() {
+        lblTotalUnits.setText("");
+        if(student.getRegistrationStatus().equalsIgnoreCase("IRREGULAR")){
+            try{
+                ps = conn.prepareStatement("SELECT status from enrollment where student_no = ? and sy = ? and semester = ?");
+                ps.setString(1, student.getStudentNo());
+                ps.setString(2, currentSY);
+                ps.setString(3, currentSem);
+
+                rs = ps.executeQuery();
+                rs.next();
+                if(rs.getString(1).equalsIgnoreCase("PENDING")){
+                    AlertMessage.showInformationAlert("Please wait for your schedule to be approved.");
+                    return;
+                }
+                else if(rs.getString(1).equalsIgnoreCase("ENROLLED")){
+                    btnSubmit.setVisible(false);
+                    btnRemove.setVisible(false);
+                }
+            }catch(Exception e){
+                System.out.println(e);
+            }
+        }
         try{
-            System.out.println("here");
             ps = conn.prepareStatement("select " +
                     "v.subject_code, " +
                     "v.description, " +
@@ -429,6 +503,12 @@ public class StudentDashboardController extends Controller {
             rs = ps.executeQuery();
             TableViewUtils.generateTableFromResultSet(tblSchedule, rs);
 
+            int totalUnits = 0;
+            for(ObservableList<String> item : tblSchedule.getItems()){
+                totalUnits += Integer.parseInt(item.get(4));
+            }
+            lblTotalUnits.setText("Total Units: "+totalUnits);
+
         }catch (Exception e) {
             System.out.println(e);
             AlertMessage.showErrorAlert("An error has occured while displaying your schedule: "+e.toString());
@@ -440,7 +520,6 @@ public class StudentDashboardController extends Controller {
         currentPane = scheduleContainer;
         currentPane.setVisible(true);
         tblSchedule.getItems().clear();
-        btnSchedule.setDisable(false);
         displaySched();
     }
     @FXML
@@ -450,6 +529,49 @@ public class StudentDashboardController extends Controller {
 
     @FXML
     protected void onBtnSubmitAction(ActionEvent event) {
+        // schedule validation
+        int totalUnits = 0;
+
+        Map<String, String> map = new HashMap<>();
+        List<String> l = new ArrayList<>();
+
+        for(ObservableList<String> item : tblSchedule.getItems()){
+            totalUnits += Integer.parseInt(item.get(4));
+            l.add(item.get(0));
+            if(item.get(1).contains("(lab)"))
+                map.put(item.get(0), item.get(0).replace(".1", ""));
+            if(item.get(1).contains("(lec)"))
+                map.put(item.get(0).replace(".1", ""), item.get(0)+".1");
+        }
+        for(ObservableList<String> item : tblSchedule.getItems()){
+            if(map.containsKey(item.get(0)) && !l.contains(map.get(item.get(0)))){
+                AlertMessage.showErrorAlert("You are required to take the respective laboratory/lecture class for " + item.get(0));
+                return;
+            }
+        }
+
+        if(totalUnits < 15){
+            AlertMessage.showErrorAlert("You must have a minimum of 15 units to enroll. Please add more subjects to your schedule.");
+            return;
+        }
+
+        Optional<ButtonType> confirm = AlertMessage.showConfirmationAlert("You won't be able to add/remove subjects once you have submitted your schedule for approval. Do you wish to proceed?");
+        if(confirm.isEmpty() || confirm.get().equals(ButtonType.NO)){
+            AlertMessage.showInformationAlert("Cancelled submission.");
+            return;
+        }
+        try{
+            ps = conn.prepareStatement("insert into enrollment values(?, ?, ?, 'Pending')");
+            ps.setString(1, currentSY);
+            ps.setString(2, currentSem);
+            ps.setString(3, student.getStudentNo());
+            ps.executeUpdate();
+            AlertMessage.showInformationAlert("Successfully submitted your schedule for approval. Please wait for your chairperson to approve your schcedule.");
+            btnDashboard.fire();
+
+        }catch(Exception e){
+            AlertMessage.showErrorAlert("An error occurred while processing your schedule:\n"+e);
+        }
 
     }
     @FXML
@@ -459,9 +581,11 @@ public class StudentDashboardController extends Controller {
         if(confirm.isEmpty() || confirm.get() == ButtonType.NO)
             return;
         try{
-            ps = conn.prepareStatement("delete from studentschedule where student_no = ? and subject_code = ?");
-            ps.setString(1, student.getStudentNo());
-            ps.setString(2, sched.getSubjectCode());
+            ps = conn.prepareStatement("delete from student_schedule where sy = ? and semester = ? and student_no = ? and subject_code = ?");
+            ps.setString(1, currentSY);
+            ps.setString(2, currentSem);
+            ps.setString(3, student.getStudentNo());
+            ps.setString(4, sched.getSubjectCode());
             ps.executeUpdate();
             tblSchedule.getItems().clear();
             tblSchedule.getColumns().clear();
@@ -497,15 +621,19 @@ public class StudentDashboardController extends Controller {
             return;
 
         try{
-            ps = conn.prepareStatement("INSERT INTO STUDENTSCHEDULE VALUES(?, ?, ?, ?)");
+            ps = conn.prepareStatement("INSERT INTO STUDENT_SCHEDULE VALUES(?, ?, ?, ?, ?, ?)");
             ps.setString(1, currentSY);
-            ps.setString(2, student.getStudentNo());
-            ps.setString(3, sched.getSubjectCode());
-            ps.setString(4, sched.getSection());
+            ps.setString(2, currentSem);
+            ps.setString(3, student.getStudentNo());
+            ps.setString(4, sched.getSubjectCode());
+            ps.setString(5, student.getCollege());
+            ps.setString(6, sched.getBlock());
+
             ps.executeUpdate();
             tblSubjects.getItems().clear();
             tblSubjects.getColumns().clear();
             displayAvailableScheds();
+            btnSchedule.setDisable(false);
             AlertMessage.showInformationAlert("Successfully added "+sched.getSubjectCode());
         } catch(Exception e){
             System.out.println(e);
