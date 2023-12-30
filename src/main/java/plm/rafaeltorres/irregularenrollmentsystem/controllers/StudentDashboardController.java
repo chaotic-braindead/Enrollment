@@ -172,6 +172,8 @@ public class StudentDashboardController extends Controller {
         // set default text for empty tables
         tblSchedule.setPlaceholder(new Label("You currently have no subjects in your schedule. Please enroll now."));
         tblGrades.setPlaceholder(new Label("Select a valid school year and semester from the drop down boxes provided."));
+
+
     }
     public void setUser(User user){
         Student student = (Student) user;
@@ -211,10 +213,15 @@ public class StudentDashboardController extends Controller {
             if(res)
                 status = rs.getString(1);
 
-            btnTuition.setDisable(status.equalsIgnoreCase("PENDING"));
+            if(status.equalsIgnoreCase("DECLINED")){
+                AlertMessage.showInformationAlert("Your schedule was not approved by the chairperson. Please submit a new schedule.");
+            }
+
+
+            btnTuition.setDisable(!status.equalsIgnoreCase("ENROLLED"));
             btnEnroll.setDisable(status.equalsIgnoreCase("ENROLLED"));
-            btnSchedule.setDisable(status.equalsIgnoreCase("PENDING"));
-            notEnrolledGroup.setVisible(status.equalsIgnoreCase("PENDING"));
+            btnSchedule.setDisable(status.isEmpty() || status.equalsIgnoreCase("PENDING"));
+            notEnrolledGroup.setVisible(!status.equalsIgnoreCase("ENROLLED"));
             enrolledGroup.setVisible(status.equalsIgnoreCase("ENROLLED"));
             btnDownloadSER.setDisable(!status.equalsIgnoreCase("ENROLLED"));
 
@@ -248,7 +255,7 @@ public class StudentDashboardController extends Controller {
 
         // initialize grade comboboxes
         try{
-            ps = conn.prepareStatement("SELECT DISTINCT SY FROM GRADE WHERE STUDENT_NO = ?");
+            ps = conn.prepareStatement("SELECT DISTINCT SY FROM GRADE WHERE STUDENT_NO = ? and subject_code <> '00000'");
             ps.setString(1, student.getStudentNo());
             rs = ps.executeQuery();
             ObservableList<String> sy = FXCollections.observableArrayList();
@@ -336,7 +343,7 @@ public class StudentDashboardController extends Controller {
 
         try{
             ps = conn.prepareStatement("select subject_code, course, year, block, description, schedule, credits, professor from vwsubjectschedules " +
-                    "where (sy = ? and semester = ? and course = ?) and subject_code not in (select subject_code from student_schedule where student_no = ?)" +
+                    "where (sy = ? and semester = ? and course = ?) and subject_code not in (select subject_code from student_schedule where student_no = ? and sy = ? and semester = ?) " +
                     "and( " +
                     "( " +
                     "    subject_code not in " +
@@ -377,12 +384,14 @@ public class StudentDashboardController extends Controller {
             ps.setString(2, currentSem);
             ps.setString(3, student.getCourse().replace("BS", ""));
             ps.setString(4, student.getStudentNo());
-            ps.setString(5, student.getStudentNo());
-            ps.setString(6, student.getStudentNo());
+            ps.setString(5, currentSY);
+            ps.setString(6, currentSem);
             ps.setString(7, student.getStudentNo());
             ps.setString(8, student.getStudentNo());
-            ps.setString(9, student.getCourse());
-            ps.setString(10, String.valueOf(1+Integer.parseInt(currentSY.substring(0, 4))-Integer.parseInt(student.getStudentNo().substring(0, 4))));
+            ps.setString(9, student.getStudentNo());
+            ps.setString(10, student.getStudentNo());
+            ps.setString(11, student.getCourse());
+            ps.setString(12, String.valueOf(1+Integer.parseInt(currentSY.substring(0, 4))-Integer.parseInt(student.getStudentNo().substring(0, 4))));
             rs = ps.executeQuery();
             TableViewUtils.generateTableFromResultSet(tblSubjects, rs);
         }catch (Exception e){
@@ -418,6 +427,7 @@ public class StudentDashboardController extends Controller {
         currentPane.setVisible(false);
         currentPane = enrollContainer;
         currentPane.setVisible(true);
+
         if(student.getRegistrationStatus().equals("Irregular")){
             btnAdd.setVisible(true);
             btnEnrollRegular.setVisible(false);
@@ -561,7 +571,7 @@ public class StudentDashboardController extends Controller {
             return;
         }
         try{
-            ps = conn.prepareStatement("insert into enrollment values(?, ?, ?, 'Pending')");
+            ps = conn.prepareStatement("replace into enrollment values(?, ?, ?, 'Pending')");
             ps.setString(1, currentSY);
             ps.setString(2, currentSem);
             ps.setString(3, student.getStudentNo());
@@ -659,8 +669,10 @@ public class StudentDashboardController extends Controller {
                 ps.setString(2, choiceSY.getSelectionModel().getSelectedItem());
                 ps.setString(3, semester);
                 rs = ps.executeQuery();
-                if(rs.getRow() == 0)
-                    tblSubjects.getItems().clear();
+                if(rs.getRow() == 0){
+                    tblGrades.getItems().clear();
+                    tblGrades.setPlaceholder(new Label("Select a valid semester."));
+                }
 
                 TableViewUtils.generateTableFromResultSet(tblGrades, rs);
 
@@ -700,9 +712,10 @@ public class StudentDashboardController extends Controller {
             ps.setString(2, choiceSY.getSelectionModel().getSelectedItem());
             ps.setString(3, semester);
             rs = ps.executeQuery();
-            if(rs.getRow() == 0)
-                tblSubjects.getItems().clear();
-
+            if(rs.getRow() == 0){
+                tblGrades.getItems().clear();
+                tblGrades.setPlaceholder(new Label("No grades yet for this SY/Sem"));
+            }
             TableViewUtils.generateTableFromResultSet(tblGrades, rs);
 
         }catch(Exception e){

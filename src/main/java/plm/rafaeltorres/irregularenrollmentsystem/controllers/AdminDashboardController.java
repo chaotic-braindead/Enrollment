@@ -33,6 +33,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.converter.DefaultStringConverter;
@@ -64,6 +65,7 @@ public class AdminDashboardController extends Controller {
     private Employee employee;
     private String currentSY = "2023-2024";
     private String currentSem = "1";
+    private ObservableList<String> selectedInTable;
     private Pane currentPane;
     @FXML
     private Label lblDateNow;
@@ -217,6 +219,65 @@ public class AdminDashboardController extends Controller {
     private Button btnLoadStudentRecord;
     @FXML
     private TextField txtStudentRecordSearch;
+    @FXML
+    private Pane scheduleContainer;
+    @FXML
+    private TableView<ObservableList<String>> tblSubjectScheduling;
+    @FXML
+    private ToggleButton btnSubjectSchedule;
+    @FXML
+    private TextField txtSchoolYearSchedule;
+    @FXML
+    private TextField txtSemesterSchedule;
+    @FXML
+    private ComboBox<String> comboBoxCollegeSchedule;
+    @FXML
+    private ComboBox<String> comboBoxSubjectSchedule;
+    @FXML
+    private TextArea txtAreaDescription;
+    @FXML
+    private ComboBox<String> comboBoxCourseSchedule;
+    @FXML
+    private ComboBox<String> comboBoxYearSchedule;
+    @FXML
+    private ComboBox<String> comboBoxBlockSchedule;
+    @FXML
+    private TextField txtBlockSched;
+    @FXML
+    private TextField txtTime;
+    @FXML
+    private TextField txtRoom;
+    @FXML
+    private CheckBox checkBoxSunday;
+    @FXML
+    private CheckBox checkBoxMonday;
+    @FXML
+    private CheckBox checkBoxTuesday;
+    @FXML
+    private CheckBox checkBoxWednesday;
+    @FXML
+    private CheckBox checkBoxThursday;
+    @FXML
+    private CheckBox checkBoxFriday;
+    @FXML
+    private CheckBox checkBoxSaturday;
+    @FXML
+    private ComboBox<String> comboBoxMode;
+    @FXML
+    private ComboBox<String> comboBoxFaculty;
+    @FXML
+    private TextField txtNameProf;
+    @FXML
+    private Button btnAddSchedule;
+    @FXML
+    private Button btnUpdateSchedule;
+    @FXML
+    private Button btnRemoveSchedule;
+    @FXML
+    private Button btnClearSchedule;
+    @FXML
+    private Button btnGo;
+
 
 
     @Override
@@ -257,17 +318,31 @@ public class AdminDashboardController extends Controller {
             lblSemester.setText("Summer Semester A.Y. " + currentSY);
         }
 
+        txtSchoolYearSchedule.setText(currentSY);
+        txtSemesterSchedule.setText(currentSem);
+
+        comboBoxYearSchedule.setItems(FXCollections.observableArrayList("1", "2", "3", "4", "5"));
+        comboBoxBlockSchedule.setItems(FXCollections.observableArrayList("1", "2", "3", "4"));
+        comboBoxMode.setItems(FXCollections.observableArrayList("F2F", "OL"));
+
         try{
-            ps = conn.prepareStatement("SELECT count(*) FROM STUDENT");
+            ps = conn.prepareStatement("SELECT employee_id from employee");
             rs = ps.executeQuery();
-            rs.next();
-            int total = rs.getInt(1);
+            while(rs.next()){
+                comboBoxFaculty.getItems().add(rs.getString(1));
+            }
+        }catch(Exception e){
+            System.out.println(e);
+        }
+
+
+        try{
             ps = conn.prepareStatement("SELECT count(*) FROM ENROLLMENT WHERE status = 'Enrolled' and sy = ? and semester = ?");
             ps.setString(1, currentSY);
             ps.setString(2, currentSem);
             rs = ps.executeQuery();
             rs.next();
-            lblTotalStudents.setText(rs.getInt(1) + "/" + total + " Enrolled");
+            lblTotalStudents.setText(rs.getInt(1) + " Enrolled Students");
 
         }catch(Exception e){
             AlertMessage.showErrorAlert("There was an error while initializing the dashboard: " + e);
@@ -280,21 +355,31 @@ public class AdminDashboardController extends Controller {
             while(rs.next()){
                 comboBoxCollege.getItems().add(rs.getString(1));
                 comboBoxCollegeGrade.getItems().add(rs.getString(1));
+                comboBoxCollegeSchedule.getItems().add(rs.getString(1));
             }
 
             ps = conn.prepareStatement("SELECT course_code from course");
             rs = ps.executeQuery();
             while(rs.next()){
                 comboBoxCourse.getItems().add(rs.getString(1));
+                comboBoxCourseSchedule.getItems().add(rs.getString(1).replace("BS", ""));
             }
 
             comboBoxYear.setItems(FXCollections.observableArrayList("Any", "1", "2", "3", "4", "5"));
             comboBoxYear.getSelectionModel().selectFirst();
 
+            ps = conn.prepareStatement("SELECT subject_code from subject where subject_code <> '00000'");
+            rs = ps.executeQuery();
+            while(rs.next()){
+                comboBoxSubjectSchedule.getItems().add(rs.getString(1));
+            }
 
         }catch (Exception e){
             System.out.println(e);
         }
+
+
+
     }
 
     public void setUser(User user){
@@ -496,6 +581,11 @@ public class AdminDashboardController extends Controller {
     @FXML
     protected void onTblEnrolleesMouseClicked(MouseEvent event){
         ObservableList<String> o = (ObservableList<String>) tblEnrollees.getSelectionModel().getSelectedItem();
+
+        if(o.equals(selectedInTable)){
+            o = null;
+            selectedInTable = null;
+        }
         String registrationStatus = (!btnApprove.isVisible()) ? "REGULAR" : "IRREGULAR";
 
         if(o == null) {
@@ -519,7 +609,7 @@ public class AdminDashboardController extends Controller {
         }
 
         for(int i = 0; i < tblEnrollees.getColumns().size(); ++i){
-            TableColumn item = (TableColumn) tblEnrollees.getColumns().get(i);
+            TableColumn item = tblEnrollees.getColumns().get(i);
             if(item.getText().equals("COURSE CODE"))
                 comboBoxCourse.getSelectionModel().select(o.get(i));
             if(item.getText().equals("STUDENT NO"))
@@ -535,6 +625,7 @@ public class AdminDashboardController extends Controller {
             rs.beforeFirst();
             TableViewUtils.generateTableFromResultSet(tblEnrollees, rs);
             tblEnrollees.getSelectionModel().select(0);
+            selectedInTable = tblEnrollees.getSelectionModel().getSelectedItem();
             if(comboBoxBlock.getSelectionModel().getSelectedItem() != null){
                 onComboBoxBlockAction(event);
             };
@@ -654,8 +745,12 @@ public class AdminDashboardController extends Controller {
         comboBoxCourse.setPromptText("Filter students by course");
         comboBoxStudentNo.setPromptText("");
         String registrationStatus = (!btnApprove.isVisible()) ? "REGULAR" : "IRREGULAR";
+        String query = "SELECT STUDENT_No, concat(LASTNAME, ', ', FIRSTNAME) as NAME, COURSE_CODE, REGISTRATION_STATUS FROM VWSTUDENTINFO WHERE REGISTRATION_STATUS = ? and student_no not in(select student_no from enrollment where SY = ? and semester = ? and status in ('Enrolled', 'Pending'))";
+        if(registrationStatus.equalsIgnoreCase("IRREGULAR")){
+            query = "SELECT STUDENT_No, concat(LASTNAME, ', ', FIRSTNAME) as NAME, COURSE_CODE, REGISTRATION_STATUS FROM VWSTUDENTINFO WHERE REGISTRATION_STATUS = ? and student_no in(select student_no from enrollment where SY = ? and semester = ? and status = 'Pending')";
+        }
         try{
-            ps = conn.prepareStatement("SELECT STUDENT_No, concat(LASTNAME, ', ', FIRSTNAME) as NAME, COURSE_CODE, REGISTRATION_STATUS FROM VWSTUDENTINFO WHERE REGISTRATION_STATUS = ? and student_no not in(select student_no from enrollment where SY = ? and semester = ? and status = 'Enrolled')");
+            ps = conn.prepareStatement(query);
             ps.setString(1, registrationStatus);
             ps.setString(2, currentSY);
             ps.setString(3, currentSem);
@@ -677,12 +772,18 @@ public class AdminDashboardController extends Controller {
         btnEnrollStudent.setVisible(false);
         comboBoxBlock.setVisible(false);
         tblSubjects.getItems().clear();
+        tblSubjects.setPlaceholder(new Label("Select a student."));
         onEnroll(event);
 
 
     }
     @FXML
     protected void onBtnApproveAction(ActionEvent event) {
+        Optional<ButtonType> confirm = AlertMessage.showConfirmationAlert("Are you sure you want to approve the student's schedule?");
+        if(confirm.isEmpty() || confirm.get() == ButtonType.NO){
+            AlertMessage.showInformationAlert("Cancelled approval.");
+            return;
+        }
         try{
             ps = conn.prepareStatement("UPDATE ENROLLMENT SET STATUS = 'Enrolled' WHERE STUDENT_NO = ? AND SY = ? AND SEMESTER = ?");
             ps.setString(1, comboBoxStudentNo.getPromptText());
@@ -698,11 +799,26 @@ public class AdminDashboardController extends Controller {
     @FXML
     protected void onBtnDisapproveAction(ActionEvent event){
         try{
-            ps = conn.prepareStatement("DELETE FROM ENROLLMENT WHERE SY = ? AND SEMESTER = ? AND STUDENT_NO = ?");
+            Optional<ButtonType> confirm = AlertMessage.showConfirmationAlert("Are you sure you want to disapprove the student's schedule?");
+            if(confirm.isEmpty() || confirm.get() == ButtonType.NO){
+                AlertMessage.showInformationAlert("Cancelled disapproval.");
+                return;
+            }
+
+            ps = conn.prepareStatement("UPDATE ENROLLMENT SET STATUS = 'Declined' WHERE SY = ? AND SEMESTER = ? AND STUDENT_NO = ?");
             ps.setString(1, currentSY);
             ps.setString(2, currentSem);
             ps.setString(3, comboBoxStudentNo.getPromptText());
             ps.executeUpdate();
+
+            ps = conn.prepareStatement("DELETE FROM STUDENT_SCHEDULE WHERE STUDENT_NO = ? AND SY = ? AND SEMESTER = ?");
+            ps.setString(1, tblEnrollees.getSelectionModel().getSelectedItem().get(0));
+            ps.setString(2, currentSY);
+            ps.setString(3, currentSem);
+            ps.executeUpdate();
+
+            btnApproval.fire();
+            AlertMessage.showInformationAlert("Disapproved schedule.");
         }catch (Exception e){
             AlertMessage.showErrorAlert("An error occurred while disapproving schedule: " + e);
         }
@@ -864,11 +980,334 @@ public class AdminDashboardController extends Controller {
     }
     @FXML
     protected void onBtnScheduleAction(ActionEvent event) {
-
+        currentPane.setVisible(false);
+        currentPane = scheduleContainer;
+        currentPane.setVisible(true);
+        onBtnClearScheduleAction(event);
     }
     @FXML
-    protected void onBtnSYandSemAction(ActionEvent event) {
+    protected void onComboBoxCollegeScheduleAction(ActionEvent event){
+        if(comboBoxCollegeSchedule.getSelectionModel().getSelectedItem() == null){
+            return;
+        }
+        try{
+            ps = conn.prepareStatement("SELECT trim(replace(course_code, 'BS', '')) from course where college_code = ?");
+            ps.setString(1, comboBoxCollegeSchedule.getSelectionModel().getSelectedItem());
+            rs = ps.executeQuery();
+            comboBoxCourseSchedule.getItems().clear();
+            while(rs.next()){
+                comboBoxCourseSchedule.getItems().add(rs.getString(1));
+            }
+            ps = conn.prepareStatement("SELECT subject_code from subject where college_code = ? and subject_code <> '00000'");
+            ps.setString(1, comboBoxCollegeSchedule.getSelectionModel().getSelectedItem());
+            rs = ps.executeQuery();
+            comboBoxSubjectSchedule.getItems().clear();
+            while(rs.next()){
+                comboBoxSubjectSchedule.getItems().add(rs.getString(1));
+            }
+        }catch (Exception e){
+            System.out.println(e);
+        }
+    }
+    @FXML
+    protected void onComboBoxSubjectScheduleAction(ActionEvent event){
+        if(comboBoxSubjectSchedule.getSelectionModel().getSelectedItem() == null)
+            return;
+        try{
+            ps = conn.prepareStatement("SELECT DISTINCT DESCRIPTION FROM SUBJECT WHERE SUBJECT_CODE = ?");
+            ps.setString(1, comboBoxSubjectSchedule.getSelectionModel().getSelectedItem());
+            rs = ps.executeQuery();
+            if(rs.next())
+            txtAreaDescription.setText(rs.getString(1));
+        }catch(Exception e){
+            System.out.println(e);
+        }
+    }
+    @FXML
+    protected void onComboBoxFacultyAction(ActionEvent event) {
+        if(comboBoxFaculty.getSelectionModel().getSelectedItem() == null)
+            return;
+        try{
+            ps = conn.prepareStatement("SELECT CONCAT(FIRSTNAME, ' ', LASTNAME) FROM EMPLOYEE WHERE EMPLOYEE_ID = ?");
+            ps.setString(1, comboBoxFaculty.getSelectionModel().getSelectedItem());
+            rs = ps.executeQuery();
+            if(rs.next())
+                txtNameProf.setText(rs.getString(1));
+        }catch(Exception e){
+            System.out.println(e);
+        }
+    }
+    @FXML
+    protected void onBtnGoAction(ActionEvent event){
+        tblSubjectScheduling.getItems().clear();
+        if(comboBoxCourseSchedule.getSelectionModel().getSelectedItem() == null || comboBoxYearSchedule.getSelectionModel().getSelectedItem() == null || comboBoxYearSchedule.getSelectionModel().getSelectedItem() == null){
+            return;
+        }
+        try{
+            ps = conn.prepareStatement("SELECT * FROM VWSUBJECTSCHEDULES WHERE SY = ? AND SEMESTER = ? AND CONCAT(COURSE, YEAR, BLOCK) = ? ORDER BY SUBJECT_CODE, SCHEDULE");
+            ps.setString(1, currentSY);
+            ps.setString(2, currentSem);
+            ps.setString(3, comboBoxCourseSchedule.getSelectionModel().getSelectedItem()+comboBoxYearSchedule.getSelectionModel().getSelectedItem()+comboBoxBlockSchedule.getSelectionModel().getSelectedItem());
+            rs = ps.executeQuery();
+            TableViewUtils.generateTableFromResultSet(tblSubjectScheduling, rs);
+        }catch(Exception e){
+            AlertMessage.showErrorAlert("An error occurred while displaying block schedule: " + e);
+        }
+    }
+    @FXML
+    protected void onTblSubjectSchedulingMouseClicked(MouseEvent event){
+        checkBoxSunday.setSelected(false);
+        checkBoxMonday.setSelected(false);
+        checkBoxTuesday.setSelected(false);
+        checkBoxWednesday.setSelected(false);
+        checkBoxThursday.setSelected(false);
+        checkBoxFriday.setSelected(false);
+        checkBoxSaturday.setSelected(false);
+        ObservableList<String> o = tblSubjectScheduling.getSelectionModel().getSelectedItem();
+        btnUpdateSchedule.setDisable(o == null);
+        btnRemoveSchedule.setDisable(o == null);
+        if(o == null)
+            return;
 
+        try{
+            ps = conn.prepareStatement("SELECT distinct college_code from subject_schedule where block_no = ? and subject_code = ?");
+            ps.setString(1, o.get(3)+o.get(4)+o.get(5));
+            ps.setString(2, o.get(2));
+            rs = ps.executeQuery();
+            if(rs.next())
+                comboBoxCollegeSchedule.getSelectionModel().select(rs.getString(1));
+
+            ps = conn.prepareStatement("SELECT EMPLOYEE_ID FROM EMPLOYEE WHERE LASTNAME = ? AND FIRSTNAME = ?");
+            ps.setString(1, o.get(9).split(" ")[1]);
+            ps.setString(2, o.get(9).split(" ")[0]);
+            rs = ps.executeQuery();
+            if(rs.next()){
+                comboBoxFaculty.getSelectionModel().select(rs.getString(1));
+            }
+        }catch(Exception e){
+            System.out.println(e);
+        }
+
+        comboBoxSubjectSchedule.getSelectionModel().select(o.get(2));
+        txtAreaDescription.setText(o.get(6));
+        comboBoxCourseSchedule.getSelectionModel().select(o.get(3));
+        comboBoxYearSchedule.getSelectionModel().select(o.get(4));
+        comboBoxBlockSchedule.getSelectionModel().select(o.get(5));
+
+        String[] schedule = o.get(7).split(",");
+        for(String sched : schedule){
+            String[] s = sched.split(" ");
+            String day = s[0];
+            switch(day){
+                case "M":
+                    checkBoxMonday.setSelected(true);
+                    break;
+                case "T":
+                    checkBoxTuesday.setSelected(true);
+                    break;
+                case "W":
+                    checkBoxWednesday.setSelected(true);
+                    break;
+                case "Th":
+                    checkBoxThursday.setSelected(true);
+                    break;
+                case "F":
+                    checkBoxFriday.setSelected(true);
+                    break;
+                case "S":
+                    checkBoxSaturday.setSelected(true);
+                    break;
+                case "Su":
+                    checkBoxSunday.setSelected(true);
+                    break;
+                default:
+                    AlertMessage.showErrorAlert("Invalid day of the week in schedule. Please fix");
+                    break;
+            }
+            txtTime.setText(s[1]);
+            comboBoxMode.getSelectionModel().select(s[2]);
+            StringBuilder room = new StringBuilder();
+            for(int i = 3; i < s.length; ++i){
+                room.append(s[i]);
+            }
+            txtRoom.setText(room.toString());
+            txtNameProf.setText(o.get(o.size()-1));
+        }
+    }
+    @FXML
+    protected void onBtnClearScheduleAction(ActionEvent event){
+        try{
+            ps = conn.prepareStatement("SELECT college_code from college");
+            rs = ps.executeQuery();
+            while(rs.next()){
+                comboBoxCollegeSchedule.getItems().add(rs.getString(1));
+            }
+
+            ps = conn.prepareStatement("SELECT course_code from course");
+            rs = ps.executeQuery();
+            while(rs.next()){
+                comboBoxCourseSchedule.getItems().add(rs.getString(1).replace("BS", ""));
+            }
+
+            ps = conn.prepareStatement("SELECT subject_code from subject where subject_code <> '00000'");
+            rs = ps.executeQuery();
+            while(rs.next()){
+                comboBoxSubjectSchedule.getItems().add(rs.getString(1));
+            }
+        }catch (Exception e){
+            System.out.println(e);
+        }
+        tblSubjectScheduling.getItems().clear();
+        comboBoxCollegeSchedule.getSelectionModel().clearSelection();
+        comboBoxSubjectSchedule.getSelectionModel().clearSelection();
+        txtAreaDescription.clear();
+        comboBoxCourseSchedule.getSelectionModel().clearSelection();
+        comboBoxYearSchedule.getSelectionModel().clearSelection();
+        comboBoxBlockSchedule.getSelectionModel().clearSelection();
+        txtTime.clear();
+        txtRoom.clear();
+        checkBoxSunday.setSelected(false);
+        checkBoxMonday.setSelected(false);
+        checkBoxTuesday.setSelected(false);
+        checkBoxWednesday.setSelected(false);
+        checkBoxThursday.setSelected(false);
+        checkBoxFriday.setSelected(false);
+        checkBoxSaturday.setSelected(false);
+        comboBoxMode.getSelectionModel().clearSelection();
+        comboBoxFaculty.getSelectionModel().clearSelection();
+        txtNameProf.clear();
+        btnUpdateSchedule.setDisable(true);
+        btnRemoveSchedule.setDisable(true);
+    }
+    @FXML
+    protected void onBtnAddScheduleAction(ActionEvent event){
+        List<String> selected = new ArrayList<>();
+        if(checkBoxSunday.isSelected())
+            selected.add(checkBoxSunday.getText());
+        if(checkBoxMonday.isSelected())
+            selected.add(checkBoxMonday.getText());
+        if(checkBoxTuesday.isSelected())
+            selected.add(checkBoxTuesday.getText());
+        if(checkBoxWednesday.isSelected())
+            selected.add(checkBoxWednesday.getText());
+        if(checkBoxThursday.isSelected())
+            selected.add(checkBoxThursday.getText());
+        if(checkBoxFriday.isSelected())
+            selected.add(checkBoxFriday.getText());
+        if(checkBoxSaturday.isSelected())
+            selected.add(checkBoxSaturday.getText());
+
+        try{
+            int res = 0;
+            for(int i = 0; i < selected.size(); ++i){
+                ps = conn.prepareStatement("INSERT INTO SUBJECT_SCHEDULE VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                ps.setString(1, currentSY);
+                ps.setString(2, currentSem);
+                ps.setString(3, comboBoxCollegeSchedule.getSelectionModel().getSelectedItem());
+                ps.setString(4, comboBoxCourseSchedule.getSelectionModel().getSelectedItem() + comboBoxYearSchedule.getSelectionModel().getSelectedItem() + comboBoxBlockSchedule.getSelectionModel().getSelectedItem());
+                ps.setString(5, comboBoxSubjectSchedule.getSelectionModel().getSelectedItem());
+                ps.setString(6, selected.get(i));
+                ps.setString(7, txtTime.getText());
+                ps.setString(8, txtRoom.getText());
+                ps.setString(9, comboBoxMode.getSelectionModel().getSelectedItem());
+                ps.setString(10, String.format("%02d", i+1));
+                ps.setString(11, comboBoxFaculty.getSelectionModel().getSelectedItem());
+                res += ps.executeUpdate();
+            }
+            if(res > 0){
+                AlertMessage.showInformationAlert("Added the subject schedule successfully!");
+            }
+            btnGo.fire();
+        }catch (Exception e){
+            AlertMessage.showErrorAlert("An error occurred while adding a subject schedule: " + e);
+        }
+
+        onBtnGoAction(event);
+    }
+    @FXML
+    protected void onBtnUpdateScheduleAction(ActionEvent event){
+        List<String> selected = new ArrayList<>();
+        if(checkBoxSunday.isSelected())
+            selected.add(checkBoxSunday.getText());
+        if(checkBoxMonday.isSelected())
+            selected.add(checkBoxMonday.getText());
+        if(checkBoxTuesday.isSelected())
+            selected.add(checkBoxTuesday.getText());
+        if(checkBoxWednesday.isSelected())
+            selected.add(checkBoxWednesday.getText());
+        if(checkBoxThursday.isSelected())
+            selected.add(checkBoxThursday.getText());
+        if(checkBoxFriday.isSelected())
+            selected.add(checkBoxFriday.getText());
+        if(checkBoxSaturday.isSelected())
+            selected.add(checkBoxSaturday.getText());
+        try {
+            int res = 0;
+            ps = conn.prepareStatement("DELETE FROM SUBJECT_SCHEDULE WHERE SY = ? AND SEMESTER = ? AND COLLEGE_CODE = ? AND BLOCK_NO = ? AND SUBJECT_CODE = ?");
+            ps.setString(1, currentSY);
+            ps.setString(2, currentSem);
+            ps.setString(3, comboBoxCollegeSchedule.getSelectionModel().getSelectedItem());
+            ps.setString(4, comboBoxCourseSchedule.getSelectionModel().getSelectedItem() + comboBoxYearSchedule.getSelectionModel().getSelectedItem() + comboBoxBlockSchedule.getSelectionModel().getSelectedItem());
+            ps.setString(5, comboBoxSubjectSchedule.getSelectionModel().getSelectedItem());
+            ps.executeUpdate();
+            for(int i = 0; i < selected.size(); ++i) {
+                ps = conn.prepareStatement("INSERT INTO SUBJECT_SCHEDULE VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                ps.setString(1, currentSY);
+                ps.setString(2, currentSem);
+                ps.setString(3, comboBoxCollegeSchedule.getSelectionModel().getSelectedItem());
+                ps.setString(4, comboBoxCourseSchedule.getSelectionModel().getSelectedItem() + comboBoxYearSchedule.getSelectionModel().getSelectedItem() + comboBoxBlockSchedule.getSelectionModel().getSelectedItem());
+                ps.setString(5, comboBoxSubjectSchedule.getSelectionModel().getSelectedItem());
+                ps.setString(6, selected.get(i));
+                ps.setString(7, txtTime.getText());
+                ps.setString(8, txtRoom.getText());
+                ps.setString(9, comboBoxMode.getSelectionModel().getSelectedItem());
+                ps.setString(10, String.format("%02d", i+1));
+                ps.setString(11, comboBoxFaculty.getSelectionModel().getSelectedItem());
+                res += ps.executeUpdate();
+            }
+            if(res > 0){
+                AlertMessage.showInformationAlert("Added the subject schedule successfully!");
+            }
+            btnGo.fire();
+        }catch(Exception e) {
+            AlertMessage.showErrorAlert("An error occurred while updating a subject schedule: " + e);
+        }
+    }
+    @FXML
+    protected void onBtnRemoveScheduleAction(ActionEvent event){
+        try{
+            ps = conn.prepareStatement("DELETE FROM SUBJECT_SCHEDULE WHERE SY = ? AND SEMESTER = ? AND COLLEGE_CODE = ? AND BLOCK_NO = ? AND SUBJECT_CODE = ?");
+            ps.setString(1, currentSY);
+            ps.setString(2, currentSem);
+            ps.setString(3, comboBoxCollegeSchedule.getSelectionModel().getSelectedItem());
+            ps.setString(4, comboBoxCourseSchedule.getSelectionModel().getSelectedItem() + comboBoxYearSchedule.getSelectionModel().getSelectedItem() + comboBoxBlockSchedule.getSelectionModel().getSelectedItem());
+            ps.setString(5, comboBoxSubjectSchedule.getSelectionModel().getSelectedItem());
+            System.out.println(comboBoxCourseSchedule.getSelectionModel().getSelectedItem() + comboBoxYearSchedule.getSelectionModel().getSelectedItem() + comboBoxBlockSchedule.getSelectionModel().getSelectedItem());
+            ps.executeUpdate();
+            AlertMessage.showInformationAlert("Removed subject schedule successfully!");
+
+            comboBoxCollegeSchedule.getSelectionModel().clearSelection();
+            comboBoxSubjectSchedule.getSelectionModel().clearSelection();
+            txtAreaDescription.clear();
+            txtTime.clear();
+            txtRoom.clear();
+            checkBoxSunday.setSelected(false);
+            checkBoxMonday.setSelected(false);
+            checkBoxTuesday.setSelected(false);
+            checkBoxWednesday.setSelected(false);
+            checkBoxThursday.setSelected(false);
+            checkBoxFriday.setSelected(false);
+            checkBoxSaturday.setSelected(false);
+            comboBoxMode.getSelectionModel().clearSelection();
+            comboBoxFaculty.getSelectionModel().clearSelection();
+            txtNameProf.clear();
+            btnUpdateSchedule.setDisable(true);
+            btnRemoveSchedule.setDisable(true);
+            btnGo.fire();
+
+        }catch(Exception e){
+
+        }
     }
     @FXML
     protected void onBtnEmployeeEntryAction(ActionEvent event) {
@@ -932,6 +1371,173 @@ public class AdminDashboardController extends Controller {
     }
 
     @FXML
+    protected void onBtnSubjectScheduleAction(ActionEvent event){
+        btnManageDelete.setDisable(true);
+        currentPane.setVisible(false);
+        currentPane = manageContainer;
+        currentPane.setVisible(true);
+        tblManage.getColumns().clear();
+        tblManage.getItems().clear();
+        lblManage.setText("MANAGE COLLEGES");
+        try{
+            ps = conn.prepareStatement("SELECT * FROM vwSubjectScheduleBySequence");
+            rs = ps.executeQuery();
+            for(int i = 0; i < rs.getMetaData().getColumnCount(); ++i){
+                final int j = i;
+                TableColumn col = new TableColumn(rs.getMetaData().getColumnName(i+1).toUpperCase());
+                col.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<ObservableList,String>, ObservableValue<String>>(){
+                    public ObservableValue<String> call(TableColumn.CellDataFeatures<ObservableList, String> param) {
+                        return (param.getValue().get(j) == null) ? new SimpleStringProperty("-") : new SimpleStringProperty(param.getValue().get(j).toString());
+                    }
+                });
+
+                col.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent>() {
+                    @Override public void handle(TableColumn.CellEditEvent t) {
+                        ObservableList<String> o = (ObservableList<String>) t.getRowValue();
+                        try{
+                            System.out.println(o.get(j));
+
+                            System.out.println(t.getNewValue());
+                            ps = conn.prepareStatement("UPDATE SUBJECT_SCHEDULE SET " + rs.getMetaData().getColumnName(j+1) + " = ? "+ "WHERE SY = ? AND SEMESTER = ? AND COLLEGE_CODE = ? AND SUBJECT_CODE = ? AND BLOCK_NO = ? AND SEQUENCE_NO = ?");
+                            ps.setString(1, t.getNewValue().toString()) ;
+                            ps.setString(2, o.get(0));
+                            ps.setString(3, o.get(1));
+                            ps.setString(4, o.get(2));
+                            ps.setString(5, o.get(3));
+                            ps.setString(6, o.get(5));
+                            ps.setString(7, o.get(10));
+
+                            System.out.println(List.of(o.get(0), o.get(1), o.get(2), o.get(3), o.get(5), o.get(10)));
+
+                            ps.executeUpdate();
+//                            o.set(j, t.getNewValue().toString());
+
+                            btnSubjectSchedule.fire();
+                        }catch(Exception e){
+                            System.out.println(e);
+                        }
+
+                    }
+                });
+                String txt = col.getText().replaceAll("_", " ").toUpperCase();
+                switch(txt){
+                    case "NAME":
+                    case "DESCRIPTION":
+                    case "SUBJECT CODE":
+                    case "COLLEGE CODE":
+                        col.setCellFactory(
+                                new Callback<TableColumn, TableCell>() {
+                                    public TableCell call(TableColumn p) {
+                                        return new TableCell<ObservableList<String>, String>() {
+                                            @Override
+                                            protected void updateItem(String item, boolean empty) {
+                                                super.updateItem(item, empty);
+
+                                                if (item == null || empty) {
+                                                    setText(null);
+                                                    setStyle("");
+                                                } else {
+                                                    Text text = new Text(item);
+                                                    text.setStyle("-fx-text-alignment:left;");
+                                                    text.wrappingWidthProperty().bind(getTableColumn().widthProperty().subtract(35));
+                                                    setGraphic(text);
+                                                }
+                                            }
+                                        };
+                                    }
+                                }
+                        );
+                        break;
+                    case "TYPE":
+                        col.setCellFactory(
+                                new Callback<TableColumn, TableCell>() {
+                                    public TableCell call(TableColumn p) {
+                                        return new ComboBoxTableCell(new DefaultStringConverter(), FXCollections.observableArrayList("F2F", "OL"));
+                                    }
+                                }
+                        );
+                        break;
+                    case "SEQUENCE NO":
+                        col.setCellFactory(
+                                new Callback<TableColumn, TableCell>() {
+                                    public TableCell call(TableColumn p) {
+                                        return new ComboBoxTableCell(new DefaultStringConverter(), FXCollections.observableArrayList("01", "02"));
+                                    }
+                                }
+                        );
+                        break;
+                    case "SY":
+                        ObservableList<String> comboBoxItems = FXCollections.observableArrayList(Database.fetch("SELECT SY FROM SY"));
+                        col.setCellFactory(
+                                new Callback<TableColumn, TableCell>() {
+                                    public TableCell call(TableColumn p) {
+                                        return new ComboBoxTableCell(new DefaultStringConverter(), comboBoxItems);
+                                    }
+                                }
+                        );
+                        break;
+                    case "SEMESTER":
+                        comboBoxItems = FXCollections.observableArrayList(Database.fetch("SELECT SEMESTER FROM SEMESTER"));
+                        col.setCellFactory(
+                                new Callback<TableColumn, TableCell>() {
+                                    public TableCell call(TableColumn p) {
+                                        return new ComboBoxTableCell(new DefaultStringConverter(), comboBoxItems);
+                                    }
+                                }
+                        );
+                        break;
+                    case "FACULTY ID":
+                        comboBoxItems = FXCollections.observableArrayList(Database.fetch("SELECT EMPLOYEE_ID FROM EMPLOYEE"));
+                        col.setCellFactory(
+                                new Callback<TableColumn, TableCell>() {
+                                    public TableCell call(TableColumn p) {
+                                        return new ComboBoxTableCell(new DefaultStringConverter(), comboBoxItems);
+                                    }
+                                }
+                        );
+                        break;
+                    default:
+                        col.setCellFactory(
+                                new Callback<TableColumn, TableCell>() {
+                                    public TableCell call(TableColumn p) {
+                                        return new WrappingTextFieldTableCell<ObservableList<String>>();
+
+                                    }
+                                }
+                        );
+                }
+                tblManage.getColumns().addAll(col);
+            }
+            ObservableList<ObservableList<String>> scheds = FXCollections.observableArrayList();
+            while(rs.next()){
+                ObservableList<String> row = FXCollections.observableArrayList();
+                for (int i = 1; i <= rs.getMetaData().getColumnCount(); ++i) {
+                    row.add(rs.getString(i));
+                }
+                scheds.add(row);
+            }
+            tblManage.setItems(scheds);
+
+            tblManage.setRowFactory(tblView -> {
+                final TableRow<ObservableList<String>> r = new TableRow<>();
+                r.hoverProperty().addListener((observable) -> {
+                    final ObservableList<String> current = r.getItem();
+                    if (r.isHover() && current != null) {
+                        r.setStyle("-fx-background-color: #dbdbdb");
+                    } else {
+                        r.setStyle("");
+                    }
+                });
+                return r;
+            });
+            TableViewUtils.resizeTable(tblManage);
+
+        } catch(Exception e){
+            AlertMessage.showErrorAlert("An error occurred while displaying subject schedules: " + e);
+        }
+    }
+
+    @FXML
     protected void onBtnClassAction(ActionEvent event) {
 
     }
@@ -977,6 +1583,10 @@ public class AdminDashboardController extends Controller {
 
     @FXML
     protected void onBtnStudentRecordsAction(ActionEvent event) {
+        if(choiceSYRecords.getSelectionModel().getSelectedItem() != null){
+            choiceSYRecords.setDisable(true);
+            choiceSYRecords.getSelectionModel().clearSelection();
+        }
         currentPane.setVisible(false);
         currentPane = studentRecordsContainer;
         currentPane.setVisible(true);
@@ -993,6 +1603,10 @@ public class AdminDashboardController extends Controller {
     @FXML
     protected void onTblStudentRecordMouseClicked(MouseEvent event){
         ObservableList<String> o = tblStudentRecord.getSelectionModel().getSelectedItem();
+        if(o.equals(selectedInTable)){
+            o = null;
+            selectedInTable = null;
+        }
 
         if(o == null) {
             tblStudentGradeRecord.getItems().clear();
@@ -1016,6 +1630,7 @@ public class AdminDashboardController extends Controller {
             rs = ps.executeQuery();
             TableViewUtils.generateTableFromResultSet(tblStudentRecord, rs);
             tblStudentRecord.getSelectionModel().select(0);
+            selectedInTable = tblStudentRecord.getSelectionModel().getSelectedItem();
         }catch(Exception e){
             AlertMessage.showErrorAlert("An error occurred while selecting a student: " + e);
         }
@@ -1457,7 +2072,25 @@ public class AdminDashboardController extends Controller {
     }
     @FXML
     protected void onBtnSubjectAction(ActionEvent event) {
-
+        btnManageDelete.setDisable(true);
+        currentPane.setVisible(false);
+        currentPane = manageContainer;
+        currentPane.setVisible(true);
+        tblManage.getColumns().clear();
+        tblManage.getItems().clear();
+        lblManage.setText("MANAGE SUBJECTS");
+        try{
+            ps = conn.prepareStatement("SELECT subject_code, description, units, college_code, case when status = 'A' then 'Active' when status = 'I' then 'Inactive' else 'Invalid status' end as status FROM SUBJECT WHERE SUBJECT_CODE <> '00000'");
+            rs = ps.executeQuery();
+            TableViewUtils.generateEditableTableFromResultSet(tblManage, rs, new String[]{"SUBJECT", "SUBJECT_CODE"},  new Runnable() {
+                @Override
+                public void run() {
+                    btnSubject.fire();
+                }
+            });
+        } catch(Exception e){
+            AlertMessage.showErrorAlert("An error occurred while displaying subjects: " + e);
+        }
     }
 
 
