@@ -11,6 +11,7 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.text.Text;
 import javafx.util.Callback;
 import javafx.util.converter.DefaultStringConverter;
+import org.controlsfx.control.table.TableFilter;
 import plm.rafaeltorres.irregularenrollmentsystem.controllers.AdminDashboardController;
 import plm.rafaeltorres.irregularenrollmentsystem.controllers.Controller;
 import plm.rafaeltorres.irregularenrollmentsystem.db.Database;
@@ -28,7 +29,7 @@ public class TableViewUtils {
     public static void generateEditableTableFromResultSet(TableView tbl, ResultSet rs, String[] args, Runnable callback){
         try{
             tbl.getColumns().clear();
-            tbl.getItems().clear();
+//            tbl.getItems().clear();
             for(int i = 0; i < rs.getMetaData().getColumnCount(); ++i){
                 final int j = i;
                 TableColumn col = new TableColumn(rs.getMetaData().getColumnName(i+1).toUpperCase());
@@ -171,6 +172,17 @@ public class TableViewUtils {
                     case "COURSE CODE":
                         if(args[0].equalsIgnoreCase("COLLEGE"))
                             break;
+                        if(args[0].equalsIgnoreCase("STUDENT")){
+                            comboBoxItems = FXCollections.observableArrayList(Database.fetch("SELECT COURSE_CODE FROM COURSE"));
+                            col.setCellFactory(
+                                    new Callback<TableColumn, TableCell>() {
+                                        public TableCell call(TableColumn p) {
+                                            return new ComboBoxTableCell(new DefaultStringConverter(), comboBoxItems);
+                                        }
+                                    }
+                            );
+                            break;
+                        }
                         col.setCellFactory(
                                 new Callback<TableColumn, TableCell>() {
                                     public TableCell call(TableColumn p) {
@@ -228,7 +240,7 @@ public class TableViewUtils {
     public static void generateTableFromResultSet(TableView tbl, ResultSet rs){
         try{
             tbl.getColumns().clear();
-            tbl.getItems().clear();
+//            tbl.getItems().clear();
             for(int i = 0; i < rs.getMetaData().getColumnCount(); ++i){
                 final int j = i;
                 TableColumn col = new TableColumn(rs.getMetaData().getColumnName(i+1).toUpperCase().replaceAll("_", " "));
@@ -294,6 +306,7 @@ public class TableViewUtils {
                 }
             });
 
+
         }catch(Exception e){
             System.out.println(e);
         }
@@ -326,6 +339,19 @@ public class TableViewUtils {
                 col.setPrefWidth(col.getPrefWidth() + (tbl.getWidth() - total) / tbl.getColumns().size());
             }
         }
+
+        tbl.setRowFactory(tblView -> {
+            final TableRow<ObservableList<String>> r = new TableRow<>();
+            r.hoverProperty().addListener((observable) -> {
+                final ObservableList<String> current = r.getItem();
+                if (r.isHover() && current != null) {
+                    r.setStyle("-fx-background-color: #dbdbdb");
+                } else {
+                    r.setStyle("");
+                }
+            });
+            return r;
+        });
         tbl.setColumnResizePolicy(new Callback<TableView.ResizeFeatures, Boolean>() {
             @Override
             public Boolean call(TableView.ResizeFeatures p) {
@@ -366,6 +392,7 @@ public class TableViewUtils {
             });
 
             resizeTable(tbl);
+
         }catch (Exception e){
             System.out.println(e);
         }

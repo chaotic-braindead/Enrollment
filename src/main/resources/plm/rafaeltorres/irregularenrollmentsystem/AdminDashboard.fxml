@@ -4,7 +4,6 @@
 <?import javafx.scene.Group?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
-<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
@@ -27,6 +26,7 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
+<?import org.controlsfx.control.SearchableComboBox?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
 <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1000.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="plm.rafaeltorres.irregularenrollmentsystem.controllers.AdminDashboardController">
@@ -103,7 +103,6 @@
                         <RowConstraints maxHeight="280.0" minHeight="10.0" prefHeight="55.0" vgrow="SOMETIMES" />
                         <RowConstraints maxHeight="280.0" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
                         <RowConstraints maxHeight="280.0" minHeight="10.0" prefHeight="36.6666259765625" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="280.0" minHeight="10.0" prefHeight="36.0" vgrow="SOMETIMES" />
                         <RowConstraints maxHeight="280.0" minHeight="10.0" prefHeight="41.0" vgrow="SOMETIMES" />
                         <RowConstraints maxHeight="280.0" minHeight="10.0" prefHeight="45.0" vgrow="SOMETIMES" />
                         <RowConstraints maxHeight="280.0" minHeight="10.0" prefHeight="44.0" vgrow="SOMETIMES" />
@@ -115,7 +114,7 @@
                                 <RowConstraints maxHeight="280.0" minHeight="10.0" prefHeight="66.0" vgrow="SOMETIMES" />
                             </rowConstraints>
                             <children>
-                                <ToggleButton fx:id="btnDashboard" alignment="CENTER" mnemonicParsing="false" onAction="#onBtnDashboardAction" prefHeight="151.0" prefWidth="166.0" selected="true" stylesheets="@assets/css/styles.css" text="DASHBOARD" textFill="WHITE" GridPane.rowIndex="18">
+                                <ToggleButton fx:id="btnDashboard" alignment="CENTER" mnemonicParsing="false" onAction="#onBtnDashboardAction" prefHeight="151.0" prefWidth="166.0" selected="true" stylesheets="@assets/css/styles.css" text="DASHBOARD" textFill="WHITE" GridPane.rowIndex="17">
                                     <cursor>
                                         <Cursor fx:constant="DEFAULT" />
                                     </cursor>
@@ -131,11 +130,11 @@
                                 <ToggleButton fx:id="btnEnrollment" alignment="CENTER" mnemonicParsing="false" onAction="#onBtnEnrollmentAction" prefHeight="67.0" prefWidth="177.0" text="Enrollment" textAlignment="CENTER" textFill="WHITE" toggleGroup="$sideBar" wrapText="true" GridPane.rowIndex="1" />
                                 <ToggleButton fx:id="btnClass" alignment="CENTER" mnemonicParsing="false" onAction="#onBtnClassAction" prefHeight="60.0" prefWidth="166.0" text="Class List" textAlignment="CENTER" textFill="WHITE" toggleGroup="$sideBar" wrapText="true" GridPane.rowIndex="6" />
                                 <ToggleButton fx:id="btnSchedule" alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#onBtnScheduleAction" prefHeight="69.0" prefWidth="166.0" text="Block Scheduling" textAlignment="CENTER" textFill="WHITE" toggleGroup="$sideBar" wrapText="true" GridPane.rowIndex="3" />
-                                <ToggleButton fx:id="btnLogout" mnemonicParsing="false" onAction="#onBtnLogoutAction" prefHeight="88.0" prefWidth="166.0" text="Log out" textFill="WHITE" GridPane.rowIndex="19" />
+                                <ToggleButton fx:id="btnLogout" mnemonicParsing="false" onAction="#onBtnLogoutAction" prefHeight="88.0" prefWidth="166.0" text="Log out" textFill="WHITE" GridPane.rowIndex="18" />
                                 <ToggleButton fx:id="btnStudentEntry" alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#onBtnStudentEntryAction" prefHeight="98.0" prefWidth="166.0" text="Student" textAlignment="CENTER" textFill="WHITE" toggleGroup="$sideBar" wrapText="true" GridPane.rowIndex="8" />
                         <ToggleButton fx:id="btnStudentRecords" mnemonicParsing="false" onAction="#onBtnStudentRecordsAction" prefHeight="58.0" prefWidth="166.0" text="Student Records" textAlignment="CENTER" textFill="WHITE" toggleGroup="$sideBar" wrapText="true" GridPane.rowIndex="5" />
                         <ToggleButton fx:id="btnEmployeeEntry" mnemonicParsing="false" onAction="#onBtnEmployeeEntryAction" prefHeight="163.0" prefWidth="166.0" text="Employee" textAlignment="CENTER" textFill="WHITE" toggleGroup="$sideBar" wrapText="true" GridPane.rowIndex="9" />
-                        <ToggleButton fx:id="btnGradesEntry" mnemonicParsing="false" onAction="#onBtnGradesEntryAction" prefHeight="35.0" prefWidth="166.0" stylesheets="@assets/css/styles.css" text="Grades" textAlignment="CENTER" textFill="WHITE" toggleGroup="$sideBar" wrapText="true" GridPane.rowIndex="11" />
+                        <ToggleButton fx:id="btnGradesEntry" mnemonicParsing="false" onAction="#onBtnGradesEntryAction" prefHeight="35.0" prefWidth="166.0" stylesheets="@assets/css/styles.css" text="Grades" textAlignment="CENTER" textFill="WHITE" toggleGroup="$sideBar" wrapText="true" GridPane.rowIndex="10" />
                         <ToggleButton fx:id="btnApproval" mnemonicParsing="false" onAction="#onBtnApprovalAction" prefHeight="104.0" prefWidth="166.0" stylesheets="@assets/css/styles.css" text="Schedule Approval" textAlignment="CENTER" textFill="WHITE" toggleGroup="$sideBar" wrapText="true" GridPane.rowIndex="2">
                            <font>
                               <Font size="10.0" />
@@ -166,7 +165,7 @@
                               <FontIcon iconColor="WHITE" iconLiteral="mdoal-calendar_today" iconSize="18" />
                            </graphic>
                         </Label>
-                        <Label alignment="CENTER" prefHeight="21.0" prefWidth="165.0" text="MAINTENANCE" textFill="WHITE" GridPane.rowIndex="12">
+                        <Label alignment="CENTER" prefHeight="21.0" prefWidth="165.0" text="MAINTENANCE" textFill="WHITE" GridPane.rowIndex="11">
                            <font>
                               <Font size="16.0" />
                            </font>
@@ -174,12 +173,11 @@
                               <FontIcon iconColor="WHITE" iconLiteral="eli-wrench" iconSize="15" />
                            </graphic>
                         </Label>
-                        <ToggleButton fx:id="btnSY" mnemonicParsing="false" onAction="#onBtnSYAction" prefHeight="100.0" prefWidth="164.0" text="School Year" textFill="WHITE" toggleGroup="$sideBar" GridPane.rowIndex="13" />
-                        <ToggleButton fx:id="btnSemester" mnemonicParsing="false" onAction="#onBtnSemesterAction" prefHeight="71.0" prefWidth="166.0" text="Semester" textFill="WHITE" toggleGroup="$sideBar" GridPane.rowIndex="14" />
-                        <ToggleButton fx:id="btnCollege" mnemonicParsing="false" onAction="#onBtnCollegeAction" prefHeight="120.0" prefWidth="166.0" text="College" textFill="WHITE" toggleGroup="$sideBar" GridPane.rowIndex="15" />
-                        <ToggleButton fx:id="btnCourse" mnemonicParsing="false" onAction="#onBtnCourseAction" prefHeight="100.0" prefWidth="165.0" text="Course" textFill="WHITE" toggleGroup="$sideBar" GridPane.rowIndex="16" />
-                        <ToggleButton fx:id="btnSubject" mnemonicParsing="false" onAction="#onBtnSubjectAction" prefHeight="75.0" prefWidth="166.0" text="Subject" textFill="WHITE" toggleGroup="$sideBar" GridPane.rowIndex="17" />
-                        <ToggleButton fx:id="btnSubjectSchedule" mnemonicParsing="false" onAction="#onBtnSubjectScheduleAction" prefHeight="55.0" prefWidth="166.0" text="Subject Schedule" textFill="WHITE" toggleGroup="$sideBar" GridPane.rowIndex="10" />
+                        <ToggleButton fx:id="btnSY" mnemonicParsing="false" onAction="#onBtnSYAction" prefHeight="100.0" prefWidth="164.0" text="School Year" textFill="WHITE" toggleGroup="$sideBar" GridPane.rowIndex="12" />
+                        <ToggleButton fx:id="btnSemester" mnemonicParsing="false" onAction="#onBtnSemesterAction" prefHeight="71.0" prefWidth="166.0" text="Semester" textFill="WHITE" toggleGroup="$sideBar" GridPane.rowIndex="13" />
+                        <ToggleButton fx:id="btnCollege" mnemonicParsing="false" onAction="#onBtnCollegeAction" prefHeight="120.0" prefWidth="166.0" text="College" textFill="WHITE" toggleGroup="$sideBar" GridPane.rowIndex="14" />
+                        <ToggleButton fx:id="btnCourse" mnemonicParsing="false" onAction="#onBtnCourseAction" prefHeight="100.0" prefWidth="165.0" text="Course" textFill="WHITE" toggleGroup="$sideBar" GridPane.rowIndex="15" />
+                        <ToggleButton fx:id="btnSubject" mnemonicParsing="false" onAction="#onBtnSubjectAction" prefHeight="75.0" prefWidth="166.0" text="Subject" textFill="WHITE" toggleGroup="$sideBar" GridPane.rowIndex="16" />
                             </children>
                         </GridPane>
                     </left>
@@ -207,11 +205,11 @@
                                           <Label layoutX="87.0" layoutY="150.0" prefHeight="17.0" prefWidth="49.0" text="Name:" />
                                           <Label layoutX="84.0" layoutY="23.0" prefHeight="17.0" prefWidth="55.0" text="College:" />
                                           <Label layoutX="85.0" layoutY="61.0" prefHeight="17.0" prefWidth="53.0" text="Course:" />
-                                          <ComboBox fx:id="comboBoxBlock" disable="true" layoutX="1358.0" layoutY="22.0" onAction="#onComboBoxBlockAction" prefHeight="25.0" prefWidth="289.0" />
+                                          <SearchableComboBox fx:id="comboBoxBlock" disable="true" layoutX="1358.0" layoutY="22.0" onAction="#onComboBoxBlockAction" prefHeight="25.0" prefWidth="289.0" />
                                           <Label fx:id="txtCurrentSYandSem" layoutX="464.0" layoutY="71.0" prefHeight="17.0" prefWidth="152.0" />
-                                          <ComboBox fx:id="comboBoxCollege" layoutX="138.0" layoutY="19.0" onAction="#onComboBoxCollegeAction" prefHeight="25.0" prefWidth="262.0" promptText="Filter enrollees by college" />
-                                          <ComboBox fx:id="comboBoxCourse" layoutX="138.0" layoutY="60.0" onAction="#onComboBoxCourseAction" prefHeight="25.0" prefWidth="262.0" promptText="Filter enrollees by course" />
-                                          <ComboBox fx:id="comboBoxStudentNo" disable="true" layoutX="136.0" layoutY="104.0" prefHeight="25.0" prefWidth="265.0" promptText="Select a student number" />
+                                          <SearchableComboBox fx:id="comboBoxCollege" layoutX="138.0" layoutY="19.0" onAction="#onComboBoxCollegeAction" prefHeight="25.0" prefWidth="262.0" promptText="Filter enrollees by college" />
+                                          <SearchableComboBox fx:id="comboBoxCourse" layoutX="138.0" layoutY="60.0" onAction="#onComboBoxCourseAction" prefHeight="25.0" prefWidth="262.0" promptText="Filter enrollees by course" />
+                                          <SearchableComboBox fx:id="comboBoxStudentNo" disable="true" layoutX="136.0" layoutY="104.0" prefHeight="25.0" prefWidth="265.0" promptText="Select a student number" />
                                           <HBox alignment="CENTER_RIGHT" layoutX="1366.0" layoutY="134.0" prefHeight="25.0" prefWidth="314.0" spacing="20.0">
                                              <children>
                                                 <Button fx:id="btnApprove" disable="true" mnemonicParsing="false" onAction="#onBtnApproveAction" text="Approve" visible="false" />
@@ -235,7 +233,7 @@
                                                 <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                                              </columnResizePolicy>
                                           </TableView>
-                                          <ComboBox fx:id="comboBoxYear" layoutX="465.0" layoutY="20.0" onAction="#onComboBoxYearAction" prefWidth="150.0" promptText="Any" />
+                                          <SearchableComboBox fx:id="comboBoxYear" layoutX="465.0" layoutY="20.0" onAction="#onComboBoxYearAction" prefWidth="150.0" promptText="Any" />
                                           <Label layoutX="426.0" layoutY="24.0" text="Year:" />
                                                   </children>
                                               </AnchorPane>
@@ -280,18 +278,21 @@
                                           <Label layoutX="735.0" layoutY="194.0" text="Room:" />
                                           <Label layoutX="734.0" layoutY="240.0" text="Day(s):" />
                                           <Label layoutX="1092.0" layoutY="108.0" text="Mode:" />
-                                          <ComboBox fx:id="comboBoxFaculty" layoutX="1146.0" layoutY="147.0" onAction="#onComboBoxFacultyAction" prefHeight="27.0" prefWidth="187.0" />
+                                          <SearchableComboBox fx:id="comboBoxFaculty" layoutX="1146.0" layoutY="147.0" onAction="#onComboBoxFacultyAction" prefHeight="27.0" prefWidth="187.0" />
                                           <Label layoutX="1069.0" layoutY="147.0" text="Faculty ID:" />
                                           <Label layoutX="1092.0" layoutY="201.0" text="Name:" />
                                           <TextField fx:id="txtNameProf" disable="true" layoutX="1147.0" layoutY="199.0" prefHeight="27.0" prefWidth="187.0" />
                                           <Button fx:id="btnClearSchedule" layoutX="1195.0" layoutY="296.0" mnemonicParsing="false" onAction="#onBtnClearScheduleAction" text="Clear fields" />
-                                          <ComboBox fx:id="comboBoxCollegeSchedule" layoutX="375.0" layoutY="188.0" onAction="#onComboBoxCollegeScheduleAction" prefHeight="27.0" prefWidth="251.0" />
-                                          <ComboBox fx:id="comboBoxSubjectSchedule" layoutX="374.0" layoutY="227.0" onAction="#onComboBoxSubjectScheduleAction" prefHeight="27.0" prefWidth="251.0" />
-                                          <ComboBox fx:id="comboBoxMode" layoutX="1148.0" layoutY="104.0" prefHeight="27.0" prefWidth="183.0" />
-                                          <ComboBox fx:id="comboBoxCourseSchedule" layoutX="791.0" layoutY="105.0" prefHeight="27.0" prefWidth="70.0" />
+                                          <SearchableComboBox fx:id="comboBoxCollegeSchedule" layoutX="375.0" layoutY="188.0" onAction="#onComboBoxCollegeScheduleAction" prefHeight="27.0" prefWidth="251.0" />
+                                          <SearchableComboBox fx:id="comboBoxSubjectSchedule" layoutX="374.0" layoutY="227.0" onAction="#onComboBoxSubjectScheduleAction" prefHeight="27.0" prefWidth="251.0" />
+                                          <SearchableComboBox fx:id="comboBoxMode" layoutX="1148.0" layoutY="104.0" prefHeight="27.0" prefWidth="183.0" />
+                                          <SearchableComboBox fx:id="comboBoxCourseSchedule" layoutX="791.0" layoutY="105.0" prefHeight="27.0" prefWidth="70.0" />
                                           <Button fx:id="btnGo" layoutX="1015.0" layoutY="105.0" mnemonicParsing="false" onAction="#onBtnGoAction" text="Go" />
-                                          <ComboBox fx:id="comboBoxYearSchedule" layoutX="863.0" layoutY="105.0" prefHeight="27.0" prefWidth="71.0" />
-                                          <ComboBox fx:id="comboBoxBlockSchedule" layoutX="938.0" layoutY="105.0" prefHeight="27.0" prefWidth="70.0" />
+                                          <SearchableComboBox fx:id="comboBoxYearSchedule" layoutX="863.0" layoutY="105.0" prefHeight="27.0" prefWidth="71.0" />
+                                          <SearchableComboBox fx:id="comboBoxBlockSchedule" layoutX="938.0" layoutY="105.0" prefHeight="27.0" prefWidth="70.0" />
+                                          <Label layoutX="75.0" layoutY="21.0" prefHeight="51.0" prefWidth="282.0" styleClass="titleText" stylesheets="@assets/css/styles.css" text="SCHEDULING" />
+                                          <Line endX="1549.0" layoutX="131.0" layoutY="71.0" startX="-100.0" stroke="#9c0000" />
+                                          <FontIcon iconColor="#9c0000" iconLiteral="mdi2c-calendar" iconSize="35" layoutX="30.0" layoutY="61.0" />
                                        </children>
                                     </AnchorPane>
                                  </children>
@@ -313,8 +314,38 @@
                                             </columns>
                                           </TableView>
                                           <TextField fx:id="txtStudentRecordSearch" layoutX="47.0" layoutY="71.0" onKeyTyped="#onTxtStudentRecordSearchKeyTyped" prefHeight="27.0" prefWidth="305.0" promptText="Search for a student number or name" />
-                                          <ComboBox fx:id="choiceSYRecords" disable="true" layoutX="1413.0" layoutY="71.0" onAction="#onChoiceSYRecordsAction" prefHeight="27.0" prefWidth="178.0" promptText="Select a school year" />
+                                          <SearchableComboBox fx:id="choiceSYRecords" disable="true" layoutX="1413.0" layoutY="71.0" onAction="#onChoiceSYRecordsAction" prefHeight="27.0" prefWidth="178.0" promptText="Select a school year" />
                                           <Button fx:id="btnLoadStudentRecord" disable="true" layoutX="1609.0" layoutY="71.0" mnemonicParsing="false" onAction="#onBtnLoadStudentRecordAction" text="Load" />
+                                       </children>
+                                    </AnchorPane>
+                                 </children>
+                              </AnchorPane>
+                              <AnchorPane fx:id="classListContainer" prefHeight="200.0" prefWidth="200.0" visible="false">
+                                 <children>
+                                    <AnchorPane layoutX="20.0" layoutY="17.0" prefHeight="840.0" prefWidth="1711.0" styleClass="loginContainer" stylesheets="@assets/css/styles.css">
+                                       <children>
+                                          <TableView fx:id="tblClassStudents" layoutX="41.0" layoutY="138.0" prefHeight="671.0" prefWidth="831.0">
+                                            <columns>
+                                              <TableColumn prefWidth="75.0" text="C1" />
+                                              <TableColumn prefWidth="75.0" text="C2" />
+                                            </columns>
+                                          </TableView>
+                                          <TableView fx:id="tblClassSchedule" layoutX="904.0" layoutY="135.0" prefHeight="673.0" prefWidth="759.0">
+                                            <columns>
+                                              <TableColumn prefWidth="75.0" text="C1" />
+                                              <TableColumn prefWidth="75.0" text="C2" />
+                                            </columns>
+                                          </TableView>
+                                          <SearchableComboBox fx:id="comboBoxClassListCourse" layoutX="179.0" layoutY="91.0" prefHeight="27.0" prefWidth="98.0" />
+                                          <Button fx:id="btnLoadClass" layoutX="497.0" layoutY="89.0" mnemonicParsing="false" onAction="#onBtnLoadClassAction" text="Load" />
+                                          <Label layoutX="47.0" layoutY="95.0" text="Course/Year/Block:" />
+                                          <Label layoutX="98.0" layoutY="20.0" styleClass="titleText" stylesheets="@assets/css/styles.css" text="CLASS LIST" />
+                                          <Line endX="1507.0" layoutX="151.0" layoutY="73.0" startX="-100.0" stroke="#9c0000" />
+                                          <FontIcon iconColor="#9c0000" iconLiteral="mdi2c-clipboard-minus" iconSize="35" layoutX="50.0" layoutY="60.0" />
+                                          <SearchableComboBox fx:id="comboBoxClassListYear" layoutX="288.0" layoutY="90.0" prefHeight="27.0" prefWidth="89.0" />
+                                          <SearchableComboBox fx:id="comboBoxClassListBlock" layoutX="389.0" layoutY="90.0" prefHeight="27.0" prefWidth="89.0" />
+                                          <TextField fx:id="txtClassListSY" disable="true" layoutX="1470.0" layoutY="91.0" />
+                                          <Label layoutX="1321.0" layoutY="95.0" text="School Year/Semester:" />
                                        </children>
                                     </AnchorPane>
                                  </children>
@@ -356,15 +387,15 @@
                                                 <TableColumn prefWidth="231.66668701171875" text="REMARK" />
                                             </columns>
                                           </TableView>
-                                          <ComboBox fx:id="comboBoxSubjectCode" disable="true" layoutX="472.0" layoutY="118.0" onAction="#onComboBoxSubjectCodeAction" prefHeight="25.0" prefWidth="172.0" promptText="Select subject code" />
-                                          <ComboBox fx:id="comboBoxYearBlock" disable="true" layoutX="305.0" layoutY="116.0" onAction="#onComboBoxYearBlockAction" prefWidth="150.0" promptText="Select year/block" />
+                                          <SearchableComboBox fx:id="comboBoxSubjectCode" disable="true" layoutX="472.0" layoutY="118.0" onAction="#onComboBoxSubjectCodeAction" prefHeight="25.0" prefWidth="172.0" promptText="Select subject code" />
+                                          <SearchableComboBox fx:id="comboBoxYearBlock" disable="true" layoutX="305.0" layoutY="116.0" onAction="#onComboBoxYearBlockAction" prefWidth="150.0" promptText="Select year/block" />
                                           <Label layoutX="43.0" layoutY="116.0" prefHeight="21.0" prefWidth="70.0" text="Filter by:">
                                              <font>
                                                 <Font size="15.0" />
                                              </font>
                                           </Label>
                                           <Button fx:id="btnLoadData" disable="true" layoutX="663.0" layoutY="118.0" mnemonicParsing="false" onAction="#onBtnLoadDataAction" text="Load Data" />
-                                          <ComboBox fx:id="comboBoxCollegeGrade" layoutX="138.0" layoutY="117.0" onAction="#onComboBoxCollegeGradeAction" prefWidth="150.0" promptText="Select college" />
+                                          <SearchableComboBox fx:id="comboBoxCollegeGrade" layoutX="138.0" layoutY="117.0" onAction="#onComboBoxCollegeGradeAction" prefWidth="150.0" promptText="Select college" />
                                        </children>
                                     </AnchorPane>
                                  </children>

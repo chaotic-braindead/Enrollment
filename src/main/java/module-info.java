@@ -16,6 +16,7 @@ module plm.rafaeltorres.irregularenrollmentsystem {
     requires org.apache.logging.log4j;
     requires org.apache.logging.log4j.core;
     requires org.apache.logging.log4j.slf4j;
+    requires org.controlsfx.controls;
 
     opens plm.rafaeltorres.irregularenrollmentsystem to javafx.fxml;
     exports plm.rafaeltorres.irregularenrollmentsystem;

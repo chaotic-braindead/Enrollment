@@ -37,6 +37,8 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.converter.DefaultStringConverter;
+import org.controlsfx.control.SearchableComboBox;
+import org.controlsfx.control.table.TableFilter;
 import plm.rafaeltorres.irregularenrollmentsystem.MainScene;
 import plm.rafaeltorres.irregularenrollmentsystem.db.Database;
 import plm.rafaeltorres.irregularenrollmentsystem.model.Employee;
@@ -61,7 +63,6 @@ import java.util.Date;
 
 
 public class AdminDashboardController extends Controller {
-    private Connection conn;
     private PreparedStatement ps;
     private ResultSet rs;
     private Employee employee;
@@ -279,7 +280,22 @@ public class AdminDashboardController extends Controller {
     private Button btnClearSchedule;
     @FXML
     private Button btnGo;
-
+    @FXML
+    private Pane classListContainer;
+    @FXML
+    private ComboBox<String> comboBoxClassListCourse;
+    @FXML
+    private ComboBox<String> comboBoxClassListYear;
+    @FXML
+    private ComboBox<String> comboBoxClassListBlock;
+    @FXML
+    private Button btnLoadClass;
+    @FXML
+    private TableView<String> tblClassStudents;
+    @FXML
+    private TableView<String> tblClassSchedule;
+    @FXML
+    private TextField txtClassListSY;
 
 
     @Override
@@ -291,8 +307,6 @@ public class AdminDashboardController extends Controller {
                 oldVal.setSelected(true);
         });
 
-        System.out.println(currentSY);
-        conn = Database.connect();
         SimpleDateFormat formatter = new SimpleDateFormat("EEEEE, MMMMM dd, yyyy");
         lblDateNow.setText("Today is "+ formatter.format(new Date()));
         btnDashboard.setSelected(true);
@@ -303,7 +317,6 @@ public class AdminDashboardController extends Controller {
         Image defaultImage = new Image(f.toURI().toString(), false);
         ImagePattern pattern = new ImagePattern(defaultImage);
         imgContainer.setFill(pattern);
-
 
         tblSubjects.setPlaceholder(new Label("Please select a student to enroll."));
         tblSubjects.setPlaceholder(new Label("Please select a block/section."));
@@ -323,8 +336,14 @@ public class AdminDashboardController extends Controller {
         txtSchoolYearSchedule.setText(currentSY);
         txtSemesterSchedule.setText(currentSem);
 
+
+
         comboBoxYearSchedule.setItems(FXCollections.observableArrayList("1", "2", "3", "4", "5"));
+        comboBoxClassListYear.setItems(FXCollections.observableArrayList("1", "2", "3", "4", "5"));
+
         comboBoxBlockSchedule.setItems(FXCollections.observableArrayList("1", "2", "3", "4"));
+        comboBoxClassListBlock.setItems(FXCollections.observableArrayList("1", "2", "3", "4"));
+
         comboBoxMode.setItems(FXCollections.observableArrayList("F2F", "OL"));
 
         try{
@@ -365,6 +384,7 @@ public class AdminDashboardController extends Controller {
             while(rs.next()){
                 comboBoxCourse.getItems().add(rs.getString(1));
                 comboBoxCourseSchedule.getItems().add(rs.getString(1).replace("BS", ""));
+                comboBoxClassListCourse.getItems().add(rs.getString(1).replace("BS", ""));
             }
 
             comboBoxYear.setItems(FXCollections.observableArrayList("Any", "1", "2", "3", "4", "5"));
@@ -504,7 +524,7 @@ public class AdminDashboardController extends Controller {
         } catch(Exception e){
             System.out.println(e);
         }
-        tblSubjects.getItems().clear();
+//        tblSubjects.getItems().clear();
         comboBoxBlock.setPromptText("Select a block/section");
 
     }
@@ -556,7 +576,7 @@ public class AdminDashboardController extends Controller {
         } catch(Exception e){
             System.out.println(e);
         }
-        tblSubjects.getItems().clear();
+//        tblSubjects.getItems().clear();
     }
 
     @FXML
@@ -633,15 +653,19 @@ public class AdminDashboardController extends Controller {
         String registrationStatus = (!btnApprove.isVisible()) ? "REGULAR" : "IRREGULAR";
 
         btnApprove.setDisable(o == null);
-        btnDisapprove.setVisible(o == null);
+        btnDisapprove.setDisable(o == null);
 
         if(o == null) {
 
-            tblSubjects.getItems().clear();
+//            tblSubjects.getItems().clear();
             comboBoxStudentNo.setPromptText("");
             comboBoxBlock.getSelectionModel().clearSelection();
+            String query = "SELECT STUDENT_No, concat(LASTNAME, ', ', FIRSTNAME) as NAME, COURSE_CODE, REGISTRATION_STATUS FROM VWSTUDENTINFO WHERE REGISTRATION_STATUS = ? and student_no not in(select student_no from enrollment where SY = ? and semester = ? and status in ('Enrolled', 'Pending'))";
+            if(registrationStatus.equalsIgnoreCase("IRREGULAR")){
+                query = "SELECT STUDENT_No, concat(LASTNAME, ', ', FIRSTNAME) as NAME, COURSE_CODE, REGISTRATION_STATUS FROM VWSTUDENTINFO WHERE REGISTRATION_STATUS = ? and student_no in(select student_no from enrollment where SY = ? and semester = ? and status = 'Pending')";
+            }
             try{
-                ps = conn.prepareStatement("SELECT STUDENT_No, concat(LASTNAME, ', ', FIRSTNAME) as NAME, COURSE_CODE, REGISTRATION_STATUS FROM VWSTUDENTINFO WHERE REGISTRATION_STATUS = ? and student_no not in(select student_no from enrollment where SY = ? and semester = ? and status = 'Enrolled') and status = 'A'");
+                ps = conn.prepareStatement(query);
                 ps.setString(1, registrationStatus);
                 ps.setString(2, currentSY);
                 ps.setString(3, currentSem);
@@ -768,7 +792,7 @@ public class AdminDashboardController extends Controller {
 
             rs = ps.executeQuery();
             TableViewUtils.generateTableFromResultSet(tblEnrollees, rs);
-            tblSubjects.getItems().clear();
+//            tblSubjects.getItems().clear();
 
             comboBoxStudentNo.getSelectionModel().clearSelection();
         }catch(Exception e){
@@ -781,7 +805,7 @@ public class AdminDashboardController extends Controller {
         btnDisapprove.setVisible(false);
         btnEnrollStudent.setVisible(true);
         comboBoxBlock.setVisible(true);
-        tblSubjects.getItems().clear();
+//        tblSubjects.getItems().clear();
         txtCurrentSYandSem.setText("SY " + currentSY + " - " + currentSem);
 
         onEnroll(event);
@@ -820,7 +844,7 @@ public class AdminDashboardController extends Controller {
         btnDisapprove.setVisible(true);
         btnEnrollStudent.setVisible(false);
         comboBoxBlock.setVisible(false);
-        tblSubjects.getItems().clear();
+//        tblSubjects.getItems().clear();
         tblSubjects.setPlaceholder(new Label("Select a student."));
         onEnroll(event);
 
@@ -876,7 +900,7 @@ public class AdminDashboardController extends Controller {
     protected void onBtnStudentEntryAction(ActionEvent event) throws IllegalAccessException {
         txtStudentSearch.clear();
         tblStudents.getSelectionModel().clearSelection();
-        tblStudents.getItems().clear();
+//        tblStudents.getItems().clear();
         tblStudents.getColumns().clear();
         currentPane.setVisible(false);
         currentPane = studentEntryContainer;
@@ -885,13 +909,14 @@ public class AdminDashboardController extends Controller {
         lblCurrentMasterlist.setText("STUDENT MASTERLIST");
         txtStudentSearch.setPromptText("Search for a student number or name");
         try{
-            ps = conn.prepareStatement("SELECT student_no, lastname, firstname, gender, bday, age, cp_num, email, college_code, plm_email, course_code, case when status = 'A' then 'Active' when status = 'I' then 'Inactive' else 'Invalid status' end as status, registration_status FROM VWSTUDENTINFO");
+            ps = conn.prepareStatement("SELECT student_no, lastname, firstname, gender, bday, age, address, cp_num, email, plm_email, college_code, course_code, case when status = 'A' then 'Active' when status = 'I' then 'Inactive' else 'Invalid status' end as status, registration_status from vwstudentinfo");
             TableViewUtils.generateEditableTableFromResultSet(tblStudents, ps.executeQuery(), new String[]{"STUDENT", "STUDENT_NO"}, new Runnable() {
                 @Override
                 public void run() {
                     btnStudentEntry.fire();
                 }
             });
+//            TableFilter.forTableView(tblStudents).apply();
         }catch(Exception e){
             AlertMessage.showErrorAlert("An error occurred while displaying student masterlist: "+e);
         }
@@ -902,7 +927,11 @@ public class AdminDashboardController extends Controller {
         btnDeleteStudent.setDisable(true);
 
         if(txtStudentSearch.getText().isBlank()){
-            displayTable("SELECT student_no, lastname, firstname, gender, bday, age, cp_num, address, course_code, status, registration_status from vwstudentinfo", tblStudents);
+            displayTable("SELECT student_no, lastname, firstname, gender, bday, age, address, cp_num, email, plm_email, college_code, course_code case when status = 'A' then 'Active' when status = 'I' then 'Inactive' else 'Invalid status' end as status, registration_status from vwstudentinfo", tblStudents);
+            return;
+        }
+        if(!txtStudentSearch.getText().matches("[^A-Za-z0-9]")){
+            txtStudentSearch.setText("");
             return;
         }
         String query = "SELECT * from vwstudentinfo where student_no regexp(?) or firstname regexp(?) or lastname regexp(?)";
@@ -918,6 +947,8 @@ public class AdminDashboardController extends Controller {
                     btnStudentEntry.fire();
                 }
             });
+//            TableFilter.forTableView(tblStudents).apply();
+
         }catch (Exception e) {
             AlertMessage.showErrorAlert("An error occurred while displaying student masterlist:"+e);
         }
@@ -1043,14 +1074,14 @@ public class AdminDashboardController extends Controller {
             ps = conn.prepareStatement("SELECT trim(replace(course_code, 'BS', '')) from course where college_code = ?");
             ps.setString(1, comboBoxCollegeSchedule.getSelectionModel().getSelectedItem());
             rs = ps.executeQuery();
-            comboBoxCourseSchedule.getItems().clear();
+//            comboBoxCourseSchedule.getItems().clear();
             while(rs.next()){
                 comboBoxCourseSchedule.getItems().add(rs.getString(1));
             }
             ps = conn.prepareStatement("SELECT subject_code from subject where college_code = ? and subject_code <> '00000'");
             ps.setString(1, comboBoxCollegeSchedule.getSelectionModel().getSelectedItem());
             rs = ps.executeQuery();
-            comboBoxSubjectSchedule.getItems().clear();
+//            comboBoxSubjectSchedule.getItems().clear();
             while(rs.next()){
                 comboBoxSubjectSchedule.getItems().add(rs.getString(1));
             }
@@ -1088,7 +1119,7 @@ public class AdminDashboardController extends Controller {
     }
     @FXML
     protected void onBtnGoAction(ActionEvent event){
-        tblSubjectScheduling.getItems().clear();
+//        tblSubjectScheduling.getItems().clear();
         if(comboBoxCourseSchedule.getSelectionModel().getSelectedItem() == null || comboBoxYearSchedule.getSelectionModel().getSelectedItem() == null || comboBoxYearSchedule.getSelectionModel().getSelectedItem() == null){
             return;
         }
@@ -1099,6 +1130,8 @@ public class AdminDashboardController extends Controller {
             ps.setString(3, comboBoxCourseSchedule.getSelectionModel().getSelectedItem()+comboBoxYearSchedule.getSelectionModel().getSelectedItem()+comboBoxBlockSchedule.getSelectionModel().getSelectedItem());
             rs = ps.executeQuery();
             TableViewUtils.generateTableFromResultSet(tblSubjectScheduling, rs);
+//            TableFilter.forTableView(tblSubjectScheduling).apply();
+
         }catch(Exception e){
             AlertMessage.showErrorAlert("An error occurred while displaying block schedule: " + e);
         }
@@ -1206,7 +1239,7 @@ public class AdminDashboardController extends Controller {
         }catch (Exception e){
             System.out.println(e);
         }
-        tblSubjectScheduling.getItems().clear();
+//        tblSubjectScheduling.getItems().clear();
         comboBoxCollegeSchedule.getSelectionModel().clearSelection();
         comboBoxSubjectSchedule.getSelectionModel().clearSelection();
         txtAreaDescription.clear();
@@ -1268,7 +1301,7 @@ public class AdminDashboardController extends Controller {
             }
             btnGo.fire();
         }catch (Exception e){
-            AlertMessage.showErrorAlert("An error occurred while adding a subject schedule: " + e);
+            AlertMessage.showErrorAlert("The selected schedule already exists in the table. Use update instead if you wish to alter the table.");
         }
 
         onBtnGoAction(event);
@@ -1366,7 +1399,7 @@ public class AdminDashboardController extends Controller {
         currentPane.setVisible(true);
         tblStudents.getSelectionModel().clearSelection();
         btnDeleteStudent.setDisable(tblStudents.getSelectionModel().getSelectedItem() == null);
-        tblStudents.getItems().clear();
+//        tblStudents.getItems().clear();
         tblStudents.getColumns().clear();
         lblCurrentMasterlist.setText("EMPLOYEE MASTERLIST");
         txtStudentSearch.setPromptText("Search for an employee id or name");
@@ -1380,6 +1413,8 @@ public class AdminDashboardController extends Controller {
                     btnEmployeeEntry.fire();
                 }
             });
+//            TableFilter.forTableView(tblStudents).apply();
+
 
         }catch(Exception e){
             System.out.println(e);
@@ -1414,180 +1449,227 @@ public class AdminDashboardController extends Controller {
                     btnEmployeeEntry.fire();
                 }
             });
+//            TableFilter.forTableView(tblStudents).apply();
+
         }catch (Exception e) {
             AlertMessage.showErrorAlert("An error occurred while displaying employee masterlist:"+e);
         }
     }
 
-    @FXML
-    protected void onBtnSubjectScheduleAction(ActionEvent event){
-        btnManageDelete.setDisable(true);
-        currentPane.setVisible(false);
-        currentPane = manageContainer;
-        currentPane.setVisible(true);
-        tblManage.getColumns().clear();
-        tblManage.getItems().clear();
-        lblManage.setText("MANAGE COLLEGES");
-        try{
-            ps = conn.prepareStatement("SELECT * FROM vwSubjectScheduleBySequence");
-            rs = ps.executeQuery();
-            for(int i = 0; i < rs.getMetaData().getColumnCount(); ++i){
-                final int j = i;
-                TableColumn col = new TableColumn(rs.getMetaData().getColumnName(i+1).toUpperCase());
-                col.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<ObservableList,String>, ObservableValue<String>>(){
-                    public ObservableValue<String> call(TableColumn.CellDataFeatures<ObservableList, String> param) {
-                        return (param.getValue().get(j) == null) ? new SimpleStringProperty("-") : new SimpleStringProperty(param.getValue().get(j).toString());
-                    }
-                });
-
-                col.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent>() {
-                    @Override public void handle(TableColumn.CellEditEvent t) {
-                        ObservableList<String> o = (ObservableList<String>) t.getRowValue();
-                        try{
-                            System.out.println(o.get(j));
-
-                            System.out.println(t.getNewValue());
-                            ps = conn.prepareStatement("UPDATE SUBJECT_SCHEDULE SET " + rs.getMetaData().getColumnName(j+1) + " = ? "+ "WHERE SY = ? AND SEMESTER = ? AND COLLEGE_CODE = ? AND SUBJECT_CODE = ? AND BLOCK_NO = ? AND SEQUENCE_NO = ?");
-                            ps.setString(1, t.getNewValue().toString()) ;
-                            ps.setString(2, o.get(0));
-                            ps.setString(3, o.get(1));
-                            ps.setString(4, o.get(2));
-                            ps.setString(5, o.get(3));
-                            ps.setString(6, o.get(5));
-                            ps.setString(7, o.get(10));
-
-                            System.out.println(List.of(o.get(0), o.get(1), o.get(2), o.get(3), o.get(5), o.get(10)));
-
-                            ps.executeUpdate();
-//                            o.set(j, t.getNewValue().toString());
-
-                            btnSubjectSchedule.fire();
-                        }catch(Exception e){
-                            System.out.println(e);
-                        }
-
-                    }
-                });
-                String txt = col.getText().replaceAll("_", " ").toUpperCase();
-                switch(txt){
-                    case "NAME":
-                    case "DESCRIPTION":
-                    case "SUBJECT CODE":
-                    case "COLLEGE CODE":
-                        col.setCellFactory(
-                                new Callback<TableColumn, TableCell>() {
-                                    public TableCell call(TableColumn p) {
-                                        return new TableCell<ObservableList<String>, String>() {
-                                            @Override
-                                            protected void updateItem(String item, boolean empty) {
-                                                super.updateItem(item, empty);
-
-                                                if (item == null || empty) {
-                                                    setText(null);
-                                                    setStyle("");
-                                                } else {
-                                                    Text text = new Text(item);
-                                                    text.setStyle("-fx-text-alignment:left;");
-                                                    text.wrappingWidthProperty().bind(getTableColumn().widthProperty().subtract(35));
-                                                    setGraphic(text);
-                                                }
-                                            }
-                                        };
-                                    }
-                                }
-                        );
-                        break;
-                    case "TYPE":
-                        col.setCellFactory(
-                                new Callback<TableColumn, TableCell>() {
-                                    public TableCell call(TableColumn p) {
-                                        return new ComboBoxTableCell(new DefaultStringConverter(), FXCollections.observableArrayList("F2F", "OL"));
-                                    }
-                                }
-                        );
-                        break;
-                    case "SEQUENCE NO":
-                        col.setCellFactory(
-                                new Callback<TableColumn, TableCell>() {
-                                    public TableCell call(TableColumn p) {
-                                        return new ComboBoxTableCell(new DefaultStringConverter(), FXCollections.observableArrayList("01", "02"));
-                                    }
-                                }
-                        );
-                        break;
-                    case "SY":
-                        ObservableList<String> comboBoxItems = FXCollections.observableArrayList(Database.fetch("SELECT SY FROM SY"));
-                        col.setCellFactory(
-                                new Callback<TableColumn, TableCell>() {
-                                    public TableCell call(TableColumn p) {
-                                        return new ComboBoxTableCell(new DefaultStringConverter(), comboBoxItems);
-                                    }
-                                }
-                        );
-                        break;
-                    case "SEMESTER":
-                        comboBoxItems = FXCollections.observableArrayList(Database.fetch("SELECT SEMESTER FROM SEMESTER"));
-                        col.setCellFactory(
-                                new Callback<TableColumn, TableCell>() {
-                                    public TableCell call(TableColumn p) {
-                                        return new ComboBoxTableCell(new DefaultStringConverter(), comboBoxItems);
-                                    }
-                                }
-                        );
-                        break;
-                    case "FACULTY ID":
-                        comboBoxItems = FXCollections.observableArrayList(Database.fetch("SELECT EMPLOYEE_ID FROM EMPLOYEE"));
-                        col.setCellFactory(
-                                new Callback<TableColumn, TableCell>() {
-                                    public TableCell call(TableColumn p) {
-                                        return new ComboBoxTableCell(new DefaultStringConverter(), comboBoxItems);
-                                    }
-                                }
-                        );
-                        break;
-                    default:
-                        col.setCellFactory(
-                                new Callback<TableColumn, TableCell>() {
-                                    public TableCell call(TableColumn p) {
-                                        return new WrappingTextFieldTableCell<ObservableList<String>>();
-
-                                    }
-                                }
-                        );
-                }
-                tblManage.getColumns().addAll(col);
-            }
-            ObservableList<ObservableList<String>> scheds = FXCollections.observableArrayList();
-            while(rs.next()){
-                ObservableList<String> row = FXCollections.observableArrayList();
-                for (int i = 1; i <= rs.getMetaData().getColumnCount(); ++i) {
-                    row.add(rs.getString(i));
-                }
-                scheds.add(row);
-            }
-            tblManage.setItems(scheds);
-
-            tblManage.setRowFactory(tblView -> {
-                final TableRow<ObservableList<String>> r = new TableRow<>();
-                r.hoverProperty().addListener((observable) -> {
-                    final ObservableList<String> current = r.getItem();
-                    if (r.isHover() && current != null) {
-                        r.setStyle("-fx-background-color: #dbdbdb");
-                    } else {
-                        r.setStyle("");
-                    }
-                });
-                return r;
-            });
-            TableViewUtils.resizeTable(tblManage);
-
-        } catch(Exception e){
-            AlertMessage.showErrorAlert("An error occurred while displaying subject schedules: " + e);
-        }
-    }
+//    @FXML
+//    protected void onBtnSubjectScheduleAction(ActionEvent event){
+//        btnManageDelete.setDisable(true);
+//        currentPane.setVisible(false);
+//        currentPane = manageContainer;
+//        currentPane.setVisible(true);
+//        tblManage.getColumns().clear();
+//        tblManage.getItems().clear();
+//        lblManage.setText("MANAGE COLLEGES");
+//        try{
+//            ps = conn.prepareStatement("SELECT * FROM vwSubjectScheduleBySequence");
+//            rs = ps.executeQuery();
+//            for(int i = 0; i < rs.getMetaData().getColumnCount(); ++i){
+//                final int j = i;
+//                TableColumn col = new TableColumn(rs.getMetaData().getColumnName(i+1).toUpperCase());
+//                col.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<ObservableList,String>, ObservableValue<String>>(){
+//                    public ObservableValue<String> call(TableColumn.CellDataFeatures<ObservableList, String> param) {
+//                        return (param.getValue().get(j) == null) ? new SimpleStringProperty("-") : new SimpleStringProperty(param.getValue().get(j).toString());
+//                    }
+//                });
+//
+//                col.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent>() {
+//                    @Override public void handle(TableColumn.CellEditEvent t) {
+//                        ObservableList<String> o = (ObservableList<String>) t.getRowValue();
+//                        try{
+//                            System.out.println(o.get(j));
+//
+//                            System.out.println(t.getNewValue());
+//                            ps = conn.prepareStatement("UPDATE SUBJECT_SCHEDULE SET " + rs.getMetaData().getColumnName(j+1) + " = ? "+ "WHERE SY = ? AND SEMESTER = ? AND COLLEGE_CODE = ? AND SUBJECT_CODE = ? AND BLOCK_NO = ? AND SEQUENCE_NO = ?");
+//                            ps.setString(1, t.getNewValue().toString()) ;
+//                            ps.setString(2, o.get(0));
+//                            ps.setString(3, o.get(1));
+//                            ps.setString(4, o.get(2));
+//                            ps.setString(5, o.get(3));
+//                            ps.setString(6, o.get(5));
+//                            ps.setString(7, o.get(10));
+//
+//                            System.out.println(List.of(o.get(0), o.get(1), o.get(2), o.get(3), o.get(5), o.get(10)));
+//
+//                            ps.executeUpdate();
+////                            o.set(j, t.getNewValue().toString());
+//
+//                            btnSubjectSchedule.fire();
+//                        }catch(Exception e){
+//                            System.out.println(e);
+//                        }
+//
+//                    }
+//                });
+//                String txt = col.getText().replaceAll("_", " ").toUpperCase();
+//                switch(txt){
+//                    case "NAME":
+//                    case "DESCRIPTION":
+//                    case "SUBJECT CODE":
+//                    case "COLLEGE CODE":
+//                        col.setCellFactory(
+//                                new Callback<TableColumn, TableCell>() {
+//                                    public TableCell call(TableColumn p) {
+//                                        return new TableCell<ObservableList<String>, String>() {
+//                                            @Override
+//                                            protected void updateItem(String item, boolean empty) {
+//                                                super.updateItem(item, empty);
+//
+//                                                if (item == null || empty) {
+//                                                    setText(null);
+//                                                    setStyle("");
+//                                                } else {
+//                                                    Text text = new Text(item);
+//                                                    text.setStyle("-fx-text-alignment:left;");
+//                                                    text.wrappingWidthProperty().bind(getTableColumn().widthProperty().subtract(35));
+//                                                    setGraphic(text);
+//                                                }
+//                                            }
+//                                        };
+//                                    }
+//                                }
+//                        );
+//                        break;
+//                    case "TYPE":
+//                        col.setCellFactory(
+//                                new Callback<TableColumn, TableCell>() {
+//                                    public TableCell call(TableColumn p) {
+//                                        return new ComboBoxTableCell(new DefaultStringConverter(), FXCollections.observableArrayList("F2F", "OL"));
+//                                    }
+//                                }
+//                        );
+//                        break;
+//                    case "SEQUENCE NO":
+//                        col.setCellFactory(
+//                                new Callback<TableColumn, TableCell>() {
+//                                    public TableCell call(TableColumn p) {
+//                                        return new ComboBoxTableCell(new DefaultStringConverter(), FXCollections.observableArrayList("01", "02"));
+//                                    }
+//                                }
+//                        );
+//                        break;
+//                    case "SY":
+//                        ObservableList<String> comboBoxItems = FXCollections.observableArrayList(Database.fetch("SELECT SY FROM SY"));
+//                        col.setCellFactory(
+//                                new Callback<TableColumn, TableCell>() {
+//                                    public TableCell call(TableColumn p) {
+//                                        return new ComboBoxTableCell(new DefaultStringConverter(), comboBoxItems);
+//                                    }
+//                                }
+//                        );
+//                        break;
+//                    case "SEMESTER":
+//                        comboBoxItems = FXCollections.observableArrayList(Database.fetch("SELECT SEMESTER FROM SEMESTER"));
+//                        col.setCellFactory(
+//                                new Callback<TableColumn, TableCell>() {
+//                                    public TableCell call(TableColumn p) {
+//                                        return new ComboBoxTableCell(new DefaultStringConverter(), comboBoxItems);
+//                                    }
+//                                }
+//                        );
+//                        break;
+//                    case "FACULTY ID":
+//                        comboBoxItems = FXCollections.observableArrayList(Database.fetch("SELECT EMPLOYEE_ID FROM EMPLOYEE"));
+//                        col.setCellFactory(
+//                                new Callback<TableColumn, TableCell>() {
+//                                    public TableCell call(TableColumn p) {
+//                                        return new ComboBoxTableCell(new DefaultStringConverter(), comboBoxItems);
+//                                    }
+//                                }
+//                        );
+//                        break;
+//                    default:
+//                        col.setCellFactory(
+//                                new Callback<TableColumn, TableCell>() {
+//                                    public TableCell call(TableColumn p) {
+//                                        return new WrappingTextFieldTableCell<ObservableList<String>>();
+//
+//                                    }
+//                                }
+//                        );
+//                }
+//                tblManage.getColumns().addAll(col);
+//            }
+//            ObservableList<ObservableList<String>> scheds = FXCollections.observableArrayList();
+//            while(rs.next()){
+//                ObservableList<String> row = FXCollections.observableArrayList();
+//                for (int i = 1; i <= rs.getMetaData().getColumnCount(); ++i) {
+//                    row.add(rs.getString(i));
+//                }
+//                scheds.add(row);
+//            }
+//            tblManage.setItems(scheds);
+//
+//            tblManage.setRowFactory(tblView -> {
+//                final TableRow<ObservableList<String>> r = new TableRow<>();
+//                r.hoverProperty().addListener((observable) -> {
+//                    final ObservableList<String> current = r.getItem();
+//                    if (r.isHover() && current != null) {
+//                        r.setStyle("-fx-background-color: #dbdbdb");
+//                    } else {
+//                        r.setStyle("");
+//                    }
+//                });
+//                return r;
+//            });
+//            TableViewUtils.resizeTable(tblManage);
+//
+//
+//        } catch(Exception e){
+//            AlertMessage.showErrorAlert("An error occurred while displaying subject schedules: " + e);
+//        }
+//    }
 
     @FXML
     protected void onBtnClassAction(ActionEvent event) {
+        currentPane.setVisible(false);
+        currentPane = classListContainer;
+        currentPane.setVisible(true);
+        txtClassListSY.setText(currentSY+"-"+currentSem);
+        comboBoxClassListCourse.getSelectionModel().clearSelection();
+        comboBoxClassListYear.getSelectionModel().clearSelection();;
+        comboBoxClassListBlock.getSelectionModel().clearSelection();
+        tblClassStudents.getColumns().clear();
+        tblClassSchedule.getColumns().clear();
+    }
+
+    @FXML
+    protected void onBtnLoadClassAction(ActionEvent event) {
+        String course = comboBoxClassListCourse.getSelectionModel().getSelectedItem();
+        String year = comboBoxClassListYear.getSelectionModel().getSelectedItem();
+        String block = comboBoxClassListBlock.getSelectionModel().getSelectedItem();
+
+        if(course == null || year == null || block == null){
+            AlertMessage.showErrorAlert("Please select a course, year, and block.");
+            return;
+        }
+        try{
+            ps = conn.prepareStatement("SELECT `student number`, `last name`, `first name` FROM VWCLASSLIST where SY = ? and semester = ? and block_no = ? and REGISTRATION_STATUS = 'Regular'");
+            ps.setString(1, currentSY);
+            ps.setString(2, currentSem);
+            ps.setString(3, course+year+block);
+            rs = ps.executeQuery();
+            TableViewUtils.generateTableFromResultSet(tblClassStudents, rs);
+        }catch (Exception e){
+            AlertMessage.showErrorAlert("An error occurred while generating the student class list: " + e);
+        }
+        try{
+            ps = conn.prepareStatement("select subject_code, description, schedule, credits, professor from vwsubjectschedules where sy = ? and semester = ? and course = ? and year = ? and block = ?");
+            ps.setString(1, currentSY);
+            ps.setString(2, currentSem);
+            ps.setString(3, course);
+            ps.setString(4, year);
+            ps.setString(5, block);
+            rs = ps.executeQuery();
+            TableViewUtils.generateTableFromResultSet(tblClassSchedule, rs);
+        }catch (Exception e){
+            AlertMessage.showErrorAlert("An error occurred while generating the student class list: " + e);
+        }
+
 
     }
     @FXML
@@ -1639,12 +1721,14 @@ public class AdminDashboardController extends Controller {
         currentPane.setVisible(false);
         currentPane = studentRecordsContainer;
         currentPane.setVisible(true);
-        tblStudentGradeRecord.getItems().clear();
+
+//        tblStudentGradeRecord.getItems().clear();
 
         try{
             ps = conn.prepareStatement("SELECT student_no, concat(lastname, ', ', firstname) as name, case when gender = 'M' then 'Male' when gender = 'F' then 'Female' else 'Invalid gender' end as gender, bday as birthday, course_code, registration_status FROM VWSTUDENTINFO");
             rs = ps.executeQuery();
             TableViewUtils.generateTableFromResultSet(tblStudentRecord, rs);
+//            TableFilter.forTableView(tblStudentRecord).apply();
         }catch (Exception e){
             AlertMessage.showErrorAlert("An error occurred while displaying students: " + e);
         }
@@ -1658,7 +1742,7 @@ public class AdminDashboardController extends Controller {
         }
 
         if(o == null) {
-            tblStudentGradeRecord.getItems().clear();
+//            tblStudentGradeRecord.getItems().clear();
             choiceSYRecords.getSelectionModel().clearSelection();
             choiceSYRecords.setDisable(true);
             btnLoadStudentRecord.setDisable(true);
@@ -1666,6 +1750,8 @@ public class AdminDashboardController extends Controller {
                 ps = conn.prepareStatement("SELECT student_no, concat(lastname, ', ', firstname) as name, case when gender = 'M' then 'Male' when gender = 'F' then 'Female' else 'Invalid gender' end as gender, bday as birthday, course_code, registration_status FROM VWSTUDENTINFO");
                 rs = ps.executeQuery();
                 TableViewUtils.generateTableFromResultSet(tblStudentRecord, rs);
+//                TableFilter.forTableView(tblStudentRecord).apply();
+
             }catch(Exception e){
                 System.out.println(e);
             }
@@ -1697,7 +1783,7 @@ public class AdminDashboardController extends Controller {
         }catch (Exception e){
             AlertMessage.showErrorAlert("An error occurred while retrieving school years: " + e);
         }
-        tblStudentGradeRecord.getItems().clear();
+//        tblStudentGradeRecord.getItems().clear();
         tblStudentGradeRecord.getColumns().clear();
     }
     @FXML
@@ -1707,7 +1793,7 @@ public class AdminDashboardController extends Controller {
     @FXML
     protected void onBtnLoadStudentRecordAction(ActionEvent event) {
         if(choiceSYRecords.getSelectionModel().getSelectedItem() == null){
-            tblStudentGradeRecord.getItems().clear();
+//            tblStudentGradeRecord.getItems().clear();
             return;
         }
         try{
@@ -1799,7 +1885,7 @@ public class AdminDashboardController extends Controller {
 
     @FXML
     protected void onBtnGradesEntryAction(ActionEvent event) throws IllegalAccessException {
-        tblStudentGrades.getItems().clear();
+//        tblStudentGrades.getItems().clear();
         tblStudentGrades.getColumns().clear();
         currentPane.setVisible(false);
         currentPane = gradesEntryContainer;
@@ -1853,7 +1939,7 @@ public class AdminDashboardController extends Controller {
     }
     @FXML
     protected void onBtnLoadDataAction(ActionEvent event){
-        tblStudentGrades.getItems().clear();
+//        tblStudentGrades.getItems().clear();
         tblStudentGrades.getColumns().clear();
 
         try{
@@ -1966,6 +2052,7 @@ public class AdminDashboardController extends Controller {
                 }
             });
 
+            tblManage.getItems().clear();
             status.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<ObservableList<String>, String>>() {
                 @Override public void handle(TableColumn.CellEditEvent<ObservableList<String>, String> t) {
                     ObservableList<String> o = t.getRowValue();
@@ -1989,6 +2076,18 @@ public class AdminDashboardController extends Controller {
                 tblManage.getItems().add(FXCollections.observableArrayList(rs.getString(1), (rs.getString(1).equals(currentSY)) ? "Active" : "Closed"));
             }
             TableViewUtils.resizeTable(tblManage);
+            tblManage.setRowFactory(tblView -> {
+                final TableRow<ObservableList<String>> r = new TableRow<>();
+                r.hoverProperty().addListener((observable) -> {
+                    final ObservableList<String> current = r.getItem();
+                    if (r.isHover() && current != null) {
+                        r.setStyle("-fx-background-color: #dbdbdb");
+                    } else {
+                        r.setStyle("");
+                    }
+                });
+                return r;
+            });
         }catch(Exception e){
             AlertMessage.showErrorAlert("An error occurred while fetching school years: " + e);
         }
@@ -2061,6 +2160,18 @@ public class AdminDashboardController extends Controller {
             while(rs.next()){
                 tblManage.getItems().add(FXCollections.observableArrayList(rs.getString(1), (rs.getString(1).equals(currentSem)) ? "Active" : "Closed"));
             }
+            tblManage.setRowFactory(tblView -> {
+                final TableRow<ObservableList<String>> r = new TableRow<>();
+                r.hoverProperty().addListener((observable) -> {
+                    final ObservableList<String> current = r.getItem();
+                    if (r.isHover() && current != null) {
+                        r.setStyle("-fx-background-color: #dbdbdb");
+                    } else {
+                        r.setStyle("");
+                    }
+                });
+                return r;
+            });
             TableViewUtils.resizeTable(tblManage);
         }catch(Exception e){
             AlertMessage.showErrorAlert("An error occurred while fetching school years: " + e);
@@ -2071,7 +2182,6 @@ public class AdminDashboardController extends Controller {
     @FXML
     protected void onBtnCollegeAction(ActionEvent event) {
         btnManageDelete.setDisable(true);
-
         currentPane.setVisible(false);
         currentPane = manageContainer;
         currentPane.setVisible(true);
@@ -2126,7 +2236,7 @@ public class AdminDashboardController extends Controller {
         currentPane = manageContainer;
         currentPane.setVisible(true);
         tblManage.getColumns().clear();
-        tblManage.getItems().clear();
+//        tblManage.getItems().clear();
         lblManage.setText("MANAGE SUBJECTS");
         try{
             ps = conn.prepareStatement("SELECT subject_code, description, units, college_code, case when status = 'A' then 'Active' when status = 'I' then 'Inactive' else 'Invalid status' end as status FROM SUBJECT WHERE SUBJECT_CODE <> '00000'");
@@ -2137,6 +2247,8 @@ public class AdminDashboardController extends Controller {
                     btnSubject.fire();
                 }
             });
+//            TableFilter.forTableView(tblManage).apply();
+
         } catch(Exception e){
             AlertMessage.showErrorAlert("An error occurred while displaying subjects: " + e);
         }

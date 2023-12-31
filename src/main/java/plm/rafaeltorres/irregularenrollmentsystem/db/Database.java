@@ -1,5 +1,6 @@
 package plm.rafaeltorres.irregularenrollmentsystem.db;
 import org.springframework.security.crypto.bcrypt.BCrypt;
+import plm.rafaeltorres.irregularenrollmentsystem.utils.AlertMessage;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -8,6 +9,28 @@ import java.util.Map;
 import java.util.Random;
 
 public final class Database {
+    public static final Database INSTANCE = new Database();
+    private Connection conn;
+    private static final String DB = "enrollment_system";
+    private Database(){
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/"+DB,
+                    "oop",
+                    "oop");
+        } catch(Exception e) {
+            AlertMessage.showInformationAlert("An error occurred while connecting to database: " + e);
+        }
+    }
+
+    public static Database getInstance(){
+        return INSTANCE;
+    }
+
+    public Connection getConnection(){
+        return conn;
+    }
+
     public static final class Query {
         public static final String getAccount = "SELECT * FROM ACCOUNT WHERE ACCOUNT_NO = ?";
         public static final String updateImage = "UPDATE ACCOUNT SET IMAGE = ? WHERE ACCOUNT_NO = ?";

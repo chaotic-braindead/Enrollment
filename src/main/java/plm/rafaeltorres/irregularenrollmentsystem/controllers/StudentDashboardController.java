@@ -44,7 +44,6 @@ public class StudentDashboardController extends Controller {
     private Desktop desktop = Desktop.getDesktop();
     private Pane currentPane;
 
-    private Connection conn;
     private PreparedStatement ps;
     private ResultSet rs;
 
@@ -148,7 +147,6 @@ public class StudentDashboardController extends Controller {
             if (newVal == null)
                 oldVal.setSelected(true);
         });
-        conn = Database.connect();
         SimpleDateFormat formatter = new SimpleDateFormat("EEEEE, MMMMM dd, yyyy");
         lblDateNow.setText("Today is "+ formatter.format(new Date()));
         btnDashboard.setSelected(true);
@@ -182,13 +180,13 @@ public class StudentDashboardController extends Controller {
         if(student.getRegistrationStatus().equalsIgnoreCase("REGULAR")) {
             btnSubmit.setVisible(false);
             btnRemove.setVisible(false);
-            btnSchedule.setDisable(true);
+//            btnSchedule.setDisable(true);
             tblSubjects.setPlaceholder(new Label("Please wait for your department chairperson to assign your schedule."));
         }
         else{
             btnSubmit.setVisible(true);
             btnRemove.setVisible(true);
-            btnSchedule.setDisable(false);
+//            btnSchedule.setDisable(false);
             tblSubjects.setPlaceholder(new Label("No schedules to display."));
 
             try{
@@ -197,7 +195,7 @@ public class StudentDashboardController extends Controller {
                 ps.setString(2, currentSY);
                 ps.setString(3, currentSem);
                 rs = ps.executeQuery();
-                btnSchedule.setDisable(!rs.next());
+//                btnSchedule.setDisable(!rs.next());
                 System.out.println(btnSchedule.isDisabled());
             }catch(Exception e){
                 System.out.println(e);
@@ -221,7 +219,7 @@ public class StudentDashboardController extends Controller {
 
             btnTuition.setDisable(!status.equalsIgnoreCase("ENROLLED"));
             btnEnroll.setDisable(status.equalsIgnoreCase("ENROLLED"));
-            btnSchedule.setDisable(status.isEmpty() || status.equalsIgnoreCase("PENDING"));
+//            btnSchedule.setDisable(status.isEmpty() || status.equalsIgnoreCase("PENDING"));
             notEnrolledGroup.setVisible(!status.equalsIgnoreCase("ENROLLED"));
             enrolledGroup.setVisible(status.equalsIgnoreCase("ENROLLED"));
             btnDownloadSER.setDisable(!status.equalsIgnoreCase("ENROLLED"));
@@ -413,7 +411,7 @@ public class StudentDashboardController extends Controller {
             ps.setString(3, currentSem);
             rs = ps.executeQuery();
             boolean res = rs.next();
-            btnSchedule.setDisable(!res);
+//            btnSchedule.setDisable(!res);
             btnEnroll.setDisable(res);
             btnTuition.setDisable(!res);
             notEnrolledGroup.setVisible(!res);
@@ -465,7 +463,7 @@ public class StudentDashboardController extends Controller {
             btnEnroll.setSelected(false);
             btnEnroll.setDisable(true);
             btnTuition.setDisable(false);
-            btnSchedule.setDisable(false);
+//            btnSchedule.setDisable(false);
             btnDownloadSER.setDisable(false);
             onBtnDashboardAction(event);
         }catch(Exception e){
@@ -645,7 +643,7 @@ public class StudentDashboardController extends Controller {
             tblSubjects.getItems().clear();
             tblSubjects.getColumns().clear();
             displayAvailableScheds();
-            btnSchedule.setDisable(false);
+//            btnSchedule.setDisable(false);
             AlertMessage.showInformationAlert("Successfully added "+sched.getSubjectCode());
         } catch(Exception e){
             System.out.println(e);

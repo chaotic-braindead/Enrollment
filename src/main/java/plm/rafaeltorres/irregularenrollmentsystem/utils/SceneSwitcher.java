@@ -26,6 +26,7 @@ public class SceneSwitcher {
         FXMLLoader loader = new FXMLLoader(MainScene.class.getResource(fxml));
         Scene scene = new Scene(loader.load());
         Stage stage = (Stage)((Node)eo.getSource()).getScene().getWindow();
+        stage.setTitle(StringUtils.addSpacesOnPascalCase(fxml).replace(".fxml", ""));
         stage.setScene(scene);
     }
 }
