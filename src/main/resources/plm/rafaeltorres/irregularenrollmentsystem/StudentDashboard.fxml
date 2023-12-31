@@ -137,7 +137,7 @@
                      <children>
                         <StackPane prefHeight="598.0" prefWidth="1081.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
-                              <AnchorPane fx:id="dashboardContainer" prefHeight="880.0" prefWidth="1803.0">
+                              <AnchorPane fx:id="dashboardContainer" prefHeight="880.0" prefWidth="1803.0" visible="false">
                                  <children>
                                     <BorderPane layoutX="27.0" layoutY="21.0" prefHeight="835.0" prefWidth="1742.0" styleClass="loginContainer" stylesheets="@assets/css/styles.css">
                                        <top>
@@ -440,11 +440,11 @@
                                     </AnchorPane>
                                  </children>
                               </AnchorPane>
-                              <AnchorPane fx:id="gradesContainer" prefHeight="551.0" prefWidth="1014.0" stylesheets="@assets/css/styles.css" visible="false">
+                              <AnchorPane fx:id="gradesContainer" prefHeight="551.0" prefWidth="1014.0" stylesheets="@assets/css/styles.css">
                                  <children>
-                                    <AnchorPane layoutX="27.0" layoutY="18.0" prefHeight="561.0" prefWidth="1027.0" styleClass="loginContainer" stylesheets="@assets/css/styles.css">
+                                    <AnchorPane layoutX="27.0" layoutY="18.0" prefHeight="830.0" prefWidth="1720.0" styleClass="loginContainer" stylesheets="@assets/css/styles.css">
                                        <children>
-                                          <TableView fx:id="tblGrades" layoutX="43.0" layoutY="90.0" prefHeight="453.0" prefWidth="923.0">
+                                          <TableView fx:id="tblGrades" layoutX="43.0" layoutY="90.0" prefHeight="704.0" prefWidth="1610.0">
                                             <columns>
                                               <TableColumn prefWidth="248.0" text="SUBJECT CODE" />
                                               <TableColumn minWidth="0.0" prefWidth="246.0" text="SUBJECT DESCRIPTION" />
@@ -457,8 +457,8 @@
                                           </TableView>
                                           <Label layoutX="119.0" layoutY="26.0" styleClass="titleText" stylesheets="@assets/css/styles.css" text="STUDENT GRADE REPORT" />
                                           <FontIcon iconColor="#9c0000" iconLiteral="mdal-list_alt" iconSize="50" layoutX="50.0" layoutY="76.0" />
-                                          <ComboBox fx:id="choiceSY" layoutX="669.0" layoutY="39.0" onAction="#onSYComboAction" prefHeight="25.0" prefWidth="131.0" promptText="School Year" />
-                                          <ComboBox fx:id="choiceSemester" disable="true" layoutX="826.0" layoutY="39.0" onAction="#onSemesterComboAction" prefHeight="25.0" prefWidth="117.0" promptText="Semester" />
+                                          <ComboBox fx:id="choiceSY" layoutX="1375.0" layoutY="40.0" onAction="#onSYComboAction" prefHeight="25.0" prefWidth="131.0" promptText="School Year" />
+                                          <ComboBox fx:id="choiceSemester" disable="true" layoutX="1530.0" layoutY="40.0" onAction="#onSemesterComboAction" prefHeight="25.0" prefWidth="117.0" promptText="Semester" />
                                        </children>
                                     </AnchorPane>
                                  </children>
