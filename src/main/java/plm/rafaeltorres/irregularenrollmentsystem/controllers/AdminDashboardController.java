@@ -2187,6 +2187,7 @@ public class AdminDashboardController extends Controller {
         currentPane.setVisible(true);
         tblManage.getColumns().clear();
         tblManage.getItems().clear();
+        
         lblManage.setText("MANAGE COLLEGES");
         try{
             ps = conn.prepareStatement("SELECT college_code, description, date_opened, date_closed, case when status = 'A' then 'Active' when status = 'I' then 'Inactive' else 'Invalid status' end as status FROM COLLEGE");
