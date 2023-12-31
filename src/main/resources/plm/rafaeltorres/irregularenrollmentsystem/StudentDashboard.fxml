@@ -137,7 +137,7 @@
                      <children>
                         <StackPane prefHeight="598.0" prefWidth="1081.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
-                              <AnchorPane fx:id="dashboardContainer" prefHeight="880.0" prefWidth="1803.0" visible="false">
+                              <AnchorPane fx:id="dashboardContainer" prefHeight="880.0" prefWidth="1803.0">
                                  <children>
                                     <BorderPane layoutX="27.0" layoutY="21.0" prefHeight="835.0" prefWidth="1742.0" styleClass="loginContainer" stylesheets="@assets/css/styles.css">
                                        <top>
@@ -440,7 +440,7 @@
                                     </AnchorPane>
                                  </children>
                               </AnchorPane>
-                              <AnchorPane fx:id="gradesContainer" prefHeight="551.0" prefWidth="1014.0" stylesheets="@assets/css/styles.css">
+                              <AnchorPane fx:id="gradesContainer" prefHeight="551.0" prefWidth="1014.0" stylesheets="@assets/css/styles.css" visible="false">
                                  <children>
                                     <AnchorPane layoutX="27.0" layoutY="18.0" prefHeight="830.0" prefWidth="1720.0" styleClass="loginContainer" stylesheets="@assets/css/styles.css">
                                        <children>
