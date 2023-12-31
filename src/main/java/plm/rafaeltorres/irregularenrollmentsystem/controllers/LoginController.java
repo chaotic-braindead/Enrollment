@@ -20,7 +20,7 @@ import java.util.Date;
 import java.util.ResourceBundle;
 
 public class LoginController implements Initializable {
-    private Connection conn;
+    private Connection conn = Database.getInstance().getConnection();
     private PreparedStatement ps;
     private ResultSet rs;
     @FXML
@@ -38,7 +38,6 @@ public class LoginController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-        conn = Database.connect();
         SimpleDateFormat formatter = new SimpleDateFormat("EEEEE, MMMMM dd, yyyy");
         lblDateNow.setText("Today is "+ formatter.format(new Date()));
     }

@@ -15,7 +15,7 @@ public abstract class User {
     public User(){}
     public User(ResultSet rs){
         Field[] fields = this.getClass().getDeclaredFields();
-        Connection conn = Database.connect();
+        Connection conn = Database.getInstance().getConnection();
         try{
             for(Field f : fields){
                 f.setAccessible(true);

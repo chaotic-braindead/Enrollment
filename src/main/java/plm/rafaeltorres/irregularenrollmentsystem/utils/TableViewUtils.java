@@ -42,7 +42,7 @@ public class TableViewUtils {
                 col.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent>() {
                     @Override public void handle(TableColumn.CellEditEvent t) {
                         ObservableList<String> o = (ObservableList<String>) t.getRowValue();
-                        Connection conn = Database.connect();
+                        Connection conn = Database.getInstance().getConnection();
                         PreparedStatement ps = null;
                         try{
                             if(rs.getMetaData().getColumnName(j+1).equalsIgnoreCase("COURSE_CODE") && args[0].equalsIgnoreCase("STUDENT")){

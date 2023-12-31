@@ -1829,7 +1829,7 @@ public class AdminDashboardController extends Controller {
                             }
                             o.set(o.size()-2, t.getNewValue());
                             try {
-                                Connection conn = Database.connect();
+                                Connection conn = Database.getInstance().getConnection();
                                 PreparedStatement ps = conn.prepareStatement("REPLACE INTO GRADE(sy, semester, student_no, subject_code, block_no, grade) VALUES(?, ?, ?, ?, ?, ?)");
                                 ps.setString(1, choiceSYRecords.getSelectionModel().getSelectedItem());
                                 ps.setString(2, o.get(2));
@@ -1979,7 +1979,7 @@ public class AdminDashboardController extends Controller {
                             o.set(o.size()-2, t.getNewValue());
                             System.out.println(o);
                             try {
-                                Connection conn = Database.connect();
+                                Connection conn = Database.getInstance().getConnection();
                                 PreparedStatement ps = conn.prepareStatement("REPLACE INTO GRADE(sy, semester, student_no, subject_code, block_no, grade) VALUES(?, ?, ?, ?, ?, ?)");
                                 ps.setString(1, currentSY);
                                 ps.setString(2, currentSem);

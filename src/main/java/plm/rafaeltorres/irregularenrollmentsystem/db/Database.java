@@ -54,25 +54,10 @@ public final class Database {
 
         public static final String getEmployeeAccount = "SELECT * FROM VWEMPLOYEEACCOUNT WHERE EMPLOYEE_ID = ?";
     }
-    public static Connection connect(){
-        Connection conn = null;
-        Map<String, String> env = System.getenv();
-        String db = "enrollment_system";
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/"+db,
-                    env.get("mysqluser"),
-                    env.get("mysqlpass"));
-//            System.out.println("[Database]: Successfully connected to "+db);
-        } catch(Exception e) {
-            System.out.println(e);
-        }
-        return conn;
-    }
     public static List<String> fetch(String query){
         List<String> res = new ArrayList<>();
         try{
-            Connection conn = connect();
+            Connection conn = Database.getInstance().getConnection();
             PreparedStatement ps = conn.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
