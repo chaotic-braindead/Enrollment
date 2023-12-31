@@ -42,32 +42,6 @@ public class WrappingTextFieldTableCell<S> extends TextFieldTableCell<S, String>
         text.wrappingWidthProperty().bind(widthProperty().subtract(10));
         text.setStyle("-fx-alignment: center");
         text.textProperty().bind(itemProperty());
-        text.setOnKeyTyped(new EventHandler<KeyEvent>() {
-            public void handle(KeyEvent event)
-            {
-                // get the typed character
-                String characterString = event.getCharacter();
-                System.out.println("here");
-                char c = characterString.charAt(0);
-                // if it is a control character or it is undefined, ignore it
-                if (Character.isISOControl(c) || characterString.contentEquals(KeyEvent.CHAR_UNDEFINED))
-                    return;
-
-                // get the text field/area that triggered this key event and its text
-                TextInputControl source = (TextInputControl) event.getSource();
-                String text = source.getText();
-
-                // If the text exceeds its max length or if a character that matches
-                // notAllowedCharactersRegEx is typed
-                if (characterString.matches(regex))
-                {
-                    // remove the last character
-                    source.deletePreviousChar();
-                    System.out.println("here");
-                }
-            }
-        });
-
         return text;
     }
 }

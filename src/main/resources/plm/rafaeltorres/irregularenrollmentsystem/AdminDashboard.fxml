@@ -214,11 +214,11 @@
                                           <ComboBox fx:id="comboBoxStudentNo" disable="true" layoutX="136.0" layoutY="104.0" prefHeight="25.0" prefWidth="265.0" promptText="Select a student number" />
                                           <HBox alignment="CENTER_RIGHT" layoutX="1366.0" layoutY="134.0" prefHeight="25.0" prefWidth="314.0" spacing="20.0">
                                              <children>
-                                                <Button fx:id="btnApprove" mnemonicParsing="false" onAction="#onBtnApproveAction" text="Approve" visible="false" />
+                                                <Button fx:id="btnApprove" disable="true" mnemonicParsing="false" onAction="#onBtnApproveAction" text="Approve" visible="false" />
                                                 <StackPane>
                                                    <children>
                                                       <Button fx:id="btnEnrollStudent" disable="true" mnemonicParsing="false" onAction="#onBtnEnrollStudentAction" text="Enroll" />
-                                                      <Button fx:id="btnDisapprove" mnemonicParsing="false" onAction="#onBtnDisapproveAction" text="Disapprove" visible="false" />
+                                                      <Button fx:id="btnDisapprove" disable="true" mnemonicParsing="false" onAction="#onBtnDisapproveAction" text="Disapprove" visible="false" />
                                                    </children>
                                                 </StackPane>
                                                 <Button fx:id="btnPrintPreview" disable="true" mnemonicParsing="false" text="Print Preview" />

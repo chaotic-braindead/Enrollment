@@ -25,6 +25,7 @@ import plm.rafaeltorres.irregularenrollmentsystem.utils.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.net.URL;
@@ -290,8 +291,8 @@ public class StudentDashboardController extends Controller {
     public void onChangePictureAction(ActionEvent event) {
         Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
         FileChooser fc = new FileChooser();
-        fc.setSelectedExtensionFilter(
-                new FileChooser.ExtensionFilter("Image formats",
+        fc.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("Image formats (.jpg, .png)",
                         "*.jpg", "*.jpeg", "*.png"));
         fc.setTitle("Select Image");
         File img = fc.showOpenDialog(stage);
@@ -321,8 +322,9 @@ public class StudentDashboardController extends Controller {
 
     }
     @FXML
-    protected void btnDownloadOnMouseClicked(MouseEvent event) {
-
+    protected void btnDownloadOnMouseClicked(MouseEvent event) throws FileNotFoundException {
+        Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+//        PDFGenerator.generateSER(stage, null);
     }
 
     private void displayAvailableScheds() {

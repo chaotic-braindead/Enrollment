@@ -29,22 +29,4 @@ public abstract class Controller implements Initializable {
 
         SceneSwitcher.switchScene(event, "Login.fxml");
     }
-    @FXML
-    protected void onBtnClick(Event event) throws IllegalAccessException{
-        Field[] fields = this.getClass().getDeclaredFields();
-        for(Field f : fields){
-            f.setAccessible(true);
-            if(event.getSource().equals(f.get(this))){
-                ToggleButton btn = (ToggleButton) f.get(this);
-                btn.setSelected(true);
-                continue;
-            }
-            if(f.getType().equals(ToggleButton.class)){
-                ToggleButton btn = (ToggleButton)f.get(this);
-                btn.setSelected(false);
-            }
-        }
-    }
-
-
 }

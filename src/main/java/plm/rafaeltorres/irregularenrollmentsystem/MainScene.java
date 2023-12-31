@@ -6,6 +6,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import plm.rafaeltorres.irregularenrollmentsystem.db.Database;
 import plm.rafaeltorres.irregularenrollmentsystem.utils.Maintenance;
+import plm.rafaeltorres.irregularenrollmentsystem.utils.PDFGenerator;
 
 
 import java.io.IOException;
@@ -16,8 +17,6 @@ public class MainScene extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-//        Database.generatePassword();
-//        Database.generateTableValues();
         FXMLLoader fxmlLoader = new FXMLLoader(MainScene.class.getResource("Login.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         stage.setTitle("Login");

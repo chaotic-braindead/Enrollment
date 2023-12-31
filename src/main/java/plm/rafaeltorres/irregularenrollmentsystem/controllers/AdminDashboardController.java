@@ -1,5 +1,4 @@
 package plm.rafaeltorres.irregularenrollmentsystem.controllers;
-
 import com.dlsc.formsfx.model.event.FieldEvent;
 import com.dlsc.formsfx.model.structure.*;
 import com.dlsc.formsfx.model.validators.RegexValidator;
@@ -34,6 +33,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.converter.DefaultStringConverter;
@@ -45,9 +45,11 @@ import plm.rafaeltorres.irregularenrollmentsystem.model.User;
 import plm.rafaeltorres.irregularenrollmentsystem.utils.*;
 
 import javax.swing.*;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.sql.*;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -404,8 +406,50 @@ public class AdminDashboardController extends Controller {
         }else{
             lblBirthday.setText("-");
         }
+
+        if(employee.getImage() != null){
+            setImage(employee.getImage());
+        }
     }
 
+    public void setImage(Blob img){;
+        Image newImg = null;
+        try{
+            byte[] imgBytes = img.getBytes(1, (int)img.length());
+            newImg = new Image((new ByteArrayInputStream(imgBytes)));
+        } catch(Exception e){
+            System.out.println(e);
+        }
+
+        if(newImg != null){
+            ImagePattern ip = new ImagePattern(newImg);
+            imgContainer.setFill(ip);
+        }
+    }
+
+    public void onChangePictureAction(ActionEvent event) {
+        Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        FileChooser fc = new FileChooser();
+        fc.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("Image formats (.jpg, .png)",
+                        "*.jpg", "*.jpeg", "*.png"));
+        fc.setTitle("Select Image");
+        File img = fc.showOpenDialog(stage);
+        try{
+            byte[] imgBytes = Files.readAllBytes(img.toPath());
+            String b64Img = Base64.getEncoder().encodeToString(imgBytes);
+            System.out.println(b64Img);
+            ps = conn.prepareStatement(Database.Query.updateImage);
+            Blob blob = conn.createBlob();
+            blob.setBytes(1, imgBytes);
+            ps.setBlob(1, blob);
+            ps.setString(2, employee.getEmployeeID());
+            ps.executeUpdate();
+            setImage(blob);
+        } catch(Exception e){
+            System.out.println(e);
+        }
+    }
 
 
     @FXML
@@ -588,7 +632,11 @@ public class AdminDashboardController extends Controller {
         }
         String registrationStatus = (!btnApprove.isVisible()) ? "REGULAR" : "IRREGULAR";
 
+        btnApprove.setDisable(o == null);
+        btnDisapprove.setVisible(o == null);
+
         if(o == null) {
+
             tblSubjects.getItems().clear();
             comboBoxStudentNo.setPromptText("");
             comboBoxBlock.getSelectionModel().clearSelection();
@@ -607,6 +655,7 @@ public class AdminDashboardController extends Controller {
             comboBoxStudentNo.getSelectionModel().clearSelection();
             return;
         }
+
 
         for(int i = 0; i < tblEnrollees.getColumns().size(); ++i){
             TableColumn item = tblEnrollees.getColumns().get(i);
@@ -2100,10 +2149,6 @@ public class AdminDashboardController extends Controller {
     }
     @FXML
     protected void btnDownloadOnMouseClicked(MouseEvent event) {
-
-    }
-    @FXML
-    protected void onChangePictureAction(ActionEvent event) {
 
     }
 
