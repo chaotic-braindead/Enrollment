@@ -401,9 +401,26 @@ public class StudentDashboardController extends Controller {
         }
     }
     @FXML
-    protected void btnDownloadOnMouseClicked(MouseEvent event) throws FileNotFoundException {
+    protected void btnDownloadOnMouseClicked(MouseEvent event) throws IOException, SQLException {
         Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-//        PDFGenerator.generateSER(stage, null);
+        ps = conn.prepareStatement("select " +
+                "v.subject_code, " +
+                "v.block, " +
+                "v.description, " +
+                "v.CREDITS, " +
+                "v.schedule, " +
+                "v.professor "+
+                "from student_schedule s " +
+                "inner join vwSubjectSchedules v on " +
+                "s.subject_code = v.subject_code " +
+                "and s.sy = v.sy " +
+                "and s.semester = v.semester " +
+                "and s.block_no = concat(v.course, v.year, v.block) where s.student_no = ? and s.sy = ? and s.semester = ? ");
+        ps.setString(1, student.getStudentNo());
+        ps.setString(2, currentSY);
+        ps.setString(3, currentSem);
+        rs = ps.executeQuery();
+        PDFGenerator.generateSER(stage, student, rs);
     }
 
     private void displayAvailableScheds() {

@@ -441,7 +441,6 @@
                                           <Label layoutX="97.0" layoutY="22.0" styleClass="titleText" stylesheets="@assets/css/styles.css" text="YOUR SCHEDULE" />
                                           <Line endX="1494.0" layoutX="165.0" layoutY="78.0" startX="-112.66667175292969" stroke="#9c0000" />
                                           <FontIcon iconColor="#9c0000" iconLiteral="mdmz-table_view" iconSize="45" layoutX="47.0" layoutY="70.0" />
-                                          <FontIcon iconColor="WHITE" iconLiteral="mdoal-assignment" iconSize="55" />
                                        </children>
                                     </AnchorPane>
                                  </children>
