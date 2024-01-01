@@ -3,52 +3,26 @@ package plm.rafaeltorres.irregularenrollmentsystem.model;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import plm.rafaeltorres.irregularenrollmentsystem.db.Database;
 
-import java.lang.reflect.Field;
-import java.math.BigInteger;
-import java.sql.*;
 import java.time.LocalDate;
-import java.util.List;
 
-public class StudentProperty {
-    private StringProperty student_number;
+public class EmployeeProperty {
+    private StringProperty employee_id;
     private StringProperty first_name;
     private StringProperty last_name;
     private StringProperty email;
-    private SimpleObjectProperty<String> course_code;
-    private ListProperty<String> courseList;
     private ListProperty<String> genderList;
     private SimpleObjectProperty<String> gender;
     private ObjectProperty<LocalDate> birthday;
     private StringProperty cellphone_number;
-    private StringProperty age;
     private StringProperty address;
-    private StringProperty status;
-
-    public StringProperty student_numberProperty() {
-        if (student_number == null){
-            SimpleStringProperty s = new SimpleStringProperty(this, "student_number");
+    public StringProperty employee_idProperty(){
+        if (employee_id == null) {
+            SimpleStringProperty s = new SimpleStringProperty(this, "employee_id");
             s.set("");
-            student_number = s;
+            employee_id= s;
         }
-        return student_number;
-    }
-    public SimpleObjectProperty<String> course_codeProperty() {
-        if (course_code == null){
-            SimpleObjectProperty<String> s = new SimpleObjectProperty<>(this, "course_code");
-            course_code = s;
-        }
-        return course_code;
-    }
-    public ListProperty<String> courseListProperty() {
-        if (courseList == null){
-            ObservableList<String> courses = FXCollections.observableArrayList(Database.fetch("SELECT COURSE_CODE FROM COURSE"));
-            ListProperty<String> s = new SimpleListProperty<>(this, "courseList");
-            s.set(courses);
-            courseList = s;
-        }
-        return courseList;
+        return employee_id;
     }
     public StringProperty first_nameProperty() {
         if (first_name == null) {
@@ -98,14 +72,6 @@ public class StudentProperty {
         }
         return email;
     }
-    public StringProperty statusProperty() {
-        if (status == null) {
-            SimpleStringProperty s = new SimpleStringProperty(this, "status");
-            s.set("");
-            status = s;
-        }
-        return status;
-    }
     public StringProperty cellphone_numberProperty() {
         if (cellphone_number== null){
             SimpleStringProperty s = new SimpleStringProperty(this, "cellphone_number");
@@ -113,14 +79,6 @@ public class StudentProperty {
             cellphone_number = s;
         }
         return cellphone_number;
-    }
-    public StringProperty ageProperty() {
-        if (age == null) {
-            SimpleStringProperty s = new SimpleStringProperty(this, "age");
-            s.set("");
-            age = s;
-        }
-        return age;
     }
     public StringProperty addressProperty() {
         if (address == null) {
@@ -135,10 +93,6 @@ public class StudentProperty {
         return addressProperty().get();
     }
 
-    public String getAge() {
-        return ageProperty().get();
-    }
-
     public String getEmail() {
         return emailProperty().get();
     }
@@ -146,20 +100,9 @@ public class StudentProperty {
     public String getCellphone_number() {
         return cellphone_numberProperty().get();
     }
-
-    public String getStatus() {
-        return statusProperty().get();
-    }
-
     public LocalDate getBirthday() {
         return birthdayProperty().get();
     }
-
-    public String getCourse_code() {
-        return course_codeProperty().get();
-    }
-    public ObservableList<String> getCourseList() { return courseListProperty().get(); }
-
     public String getFirst_name() {
         return first_nameProperty().get();
     }
@@ -175,18 +118,15 @@ public class StudentProperty {
         return last_nameProperty().get();
     }
 
-    public String getStudent_number() {
-        return student_numberProperty().get();
+    public String getEmployee_id() {
+        return employee_idProperty().get();
     }
-
+    public void setEmployee_id(String value){
+        employee_idProperty().set(value);
+    }
     public void setAddress(String value) {
         addressProperty().set(value);
     }
-
-    public void setAge(String value) {
-        ageProperty().set(value);
-    }
-
     public void setEmail(String value) {
         emailProperty().set(value);
     }
@@ -194,21 +134,8 @@ public class StudentProperty {
     public void setCellphone_number(String value) {
         cellphone_numberProperty().set(value);
     }
-
-    public void setStatus(String value) {
-        statusProperty().set(value);
-    }
-
     public void setBirthday(LocalDate value) {
         birthdayProperty().set(value);
-    }
-
-    public void setCourse_code(String value) {
-        course_codeProperty().set(value);
-    }
-
-    public void setCourseList(ObservableList<String> value) {
-        courseListProperty().set(value);
     }
 
     public void setFirst_name(String value) {
@@ -222,13 +149,7 @@ public class StudentProperty {
         genderListProperty().set(value);
     }
 
-
-
     public void setLast_name(String value) {
         last_nameProperty().set(value);
-    }
-
-    public void setStudent_number(String value) {
-        student_numberProperty().set(value);
     }
 }

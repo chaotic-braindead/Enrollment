@@ -1,14 +1,15 @@
 package plm.rafaeltorres.irregularenrollmentsystem.controllers;
 import com.dlsc.formsfx.model.event.FieldEvent;
 import com.dlsc.formsfx.model.structure.*;
+import com.dlsc.formsfx.model.util.BindingMode;
 import com.dlsc.formsfx.model.validators.RegexValidator;
 import com.dlsc.formsfx.model.validators.StringLengthValidator;
+import com.dlsc.formsfx.model.validators.ValidationResult;
+import com.dlsc.formsfx.model.validators.Validator;
 import com.dlsc.formsfx.view.controls.SimpleRadioButtonControl;
 import com.dlsc.formsfx.view.renderer.FormRenderer;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.SimpleListProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -39,9 +40,11 @@ import javafx.util.Callback;
 import javafx.util.converter.DefaultStringConverter;
 import org.controlsfx.control.SearchableComboBox;
 import org.controlsfx.control.table.TableFilter;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import plm.rafaeltorres.irregularenrollmentsystem.MainScene;
 import plm.rafaeltorres.irregularenrollmentsystem.db.Database;
 import plm.rafaeltorres.irregularenrollmentsystem.model.Employee;
+import plm.rafaeltorres.irregularenrollmentsystem.model.EmployeeProperty;
 import plm.rafaeltorres.irregularenrollmentsystem.model.StudentProperty;
 import plm.rafaeltorres.irregularenrollmentsystem.model.User;
 import plm.rafaeltorres.irregularenrollmentsystem.utils.*;
@@ -294,6 +297,8 @@ public class AdminDashboardController extends Controller {
     private TableView<String> tblClassSchedule;
     @FXML
     private TextField txtClassListSY;
+    @FXML
+    private Button btnManageAdd;
 
 
     @Override
@@ -966,101 +971,238 @@ public class AdminDashboardController extends Controller {
         return res;
     }
 
-
-
-    @FXML
-    protected void onBtnAddStudentAction(ActionEvent event) throws IOException{
-        List<String> courses = fetch("SELECT COURSE_CODE FROM COURSE");
-        StringProperty name = new SimpleStringProperty("");
+    private void addStudentEntry(){
         StudentProperty student = new StudentProperty();
-        SingleSelectionField<String> gender = Field.ofSingleSelectionType(List.of("M", "F"));
-        gender.selectionProperty().addListener(new ChangeListener<String>() {
-                    @Override
-                    public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                        System.out.println(newValue);
-                        student.setGender(newValue);
-                    }
-                } );
-        gender.required("Student must have a gender.");
-        gender.label("Gender");
-
-        DateField bday = Field.ofDate(LocalDate.now())
-                .required("Student must have a birthdate.")
-                .label("Birthday");
-        bday.valueProperty().addListener(new ChangeListener<LocalDate>() {
-            @Override
-            public void changed(ObservableValue<? extends LocalDate> observable, LocalDate oldValue, LocalDate newValue) {
-                student.setBirthday(DateTimeFormatter.ofPattern("yyyy-MM-dd").format(newValue));
-            }
-        });
-
-        SingleSelectionField<String> course = Field.ofSingleSelectionType(courses);
-        course.selectionProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                System.out.println(newValue);
-                student.setCourse_code(newValue);
-            }
-        } );
-        course.required("Student must have a course.");
-        course.label("Course");
         Form addStudent = Form.of(
-                Group.of(
-                        Field.ofStringType(student.student_numberProperty()).bind(student.student_numberProperty())
-                                .required("Student must have a student number.")
-                                .label("Student Number")
-                                .validate(RegexValidator.forPattern("^[0-9]{4}-[0-9]{5}", "Must have a valid student number format (year-nnnnn) ex: 2022-00000")),
-                        Field.ofStringType(student.last_nameProperty()).bind(student.last_nameProperty())
-                                .required("Student must have a last name.")
-                                .validate(RegexValidator.forPattern("^[A-Z]{1}([a-z]+)?( )?([A-Z]{1}[a-z]+)?", "Must have a valid name format ex: Dela Cruz"))
-                                .label("Last Name"),
-                        Field.ofStringType(student.first_nameProperty()).bind(student.first_nameProperty())
-                                .required("Student must have a first name.")
-                                .validate(RegexValidator.forPattern("^[A-Z]{1}([a-z]+)?( )?([A-Z]{1}[a-z]+)?", "Must have a valid name format (uppercase start of name/s) ex: Juan"))
-                                .label("First Name"),
-                        gender,
-                        Field.ofDate(LocalDate.now())
-                                .required("Student must have a birthdate.")
-                                .label("Birthday"),
-                        Field.ofStringType(student.emailProperty()).bind(student.emailProperty())
-                                .label("Personal Email")
-                                .validate(RegexValidator.forEmail("Must be a valid email address.")),
-                        Field.ofStringType(student.cellphone_numberProperty()).bind(student.cellphone_numberProperty())
-                                .label("Cellphone Number")
-                                .validate(RegexValidator.forPattern("^(09|\\+639)\\d{9}$", "Must be a valid Philippine phone number ex: 09123456789.")),
-                        Field.ofStringType(student.addressProperty()).bind(student.addressProperty())
-                                .label("Address")
-                                .required("Must have an address"),
-                        course
-                )
-        ).title("Add Student");
-
-        Pane root = new Pane();
-        root.getChildren().add(new FormRenderer(addStudent));
-        Button submit = new Button("Submit");
-        submit.addEventHandler(ActionEvent.ACTION, new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                System.out.println(student.getFirst_name());
-                System.out.println(student.getBirthday());
-                System.out.println(student.getCourse_code());
+                        Group.of(
+                                Field.ofStringType(student.student_numberProperty())
+                                        .bind(student.student_numberProperty())
+                                        .required("Student must have a student number.")
+                                        .label("Student Number")
+                                        .validate(RegexValidator.forPattern("^[0-9]{4}-[0-9]{5}", "Must have a valid student number format (year-nnnnn) ex: 2022-00000")),
+                                Field.ofStringType(student.last_nameProperty())
+                                        .bind(student.last_nameProperty())
+                                        .required("Student must have a last name.")
+                                        .validate(RegexValidator.forPattern("^[A-Z]{1}([a-z]+)?( )?([A-Z]{1}[a-z]+)?", "Must have a valid name format ex: Dela Cruz"))
+                                        .label("Last Name"),
+                                Field.ofStringType(student.first_nameProperty())
+                                        .bind(student.first_nameProperty())
+                                        .required("Student must have a first name.")
+                                        .validate(RegexValidator.forPattern("^[A-Z]{1}([a-z]+)?( )?([A-Z]{1}[a-z]+)?", "Must have a valid name format (uppercase start of name/s) ex: Juan"))
+                                        .label("First Name"),
+                                Field.ofSingleSelectionType(student.genderListProperty())
+                                        .bind(student.genderListProperty(), student.genderProperty())
+                                        .required("Student must have a gender")
+                                        .label("Gender"),
+                                Field.ofDate(LocalDate.now())
+                                        .bind(student.birthdayProperty())
+                                        .required("Student must have a birthdate.")
+                                        .label("Birthday"),
+                                Field.ofStringType(student.emailProperty())
+                                        .bind(student.emailProperty())
+                                        .label("Personal Email")
+                                        .validate(RegexValidator.forEmail("Must be a valid email address.")),
+                                Field.ofStringType(student.cellphone_numberProperty())
+                                        .bind(student.cellphone_numberProperty())
+                                        .label("Cellphone Number")
+                                        .validate(RegexValidator.forPattern("^(09|\\+639)\\d{9}$", "Must be a valid Philippine phone number ex: 09123456789.")),
+                                Field.ofStringType(student.addressProperty())
+                                        .bind(student.addressProperty())
+                                        .label("Address")
+                                        .required("Must have an address"),
+                                Field.ofSingleSelectionType(student.courseListProperty())
+                                        .bind(student.courseListProperty(), student.course_codeProperty())
+                                        .required("Student must have a course")
+                                        .label("Course")
+                        )
+                ).title("Add Student")
+                .binding(BindingMode.CONTINUOUS);
+        FormRenderer formRenderer = new FormRenderer(addStudent);
+        formRenderer.setPrefWidth(700);
+        Dialog dialog = new Dialog();
+        dialog.setTitle("Add student");
+        ButtonType saveConfigButtonType = new ButtonType("Add", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(saveConfigButtonType, ButtonType.CANCEL);
+        dialog.getDialogPane().setContent(formRenderer);
+        dialog.getDialogPane()
+                .lookupButton(saveConfigButtonType)
+                .disableProperty()
+                .bind(Bindings.createBooleanBinding(() -> !addStudent.isValid(),addStudent.validProperty()));
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == saveConfigButtonType) {
+                return student;
             }
+            return null;
         });
-        root.getChildren().add(submit);
-        Stage stage = new Stage();
-        stage.setTitle("Add Student");
-        stage.setScene(new Scene(root));
-        stage.show();
 
+        Optional<StudentProperty> newStudent = dialog.showAndWait();
+        if(newStudent.isEmpty())
+            return;
 
+        try{
+            ps = conn.prepareStatement("INSERT INTO STUDENT VALUES(?, ?, ?, ?, ?, null, ?, ?, ?, ?, 'A')");
+            ps.setString(1, student.getStudent_number());
+            ps.setString(2, student.getLast_name());
+            ps.setString(3, student.getFirst_name());
+            ps.setString(4, student.getEmail());
+            ps.setString(5, student.getGender());
+            ps.setString(6, student.getCourse_code());
+            ps.setString(7, student.getCellphone_number());
+            ps.setString(8, student.getAddress());
+            ps.setString(9, DateTimeFormatter.ofPattern("yyyy-MM-dd").format(student.getBirthday()));
+            ps.executeUpdate();
+            addAccount(student.getStudent_number(), "S");
+            AlertMessage.showInformationAlert("Successfully added student!");
+            btnStudentEntry.fire();
+        }catch(Exception e){
+            AlertMessage.showErrorAlert("The student you entered already exists in the database.");
+        }
+    }
 
-//       ((Node)(event.getSource())).getScene().getWindow().hide())
+    private void addEmployeeEntry(){
+        EmployeeProperty employee = new EmployeeProperty();
+        Form addEmployee = Form.of(
+                        Group.of(
+                                Field.ofStringType(employee.employee_idProperty())
+                                        .bind(employee.employee_idProperty())
+                                        .required("Employee must have an employee id.")
+                                        .label("Employee ID")
+                                        .validate(RegexValidator.forPattern("^E[0-9]{3}", "Must have a valid employee id format ex: E000")),
+                                Field.ofStringType(employee.last_nameProperty())
+                                        .bind(employee.last_nameProperty())
+                                        .required("Employee must have a last name.")
+                                        .validate(RegexValidator.forPattern("^[A-Z]{1}([a-z]+)?( )?([A-Z]{1}[a-z]+)?", "Must have a valid name format ex: Dela Cruz"))
+                                        .label("Last Name"),
+                                Field.ofStringType(employee.first_nameProperty())
+                                        .bind(employee.first_nameProperty())
+                                        .required("Employee must have a first name.")
+                                        .validate(RegexValidator.forPattern("^[A-Z]{1}([a-z]+)?( )?([A-Z]{1}[a-z]+)?", "Must have a valid name format (uppercase start of name/s) ex: Juan"))
+                                        .label("First Name"),
+                                Field.ofSingleSelectionType(employee.genderListProperty())
+                                        .bind(employee.genderListProperty(), employee.genderProperty())
+                                        .required("Employee must have a gender")
+                                        .label("Gender"),
+                                Field.ofDate(LocalDate.now())
+                                        .bind(employee.birthdayProperty())
+                                        .required("Employee must have a birthdate.")
+                                        .label("Birthday"),
+                                Field.ofStringType(employee.emailProperty())
+                                        .bind(employee.emailProperty())
+                                        .label("Personal Email")
+                                        .validate(RegexValidator.forEmail("Must be a valid email address."))
+                                        .required("Employee must have an email"),
+                                Field.ofStringType(employee.cellphone_numberProperty())
+                                        .bind(employee.cellphone_numberProperty())
+                                        .label("Cellphone Number")
+                                        .validate(RegexValidator.forPattern("^(09|\\+639)\\d{9}$", "Must be a valid Philippine phone number ex: 09123456789.")),
+                                Field.ofStringType(employee.addressProperty())
+                                        .bind(employee.addressProperty())
+                                        .label("Address")
+                                        .required("Must have an address")
+                        )
+        )
+                .title("Add Student")
+                .binding(BindingMode.CONTINUOUS);
+        FormRenderer formRenderer = new FormRenderer(addEmployee);
+        formRenderer.setPrefWidth(700);
+        Dialog dialog = new Dialog();
+        dialog.setTitle("Add student");
+        ButtonType saveConfigButtonType = new ButtonType("Add", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(saveConfigButtonType, ButtonType.CANCEL);
+        dialog.getDialogPane().setContent(formRenderer);
+        dialog.getDialogPane()
+                .lookupButton(saveConfigButtonType)
+                .disableProperty()
+                .bind(Bindings.createBooleanBinding(() -> !addEmployee.isValid(),addEmployee.validProperty()));
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == saveConfigButtonType) {
+                return employee;
+            }
+            return null;
+        });
+
+        Optional<StudentProperty> newEmployee = dialog.showAndWait();
+        if(newEmployee.isEmpty())
+            return;
+
+        try{
+            ps = conn.prepareStatement("INSERT INTO EMPLOYEE VALUES(?, ?, ?, ?, ?, ?, ?, ?, 'A')");
+            ps.setString(1, employee.getEmployee_id());
+            ps.setString(2, employee.getLast_name());
+            ps.setString(3, employee.getFirst_name());
+            ps.setString(4, employee.getEmail());
+            ps.setString(5, employee.getGender());
+            ps.setString(6, employee.getCellphone_number());
+            ps.setString(7, employee.getAddress());
+            ps.setString(8, DateTimeFormatter.ofPattern("yyyy-MM-dd").format(employee.getBirthday()));
+            ps.executeUpdate();
+            addAccount(employee.getEmployee_id(), "A");
+            AlertMessage.showInformationAlert("Successfully added employee!");
+            btnEmployeeEntry.fire();
+        }catch(Exception e){
+            AlertMessage.showErrorAlert("The employee you entered already exists in the database.");
+        }
+    }
+    private void addAccount(String accountNumber, String type){
+        try{
+            ps = conn.prepareStatement("INSERT INTO ACCOUNT VALUES(?, ?, null, ?)");
+            ps.setString(1, accountNumber);
+            ps.setString(2, BCrypt.hashpw(accountNumber, BCrypt.gensalt()));
+            ps.setString(3, type);
+            ps.executeUpdate();
+        }catch(Exception e){
+            AlertMessage.showErrorAlert("There was an error while creating user account: " + e);
+        }
+    }
+    @FXML
+    protected void onBtnAddStudentAction(ActionEvent event){
+        if(lblCurrentMasterlist.getText().toUpperCase().contains("STUDENT"))
+            addStudentEntry();
+        else
+            addEmployeeEntry();
+    }
+    private void deleteEntry(String table, String pk, TableView tbl, Runnable callback){
+        table = table.toLowerCase();
+        Optional<ButtonType> confirm = AlertMessage.showConfirmationAlert("Are you sure you want to delete the " + table +"? All occurrences of this record from all tables will be deleted from the database.");
+        if(confirm.isEmpty() || confirm.get() == ButtonType.NO){
+            AlertMessage.showInformationAlert("Cancelled deletion of "+ table);
+            return;
+        }
+        try{
+            ps = conn.prepareStatement("DELETE FROM "+table+" WHERE "+pk+" = ?");
+            ps.setString(1, ((ObservableList<String>)tbl.getSelectionModel().getSelectedItem()).get(0));
+            ps.executeUpdate();
+            AlertMessage.showInformationAlert("Successfully deleted " +table+ " from the database.");
+            callback.run();
+        }catch (Exception e){
+            AlertMessage.showErrorAlert("An error occurred while deleting " +table+ " from the database: " + e);
+        }
+    }
+    @FXML
+    protected void onBtnDeleteStudentAction(ActionEvent event){
+
+        if(lblCurrentMasterlist.getText().toUpperCase().contains("STUDENT"))
+            deleteEntry("student", "student_no", tblStudents,  new Runnable() {
+                @Override
+                public void run() {
+                    btnStudentEntry.fire();
+                }
+            });
+        else
+            deleteEntry("employee", "employee_id", tblStudents, new Runnable() {
+                @Override
+                public void run() {
+                    btnEmployeeEntry.fire();
+                }
+            });
     }
     @FXML
     protected void onBtnScheduleAction(ActionEvent event) {
         currentPane.setVisible(false);
         currentPane = scheduleContainer;
         currentPane.setVisible(true);
+        txtSchoolYearSchedule.setText(currentSY);
+        txtSemesterSchedule.setText(currentSem);
         onBtnClearScheduleAction(event);
     }
     @FXML
@@ -1118,6 +1260,29 @@ public class AdminDashboardController extends Controller {
     @FXML
     protected void onBtnGoAction(ActionEvent event){
 //        tblSubjectScheduling.getItems().clear();
+        comboBoxSubjectSchedule.setDisable(false);
+
+        try{
+            ps = conn.prepareStatement("SELECT college_code from course where course_code = ?");
+            ps.setString(1, "BS"+comboBoxCourseSchedule.getSelectionModel().getSelectedItem());
+            rs = ps.executeQuery();
+            if(rs.next())
+                comboBoxCollegeSchedule.getSelectionModel().select(rs.getString(1));
+        }catch(Exception e){
+            System.out.println(e);
+        }
+        try{
+            ObservableList<String> subs = FXCollections.observableArrayList();
+            ps = conn.prepareStatement("SELECT SUBJECT_CODE FROM SUBJECT WHERE COLLEGE_CODE = ? AND SUBJECT_CODE <> '00000'");
+            ps.setString(1, comboBoxCollegeSchedule.getSelectionModel().getSelectedItem());
+            rs = ps.executeQuery();
+            while(rs.next()){
+                subs.add(rs.getString(1));
+            }
+            comboBoxSubjectSchedule.setItems(subs);
+        }catch(Exception e ){
+            System.out.println(e);
+        }
         if(comboBoxCourseSchedule.getSelectionModel().getSelectedItem() == null || comboBoxYearSchedule.getSelectionModel().getSelectedItem() == null || comboBoxYearSchedule.getSelectionModel().getSelectedItem() == null){
             return;
         }
@@ -1143,6 +1308,8 @@ public class AdminDashboardController extends Controller {
         checkBoxThursday.setSelected(false);
         checkBoxFriday.setSelected(false);
         checkBoxSaturday.setSelected(false);
+        comboBoxCollegeSchedule.setDisable(true);
+        comboBoxSubjectSchedule.setDisable(true);
         ObservableList<String> o = tblSubjectScheduling.getSelectionModel().getSelectedItem();
         btnUpdateSchedule.setDisable(o == null);
         btnRemoveSchedule.setDisable(o == null);
@@ -1239,7 +1406,9 @@ public class AdminDashboardController extends Controller {
         }
 //        tblSubjectScheduling.getItems().clear();
         comboBoxCollegeSchedule.getSelectionModel().clearSelection();
+        comboBoxCollegeSchedule.setDisable(true);
         comboBoxSubjectSchedule.getSelectionModel().clearSelection();
+        comboBoxSubjectSchedule.setDisable(true);
         txtAreaDescription.clear();
         comboBoxCourseSchedule.getSelectionModel().clearSelection();
         comboBoxYearSchedule.getSelectionModel().clearSelection();
@@ -1294,9 +1463,11 @@ public class AdminDashboardController extends Controller {
                 ps.setString(11, comboBoxFaculty.getSelectionModel().getSelectedItem());
                 res += ps.executeUpdate();
             }
-            if(res > 0){
-                AlertMessage.showInformationAlert("Added the subject schedule successfully!");
+            if(res == 0){
+                AlertMessage.showErrorAlert("Select a valid course/year/block and fill out all fields correctly in order to add a subject schedule.");
+                return;
             }
+            AlertMessage.showInformationAlert("Added the subject schedule successfully!");
             btnGo.fire();
         }catch (Exception e){
             AlertMessage.showErrorAlert("The selected schedule already exists in the table. Use update instead if you wish to alter the table.");
@@ -1346,7 +1517,7 @@ public class AdminDashboardController extends Controller {
                 res += ps.executeUpdate();
             }
             if(res > 0){
-                AlertMessage.showInformationAlert("Added the subject schedule successfully!");
+                AlertMessage.showInformationAlert("Updated the subject schedule successfully!");
             }
             btnGo.fire();
         }catch(Exception e) {
@@ -1740,7 +1911,7 @@ public class AdminDashboardController extends Controller {
         }
 
         if(o == null) {
-//            tblStudentGradeRecord.getItems().clear();
+            tblStudentGradeRecord.getItems().clear();
             choiceSYRecords.getSelectionModel().clearSelection();
             choiceSYRecords.setDisable(true);
             btnLoadStudentRecord.setDisable(true);
@@ -2008,7 +2179,350 @@ public class AdminDashboardController extends Controller {
         }catch(Exception e){
             AlertMessage.showErrorAlert("There was an error while trying to fetch the grades: "+e);
         }
-}
+    }
+    private void addSY(){
+        SimpleStringProperty sy = new SimpleStringProperty();
+        Form schoolYear = Form.of(
+                Group.of(
+                    Field.ofStringType("")
+                        .bind(sy)
+                        .required("SY is required")
+                        .label("School Year")
+                        .validate(RegexValidator.forPattern("^2[0-9]{3}-2[0-9]{3}", "Must be a valid school year format ex: 2023-2024"))
+                )
+        ).title("Add School Year")
+            .binding(BindingMode.CONTINUOUS);
+
+        FormRenderer formRenderer = new FormRenderer(schoolYear);
+        formRenderer.setPrefWidth(700);
+        Dialog dialog = new Dialog();
+        dialog.setTitle("Add School Year");
+        ButtonType saveConfigButtonType = new ButtonType("Add", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(saveConfigButtonType, ButtonType.CANCEL);
+        dialog.getDialogPane().setContent(formRenderer);
+        dialog.getDialogPane()
+                .lookupButton(saveConfigButtonType)
+                .disableProperty()
+                .bind(Bindings.createBooleanBinding(() -> !schoolYear.isValid(),schoolYear.validProperty()));
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == saveConfigButtonType) {
+                return sy;
+            }
+            return null;
+        });
+
+        Optional<SimpleStringProperty> newSY = dialog.showAndWait();
+        if(newSY.isEmpty())
+            return;
+
+        try{
+            ps = conn.prepareStatement("INSERT INTO SY VALUES(?)");
+            ps.setString(1, sy.get());
+            ps.executeUpdate();
+            AlertMessage.showInformationAlert("Successfully added school year.");
+            btnSY.fire();
+        }catch(Exception e){
+            AlertMessage.showErrorAlert("You may have added an already existing school year.");
+        }
+    }
+    private void addSem(){
+        SimpleStringProperty sem = new SimpleStringProperty();
+        Form semester = Form.of(
+                        Group.of(
+                                Field.ofStringType("")
+                                        .bind(sem)
+                                        .required("Semester is required")
+                                        .label("Semester")
+                                        .validate(RegexValidator.forPattern("[A-Z1-9]{1}", "Must have a length of 1 and be alphanumeric."))
+                        )
+                ).title("Add Semester")
+                .binding(BindingMode.CONTINUOUS);
+        FormRenderer formRenderer = new FormRenderer(semester);
+        formRenderer.setPrefWidth(700);
+        Dialog dialog = new Dialog();
+        dialog.setTitle("Add Semester");
+        ButtonType saveConfigButtonType = new ButtonType("Add", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(saveConfigButtonType, ButtonType.CANCEL);
+        dialog.getDialogPane().setContent(formRenderer);
+        dialog.getDialogPane()
+                .lookupButton(saveConfigButtonType)
+                .disableProperty()
+                .bind(Bindings.createBooleanBinding(() -> !semester.isValid(),semester.validProperty()));
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == saveConfigButtonType) {
+                return sem;
+            }
+            return null;
+        });
+
+        Optional<SimpleStringProperty> newSem = dialog.showAndWait();
+        if(newSem.isEmpty())
+            return;
+        try{
+            ps = conn.prepareStatement("INSERT INTO SEMESTER VALUES(?)");
+            ps.setString(1, sem.get());
+            ps.executeUpdate();
+            AlertMessage.showInformationAlert("Successfully added semester.");
+            btnSemester.fire();
+        }catch(Exception e){
+            AlertMessage.showErrorAlert("An error occurred while adding semester.");
+        }
+    }
+    private void addCollege(){
+        SimpleStringProperty college_code = new SimpleStringProperty();
+        SimpleStringProperty description = new SimpleStringProperty();
+
+        Form college = Form.of(
+                        Group.of(
+                                Field.ofStringType("")
+                                        .bind(college_code)
+                                        .required("College Code is required")
+                                        .label("College Code")
+                                        .validate(RegexValidator.forPattern("^.{1,20}$", "Length must be between 1 and 20")),
+                                Field.ofStringType("")
+                                        .bind(description)
+                                        .required("College description is required.")
+                                        .label("Description")
+                                        .validate(RegexValidator.forPattern("^.{1,100}$", "Length must be between 1 and 100"))
+                        )
+                ).title("Add College")
+                .binding(BindingMode.CONTINUOUS);
+        FormRenderer formRenderer = new FormRenderer(college);
+        formRenderer.setPrefWidth(700);
+        Dialog dialog = new Dialog();
+        dialog.setTitle("Add College");
+        ButtonType saveConfigButtonType = new ButtonType("Add", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(saveConfigButtonType, ButtonType.CANCEL);
+        dialog.getDialogPane().setContent(formRenderer);
+        dialog.getDialogPane()
+                .lookupButton(saveConfigButtonType)
+                .disableProperty()
+                .bind(Bindings.createBooleanBinding(() -> !college.isValid(),college.validProperty()));
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == saveConfigButtonType) {
+                return List.of(college_code, description);
+            }
+            return null;
+        });
+
+        Optional<List<SimpleStringProperty>> newCollege = dialog.showAndWait();
+        if(newCollege.isEmpty())
+            return;
+        try{
+            ps = conn.prepareStatement("INSERT INTO COLLEGE VALUES(?, ?, ?, '9999-12-31', 'A')");
+            ps.setString(1, newCollege.get().get(0).get());
+            ps.setString(2, newCollege.get().get(1).get());
+            ps.setString(3, DateTimeFormatter.ofPattern("yyyy-MM-dd").format(LocalDate.now()));
+            ps.executeUpdate();
+            AlertMessage.showInformationAlert("Successfully added college.");
+            btnCollege.fire();
+        }catch(Exception e){
+            AlertMessage.showErrorAlert("An error occurred while adding college.");
+        }
+    }
+    private void addCourse(){
+        SimpleStringProperty course_code = new SimpleStringProperty();
+        SimpleStringProperty description = new SimpleStringProperty();
+        SimpleListProperty<String> college_codeList = new SimpleListProperty<>();
+        college_codeList.set(FXCollections.observableArrayList(Database.fetch("SELECT COLLEGE_CODE FROM COLLEGE")));
+        ObjectProperty<String> college_code = new SimpleObjectProperty<>();
+
+        Form course = Form.of(
+                        Group.of(
+                                Field.ofStringType("")
+                                        .bind(course_code)
+                                        .required("Course code is required.")
+                                        .label("Course Code")
+                                        .validate(RegexValidator.forPattern("^.{1,20}$", "Length must be between 1 and 20")),
+                                Field.ofStringType("")
+                                        .bind(description)
+                                        .required("Course description is required.")
+                                        .label("Description")
+                                        .validate(RegexValidator.forPattern("^.{1,100}$", "Length must be between 1 and 100")),
+                                Field.ofSingleSelectionType(college_codeList)
+                                        .bind(college_codeList, college_code)
+                                        .required("College Code is required")
+                                        .label("College Code")
+                        )
+                ).title("Add Course")
+                .binding(BindingMode.CONTINUOUS);
+        FormRenderer formRenderer = new FormRenderer(course);
+        formRenderer.setPrefWidth(700);
+        Dialog dialog = new Dialog();
+        dialog.setTitle("Add Course");
+        ButtonType saveConfigButtonType = new ButtonType("Add", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(saveConfigButtonType, ButtonType.CANCEL);
+        dialog.getDialogPane().setContent(formRenderer);
+        dialog.getDialogPane()
+                .lookupButton(saveConfigButtonType)
+                .disableProperty()
+                .bind(Bindings.createBooleanBinding(() -> !course.isValid(),course.validProperty()));
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == saveConfigButtonType) {
+                return List.of(course_code, description, college_code);
+            }
+            return null;
+        });
+
+        Optional<List<Property>> newCourse = dialog.showAndWait();
+        if(newCourse.isEmpty())
+            return;
+        try{
+            ps = conn.prepareStatement("INSERT INTO COURSE VALUES(?, ?, ?, ?, '9999-12-31', 'A')");
+            ps.setString(1, newCourse.get().get(0).getValue().toString());
+            ps.setString(2, newCourse.get().get(1).getValue().toString());
+            ps.setString(3, newCourse.get().get(2).getValue().toString());
+            ps.setString(4, DateTimeFormatter.ofPattern("yyyy-MM-dd").format(LocalDate.now()));
+            ps.executeUpdate();
+            AlertMessage.showInformationAlert("Successfully added course.");
+            btnCourse.fire();
+        }catch(Exception e){
+            AlertMessage.showErrorAlert("An error occurred while adding course: " + e);
+        }
+    }
+    private void addSubject(){
+        SimpleStringProperty subject_code = new SimpleStringProperty();
+        SimpleStringProperty description = new SimpleStringProperty();
+        SimpleIntegerProperty units = new SimpleIntegerProperty();
+        SimpleStringProperty curriculum = new SimpleStringProperty();
+        SimpleListProperty<String> college_codeList = new SimpleListProperty<>();
+        college_codeList.set(FXCollections.observableArrayList(Database.fetch("SELECT COLLEGE_CODE FROM COLLEGE")));
+        ObjectProperty<String> college_code = new SimpleObjectProperty<>();
+        Form course = Form.of(
+                        Group.of(
+                                Field.ofStringType("")
+                                        .bind(subject_code)
+                                        .required("Subject code is required.")
+                                        .label("Subject Code")
+                                        .validate(RegexValidator.forPattern("^.{1,20}$", "Length must be between 1 and 20")),
+                                Field.ofStringType("")
+                                        .bind(description)
+                                        .required("Subject description is required.")
+                                        .label("Description")
+                                        .validate(RegexValidator.forPattern("^.{1,100}$", "Length must be between 1 and 100")),
+                                Field.ofIntegerType(units)
+                                        .bind(units)
+                                        .required("Units is required.")
+                                        .label("Units"),
+                                Field.ofStringType("")
+                                        .bind(curriculum)
+                                        .label("Curriculum")
+                                        .required("Curriculum is required"),
+                                Field.ofSingleSelectionType(college_codeList)
+                                        .bind(college_codeList, college_code)
+                                        .required("College Code is required")
+                                        .label("College Code")
+                                )
+                ).title("Add Subject")
+                .binding(BindingMode.CONTINUOUS);
+        FormRenderer formRenderer = new FormRenderer(course);
+        formRenderer.setPrefWidth(700);
+        Dialog dialog = new Dialog();
+        dialog.setTitle("Add Subject");
+        ButtonType saveConfigButtonType = new ButtonType("Add", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(saveConfigButtonType, ButtonType.CANCEL);
+        dialog.getDialogPane().setContent(formRenderer);
+        dialog.getDialogPane()
+                .lookupButton(saveConfigButtonType)
+                .disableProperty()
+                .bind(Bindings.createBooleanBinding(() -> !course.isValid(),course.validProperty()));
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == saveConfigButtonType) {
+                return List.of(subject_code, description, units, curriculum, college_code);
+            }
+            return null;
+        });
+
+        Optional<List<Property>> newSubject = dialog.showAndWait();
+        if(newSubject.isEmpty())
+            return;
+        try{
+            ps = conn.prepareStatement("INSERT INTO SUBJECT VALUES(?, ?, ?, ?, ?, 'A')");
+            ps.setString(1, newSubject.get().get(0).getValue().toString());
+            ps.setString(2, newSubject.get().get(1).getValue().toString());
+            ps.setInt(3, Integer.parseInt(newSubject.get().get(2).getValue().toString()));
+            ps.setString(4, newSubject.get().get(3).getValue().toString());
+            ps.setString(5, newSubject.get().get(4).getValue().toString());
+            ps.executeUpdate();
+            AlertMessage.showInformationAlert("Successfully added subject.");
+            btnSubject.fire();
+        }catch(Exception e){
+            AlertMessage.showErrorAlert("An error occurred while adding subject: " + e);
+        }
+    }
+    @FXML
+    protected void onBtnManageAddAction(){
+        String current = lblManage.getText().toUpperCase().replace("MANAGE", "").replace(" ", "");
+        switch(current){
+            case "SCHOOLYEAR":
+                addSY();
+                break;
+            case "SEMESTER":
+                addSem();
+                break;
+            case "COLLEGES":
+                addCollege();
+                break;
+            case "COURSES":
+                addCourse();
+                break;
+            case "SUBJECTS":
+                addSubject();
+                break;
+            default:
+                System.out.println("Invalid add operation");
+        }
+    }
+
+    @FXML
+    protected void onBtnManageDelete(){
+        String current = lblManage.getText().toUpperCase().replace("MANAGE", "").replace(" ", "");
+        switch(current){
+            case "SCHOOLYEAR":
+                deleteEntry("SY", "SY", tblManage, new Runnable() {
+                    @Override
+                    public void run() {
+                        btnSY.fire();
+                    }
+                });
+                break;
+            case "SEMESTER":
+                deleteEntry("SEMESTER", "SEMESTER", tblManage, new Runnable() {
+                    @Override
+                    public void run() {
+                        btnSemester.fire();
+                    }
+                });
+                break;
+            case "COLLEGES":
+                deleteEntry("COLLEGE", "COLLEGE_CODE", tblManage, new Runnable() {
+                    @Override
+                    public void run() {
+                        btnCollege.fire();
+                    }
+                });
+                break;
+            case "COURSES":
+                deleteEntry("COURSE", "COURSE_CODE", tblManage, new Runnable() {
+                    @Override
+                    public void run() {
+                        btnCourse.fire();
+                    }
+                });
+                break;
+            case "SUBJECTS":
+                deleteEntry("SUBJECT", "SUBJECT_CODE", tblManage, new Runnable() {
+                    @Override
+                    public void run() {
+                        btnSubject.fire();
+                    }
+                });
+                break;
+            default:
+                System.out.println("Invalid add operation");
+        }
+    }
+
     @FXML
     protected void onBtnSYAction(ActionEvent event) {
         currentPane.setVisible(false);
@@ -2089,7 +2603,6 @@ public class AdminDashboardController extends Controller {
         }catch(Exception e){
             AlertMessage.showErrorAlert("An error occurred while fetching school years: " + e);
         }
-
     }
     @FXML
     protected void onBtnSemesterAction(ActionEvent event) {

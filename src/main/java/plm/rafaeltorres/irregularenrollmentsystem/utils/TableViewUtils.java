@@ -53,7 +53,7 @@ public class TableViewUtils {
                                     return;
                                 }
                                 try{
-                                    ps = conn.prepareStatement("insert into grade values (?, ?, ?, '00000', '', 5.00)");
+                                    ps = conn.prepareStatement("replace into grade values (?, ?, ?, '00000', '', 5.00)");
                                     ps.setString(1, Maintenance.getInstance().getCurrentSY());
                                     ps.setString(2, Maintenance.getInstance().getCurrentSem());
                                     ps.setString(3, o.get(0));
