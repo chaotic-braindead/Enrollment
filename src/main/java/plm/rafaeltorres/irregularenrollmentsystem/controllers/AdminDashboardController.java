@@ -1,11 +1,9 @@
 package plm.rafaeltorres.irregularenrollmentsystem.controllers;
 import com.dlsc.formsfx.model.event.FieldEvent;
 import com.dlsc.formsfx.model.structure.*;
+import com.dlsc.formsfx.model.structure.PasswordField;
 import com.dlsc.formsfx.model.util.BindingMode;
-import com.dlsc.formsfx.model.validators.RegexValidator;
-import com.dlsc.formsfx.model.validators.StringLengthValidator;
-import com.dlsc.formsfx.model.validators.ValidationResult;
-import com.dlsc.formsfx.model.validators.Validator;
+import com.dlsc.formsfx.model.validators.*;
 import com.dlsc.formsfx.view.controls.SimpleRadioButtonControl;
 import com.dlsc.formsfx.view.renderer.FormRenderer;
 import javafx.beans.binding.Bindings;
@@ -63,6 +61,7 @@ import java.time.Year;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.Date;
+import java.util.function.Predicate;
 
 
 public class AdminDashboardController extends Controller {
@@ -2769,8 +2768,81 @@ public class AdminDashboardController extends Controller {
 
     @FXML
     protected void onBtnChangePasswordAction(ActionEvent event) {
+        SimpleStringProperty oldPass = new SimpleStringProperty();
+        SimpleStringProperty newPass = new SimpleStringProperty();
+        SimpleStringProperty confirmPass = new SimpleStringProperty();
 
+        Form newPassword = Form.of(
+                Group.of(
+                        Field.ofPasswordType("")
+                                .bind(oldPass)
+                                .required("Please enter your old password")
+                                .label("Old Password"),
+
+                        Field.ofPasswordType("")
+                                .bind(newPass)
+                                .required("Please enter your new password")
+                                .label("New Password")
+                                .validate(RegexValidator.forPattern("[0-9a-zA-Z!@#$%]{8,}",
+                                        "Must be at least 8 characters long and contains only alphanumeric or !@#$%")),
+                        Field.ofPasswordType("")
+                                .bind(confirmPass)
+                                .required("Please confirm your new password")
+                                .label("Confirm Password")
+                                .validate(RegexValidator.forPattern("[0-9a-zA-Z!@#$%]{8,}",
+                                        "Must be at least 8 characters long and contains only alphanumeric or !@#$%"))
+
+                )
+        ).binding(BindingMode.CONTINUOUS)
+                .title("Change Password");
+
+
+        FormRenderer formRenderer = new FormRenderer(newPassword);
+        formRenderer.setPrefWidth(700);
+        Dialog dialog = new Dialog();
+        dialog.setTitle("Change Password");
+        ButtonType saveConfigButtonType = new ButtonType("Change Password", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(saveConfigButtonType, ButtonType.CANCEL);
+        dialog.getDialogPane().setContent(formRenderer);
+        dialog.getDialogPane()
+                .lookupButton(saveConfigButtonType)
+                .disableProperty()
+                .bind(Bindings.createBooleanBinding(() -> !newPassword.isValid(),newPassword.validProperty()));
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == saveConfigButtonType) {
+                return List.of(oldPass, newPass, confirmPass);
+            }
+            return null;
+        });
+
+        Optional<List<SimpleStringProperty>> changePass = dialog.showAndWait();
+        if(changePass.isEmpty())
+            return;
+
+        if(!newPass.get().equals(confirmPass.get())){
+            AlertMessage.showErrorAlert("Your passwords do not match. Please try again.");
+            return;
+        }
+
+        try{
+            ps = conn.prepareStatement("SELECT password from account where account_no = ?");
+            ps.setString(1, employee.getEmployeeID());
+            rs = ps.executeQuery();
+            if(rs.next() && !BCrypt.checkpw(changePass.get().get(0).get(), rs.getString(1))){
+                AlertMessage.showErrorAlert("The old password you entered is incorrect. Please try again.");
+                return;
+            }
+
+            ps = conn.prepareStatement("UPDATE account set password = ? where account_no = ?");
+            ps.setString(1, BCrypt.hashpw(changePass.get().get(1).get(), BCrypt.gensalt()));
+            ps.setString(2, employee.getEmployeeID());
+            ps.executeUpdate();
+            AlertMessage.showInformationAlert("Your password has been changed.");
+        }catch(Exception e){
+            AlertMessage.showErrorAlert("An error occurred while changing passwords: " + e);
+        }
     }
+
     @FXML
     protected void btnDownloadOnMouseClicked(MouseEvent event) {
 

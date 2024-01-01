@@ -197,10 +197,7 @@ public class PDFGenerator {
         studentInfoRow2.addCell(new Cell()
                 .add(course));
 
-
-
-
-
+        
         document.add(table);
         document.add(divider);
         document.add(studentInfo);

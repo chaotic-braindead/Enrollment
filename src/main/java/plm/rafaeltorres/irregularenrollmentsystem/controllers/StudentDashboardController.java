@@ -1,6 +1,13 @@
 package plm.rafaeltorres.irregularenrollmentsystem.controllers;
 import java.awt.Desktop;
 
+import com.dlsc.formsfx.model.structure.Field;
+import com.dlsc.formsfx.model.structure.Form;
+import com.dlsc.formsfx.model.util.BindingMode;
+import com.dlsc.formsfx.model.validators.RegexValidator;
+import com.dlsc.formsfx.view.renderer.FormRenderer;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -16,6 +23,7 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import plm.rafaeltorres.irregularenrollmentsystem.MainScene;
 import plm.rafaeltorres.irregularenrollmentsystem.db.Database;
 import plm.rafaeltorres.irregularenrollmentsystem.model.Schedule;
@@ -27,7 +35,6 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.net.URL;
 import java.nio.file.Files;
 import java.sql.*;
@@ -135,6 +142,8 @@ public class StudentDashboardController extends Controller {
     private Pane btnDownloadSER;
     @FXML
     private Label lblTotalUnits;
+    @FXML
+    private Button btnLoadGrades;
 
 
 
@@ -317,7 +326,79 @@ public class StudentDashboardController extends Controller {
     }
     @FXML
     protected void onBtnChangePasswordAction(ActionEvent event) {
+        SimpleStringProperty oldPass = new SimpleStringProperty();
+        SimpleStringProperty newPass = new SimpleStringProperty();
+        SimpleStringProperty confirmPass = new SimpleStringProperty();
 
+        Form newPassword = Form.of(
+                        com.dlsc.formsfx.model.structure.Group.of(
+                                com.dlsc.formsfx.model.structure.Field.ofPasswordType("")
+                                        .bind(oldPass)
+                                        .required("Please enter your old password")
+                                        .label("Old Password"),
+
+                                com.dlsc.formsfx.model.structure.Field.ofPasswordType("")
+                                        .bind(newPass)
+                                        .required("Please enter your new password")
+                                        .label("New Password")
+                                        .validate(RegexValidator.forPattern("[0-9a-zA-Z!@#$%]{8,}",
+                                                "Must be at least 8 characters long and contains only alphanumeric or !@#$%")),
+                                Field.ofPasswordType("")
+                                        .bind(confirmPass)
+                                        .required("Please confirm your new password")
+                                        .label("Confirm Password")
+                                        .validate(RegexValidator.forPattern("[0-9a-zA-Z!@#$%]{8,}",
+                                                "Must be at least 8 characters long and contains only alphanumeric or !@#$%"))
+
+                        )
+                ).binding(BindingMode.CONTINUOUS)
+                .title("Change Password");
+
+
+        FormRenderer formRenderer = new FormRenderer(newPassword);
+        formRenderer.setPrefWidth(700);
+        Dialog dialog = new Dialog();
+        dialog.setTitle("Change Password");
+        ButtonType saveConfigButtonType = new ButtonType("Change Password", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(saveConfigButtonType, ButtonType.CANCEL);
+        dialog.getDialogPane().setContent(formRenderer);
+        dialog.getDialogPane()
+                .lookupButton(saveConfigButtonType)
+                .disableProperty()
+                .bind(Bindings.createBooleanBinding(() -> !newPassword.isValid(),newPassword.validProperty()));
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == saveConfigButtonType) {
+                return List.of(oldPass, newPass, confirmPass);
+            }
+            return null;
+        });
+
+        Optional<List<SimpleStringProperty>> changePass = dialog.showAndWait();
+        if(changePass.isEmpty())
+            return;
+
+        if(!newPass.get().equals(confirmPass.get())){
+            AlertMessage.showErrorAlert("Your passwords do not match. Please try again.");
+            return;
+        }
+
+        try{
+            ps = conn.prepareStatement("SELECT password from account where account_no = ?");
+            ps.setString(1, student.getStudentNo());
+            rs = ps.executeQuery();
+            if(rs.next() && !BCrypt.checkpw(changePass.get().get(0).get(), rs.getString(1))){
+                AlertMessage.showErrorAlert("The old password you entered is incorrect. Please try again.");
+                return;
+            }
+
+            ps = conn.prepareStatement("UPDATE account set password = ? where account_no = ?");
+            ps.setString(1, BCrypt.hashpw(changePass.get().get(1).get(), BCrypt.gensalt()));
+            ps.setString(2, student.getStudentNo());
+            ps.executeUpdate();
+            AlertMessage.showInformationAlert("Your password has been changed.");
+        }catch(Exception e){
+            AlertMessage.showErrorAlert("An error occurred while changing passwords: " + e);
+        }
     }
     @FXML
     protected void btnDownloadOnMouseClicked(MouseEvent event) throws FileNotFoundException {
@@ -657,29 +738,29 @@ public class StudentDashboardController extends Controller {
         String semester = choiceSemester.getSelectionModel().getSelectedItem();
         if(sy == null)
             return;
-        if(semester != null){
-            try{
-                ps = conn.prepareStatement("select " +
-                        "ss.subject_code as `SUBJECT CODE`," +
-                        "    ss.description as `SUBJECT DESCRIPTION`," +
-                        "    ss.units as UNITS," +
-                        "    ss.grade as GRADE " +
-                        "from vwStudentGradeForSYAndSem ss where ss.student_no = ? and ss.sy = ? and ss.semester = ?");
-                ps.setString(1, student.getStudentNo());
-                ps.setString(2, choiceSY.getSelectionModel().getSelectedItem());
-                ps.setString(3, semester);
-                rs = ps.executeQuery();
-                if(rs.getRow() == 0){
-                    tblGrades.getItems().clear();
-                    tblGrades.setPlaceholder(new Label("Select a valid semester."));
-                }
-
-                TableViewUtils.generateTableFromResultSet(tblGrades, rs);
-
-            }catch(Exception e){
-                AlertMessage.showErrorAlert("An error occurred while fetching your grades.");
-            }
-        }
+//        if(semester != null){
+//            try{
+//                ps = conn.prepareStatement("select " +
+//                        "ss.subject_code as `SUBJECT CODE`," +
+//                        "    ss.description as `SUBJECT DESCRIPTION`," +
+//                        "    ss.units as UNITS," +
+//                        "    ss.grade as GRADE " +
+//                        "from vwStudentGradeForSYAndSem ss where ss.student_no = ? and ss.sy = ? and ss.semester = ?");
+//                ps.setString(1, student.getStudentNo());
+//                ps.setString(2, choiceSY.getSelectionModel().getSelectedItem());
+//                ps.setString(3, semester);
+//                rs = ps.executeQuery();
+//                if(rs.getRow() == 0){
+//                    tblGrades.getItems().clear();
+//                    tblGrades.setPlaceholder(new Label("Select a valid semester."));
+//                }
+//                tblGrades.getColumns().clear();
+//                TableViewUtils.generateTableFromResultSet(tblGrades, rs);
+//
+//            }catch(Exception e){
+//                AlertMessage.showErrorAlert("An error occurred while fetching your grades.");
+//            }
+//        }
 
         try{
             ps = conn.prepareStatement("SELECT DISTINCT SEMESTER FROM GRADE WHERE STUDENT_NO = ? AND SY = ?");
@@ -698,9 +779,17 @@ public class StudentDashboardController extends Controller {
     }
     @FXML
     protected void onSemesterComboAction(ActionEvent event){
+
+
+
+    }
+    @FXML
+    protected void onBtnLoadGradesAction(ActionEvent event){
         String semester = choiceSemester.getSelectionModel().getSelectedItem();
-        if(semester == null)
+        if(semester == null){
+            AlertMessage.showErrorAlert("Select a valid school year.");
             return;
+        }
         try{
             ps = conn.prepareStatement("select " +
                     "ss.subject_code as `SUBJECT CODE`," +
@@ -716,11 +805,12 @@ public class StudentDashboardController extends Controller {
                 tblGrades.getItems().clear();
                 tblGrades.setPlaceholder(new Label("No grades yet for this SY/Sem"));
             }
+            tblGrades.getColumns().clear();
+
             TableViewUtils.generateTableFromResultSet(tblGrades, rs);
 
         }catch(Exception e){
             AlertMessage.showErrorAlert("An error occurred while fetching your grades.");
         }
-
     }
 }
