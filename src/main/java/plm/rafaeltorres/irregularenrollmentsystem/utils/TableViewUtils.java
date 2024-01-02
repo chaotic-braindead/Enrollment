@@ -62,12 +62,24 @@ public class TableViewUtils {
                                     AlertMessage.showErrorAlert("An error occurred while shifting courses: " + e);
                                 }
                             }
-                            o.set(j, t.getNewValue().toString());
 
                             ps = conn.prepareStatement("UPDATE " + args[0] + " SET " + rs.getMetaData().getColumnName(j+1) + " = ? "+ "WHERE "+ args[1] +" = ?");
-                            ps.setString(1, o.get(j));
+                            ps.setString(1, t.getNewValue().toString());
+//                            o.set(j, t.getNewValue().toString());
                             ps.setString(2, o.get(0));
                             ps.executeUpdate();
+
+                            if(rs.getMetaData().getColumnName(j+1).equalsIgnoreCase("STUDENT_NO") || rs.getMetaData().getColumnName(j+1).equalsIgnoreCase("EMPLOYEE_ID")){
+                                Optional<ButtonType> confirm = AlertMessage.showConfirmationAlert("Warning: Editing this value will cascade to all other records in the database which uses this value. Do you wish to proceed?");
+                                if(confirm.isEmpty() || confirm.get() == ButtonType.CANCEL)
+                                    return;
+
+                                ps = conn.prepareStatement("UPDATE ACCOUNT SET ACCOUNT_NO = ? WHERE ACCOUNT_NO = ?");
+                                ps.setString(1, t.getNewValue().toString());
+                                ps.setString(2, o.get(0));
+                                ps.executeUpdate();
+                                AlertMessage.showInformationAlert("Successfully edited all records involving this field.");
+                            }
 
                             if(rs.getMetaData().getColumnName(j+1).equalsIgnoreCase("STATUS") && !args[0].equalsIgnoreCase("STUDENT") && !args[0].equalsIgnoreCase("SUBJECT")){
                                 String query = "UPDATE " + args[0] + " SET DATE_CLOSED = '" + DateTimeFormatter.ISO_LOCAL_DATE.format(LocalDate.now()) + "' WHERE " + args[1] + " = ?";
@@ -92,7 +104,6 @@ public class TableViewUtils {
                     case "PLM EMAIL":
                     case "REGISTRATION STATUS":
                     case "STUDENT NUMBER":
-                    case "STUDENT NO":
                     case "DATE CLOSED":
                     case "EMPLOYEE ID":
                         col.setCellFactory(
@@ -114,6 +125,15 @@ public class TableViewUtils {
                                                 }
                                             }
                                         };
+                                    }
+                                }
+                        );
+                        break;
+                    case "STUDENT NO":
+                        col.setCellFactory(
+                                new Callback<TableColumn, TableCell>() {
+                                    public TableCell call(TableColumn p) {
+                                        return new WrappingTextFieldTableCell<ObservableList<String>>();
                                     }
                                 }
                         );

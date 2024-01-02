@@ -441,7 +441,7 @@ public class StudentDashboardController extends Controller {
         }
 
         try{
-            ps = conn.prepareStatement("select subject_code, course, year, block, description, schedule, credits, professor from vwsubjectschedules " +
+            ps = conn.prepareStatement("select subject_code, course, year, block, description, schedule, credits, professor, 20-total_students as available_slots, case when 30-total_students = 0 then 'CLOSED' else 'OPEN' end as status from vwsubjectscheduleswithtotalstudents " +
                     "where (sy = ? and semester = ? and course = ?) and subject_code not in (select subject_code from student_schedule where student_no = ? and sy = ? and semester = ?) " +
                     "and( " +
                     "( " +
@@ -720,7 +720,8 @@ public class StudentDashboardController extends Controller {
     }
     @FXML
     protected void onTblSubjectsMouseClicked(MouseEvent event) {
-        btnAdd.setDisable(tblSubjects.getSelectionModel().getSelectedItem() == null);
+        ObservableList<String> s = tblSubjects.getSelectionModel().getSelectedItem();
+        btnAdd.setDisable(s == null || (s.get(s.size()-1).equals("CLOSED")));
     }
     @FXML
     protected void onBtnAddAction(ActionEvent event) {
@@ -813,7 +814,7 @@ public class StudentDashboardController extends Controller {
                     "ss.subject_code as `SUBJECT CODE`," +
                     "    ss.description as `SUBJECT DESCRIPTION`," +
                     "    ss.units as UNITS," +
-                    "    ss.grade as GRADE " +
+                    "    ss.grade as GRADE, ss.remark " +
                     "from vwStudentGradeForSYAndSem ss where ss.student_no = ? and ss.sy = ? and ss.semester = ?");
             ps.setString(1, student.getStudentNo());
             ps.setString(2, choiceSY.getSelectionModel().getSelectedItem());

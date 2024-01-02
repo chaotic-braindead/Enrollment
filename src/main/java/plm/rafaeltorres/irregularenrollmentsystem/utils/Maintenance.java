@@ -1,32 +1,34 @@
 package plm.rafaeltorres.irregularenrollmentsystem.utils;
 
+import plm.rafaeltorres.irregularenrollmentsystem.MainScene;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
+import java.util.Properties;
 
 public class Maintenance {
     private String currentSY;
     private String currentSem;
-    private LocalDate startSem1 = LocalDate.of(LocalDate.now().getYear(), Month.AUGUST, 15);
-    private LocalDate startSem2 = LocalDate.of(LocalDate.now().getYear(), Month.FEBRUARY, 1);
-    private LocalDate startSemS = LocalDate.of(LocalDate.now().getYear(), Month.JUNE, 15);
     private final static Maintenance instance = new Maintenance();
-    private Maintenance(){
-       refresh();
-    }
-    public void refresh(){
-        LocalDate now = LocalDate.now();
-        if(now.isBefore(startSem2))
-            currentSem = "1";
-        else if(now.isAfter(startSem1) && now.isBefore(startSemS))
-            currentSem = "2";
-        else if(now.isAfter(startSem2))
-            currentSem = "S";
+    private String startSem1;
+    private String startSem2;
+    private String startSemS;
+    private final Properties properties = new Properties();
+    private final String path = MainScene.class.getResource("app.properties").getPath();
 
-        if((currentSem.equals("1") && LocalDate.now().isBefore(startSem1)) || currentSem.equals("2") || currentSem.equals("S"))
-            currentSY = (Integer.parseInt(DateTimeFormatter.ofPattern("yyyy").format(LocalDate.now()))-1)+"-"+DateTimeFormatter.ofPattern("yyyy").format(LocalDate.now());
-        else
-            currentSY = DateTimeFormatter.ofPattern("yyyy").format(LocalDate.now())+"-"+(Integer.parseInt(DateTimeFormatter.ofPattern("yyyy").format(LocalDate.now()))+1);
+    private Maintenance() {
+        try{
+            properties.load(new FileInputStream(path));
+        }catch(Exception e){
+            System.out.println(e);
+        }
+        currentSY = properties.getProperty("currentSY");
+        currentSem = properties.getProperty("currentSem");
     }
 
     public static Maintenance getInstance() {
@@ -38,19 +40,20 @@ public class Maintenance {
     public String getCurrentSem(){
         return currentSem;
     }
+    private void set(String props, String newVal){
+        try(FileOutputStream out = new FileOutputStream(path)){
+            properties.setProperty(props, newVal);
+            properties.store(out, null);
+        }catch(Exception e){
+            System.out.println(e);
+        }
+    }
     public void setCurrentSY(String sy){
+        set("currentSY", sy);
         currentSY = sy;
     }
     public void setCurrentSem(String sem){
+        set("currentSem", sem);
         currentSem = sem;
-    }
-    public void setStartSem1(LocalDate date){
-        startSem1 = date;
-    }
-    public void setStartSem2(LocalDate date){
-        startSem2 = date;
-    }
-    public void setStartSemS(LocalDate date){
-        startSemS = date;
     }
 }

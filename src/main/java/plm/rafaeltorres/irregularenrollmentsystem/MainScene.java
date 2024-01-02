@@ -9,15 +9,18 @@ import plm.rafaeltorres.irregularenrollmentsystem.utils.Maintenance;
 import plm.rafaeltorres.irregularenrollmentsystem.utils.PDFGenerator;
 
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Properties;
 
 public class MainScene extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(MainScene.class.getResource("Login.fxml"));
+        String propsPath = MainScene.class.getResource("app.properties").getPath();
         Scene scene = new Scene(fxmlLoader.load());
         stage.setTitle("Login");
         stage.setScene(scene);

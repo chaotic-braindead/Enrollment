@@ -46,7 +46,7 @@ public class PDFGenerator {
         DirectoryChooser dc = new DirectoryChooser();
         dc.setInitialDirectory(new File(System.getProperty("user.home")+"/Downloads/"));
         File directory = dc.showDialog(stage);
-        String path = directory.getAbsolutePath() + "/" + student.getStudentNo() + "_"+DateTimeFormatter.ofPattern("yyyy-MM-dd").format(LocalDate.now()) + "SER.pdf";
+        String path = directory.getAbsolutePath() + "/registration_form_" + student.getStudentNo() + "_"+DateTimeFormatter.ofPattern("yyyy-MM-dd").format(LocalDate.now()) + ".pdf";
         ImageData imageData = ImageDataFactory.create(MainScene.class.getResource("assets/img/PLM_Seal_2013.png"));
         com.itextpdf.layout.element.Image image = new Image(imageData);
 
