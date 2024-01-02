@@ -12,12 +12,15 @@ public class Maintenance {
     private LocalDate startSemS = LocalDate.of(LocalDate.now().getYear(), Month.JUNE, 15);
     private final static Maintenance instance = new Maintenance();
     private Maintenance(){
+       refresh();
+    }
+    public void refresh(){
         LocalDate now = LocalDate.now();
         if(now.isBefore(startSem2))
             currentSem = "1";
-        else if(now.isBefore(startSemS))
+        else if(now.isAfter(startSem1) && now.isBefore(startSemS))
             currentSem = "2";
-        else if(now.isAfter(startSemS))
+        else if(now.isAfter(startSem2))
             currentSem = "S";
 
         if((currentSem.equals("1") && LocalDate.now().isBefore(startSem1)) || currentSem.equals("2") || currentSem.equals("S"))

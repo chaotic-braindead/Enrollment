@@ -148,50 +148,34 @@ public class TableViewUtils {
                         );
                         break;
                     case "COLLEGE CODE":
-                        if(!args[0].equalsIgnoreCase("SUBJECT") && !args[0].equalsIgnoreCase("COURSE")){
-                            col.setCellFactory(
-                                    new Callback<TableColumn, TableCell>() {
-                                        public TableCell call(TableColumn p) {
-                                            return new WrappingTextFieldTableCell<ObservableList<String>>();
-                                        }
+                        if(!args[0].equalsIgnoreCase("SUBJECT") && !args[0].equalsIgnoreCase("COURSE"))
+                            break;
+                        ObservableList<String> comboBoxItems = FXCollections.observableArrayList(Database.fetch("SELECT COLLEGE_CODE FROM COLLEGE"));
+                        col.setCellFactory(
+                                new Callback<TableColumn, TableCell>() {
+                                    public TableCell call(TableColumn p) {
+                                        return new ComboBoxTableCell(new DefaultStringConverter(), comboBoxItems);
                                     }
-                            );
-                        }
-                        else{
-                            ObservableList<String> comboBoxItems = FXCollections.observableArrayList(Database.fetch("SELECT COLLEGE_CODE FROM COLLEGE"));
-                            col.setCellFactory(
-                                    new Callback<TableColumn, TableCell>() {
-                                        public TableCell call(TableColumn p) {
-                                            return new ComboBoxTableCell(new DefaultStringConverter(), comboBoxItems);
-                                        }
-                                    }
-                            );
-                        }
+                                }
+                        );
                         break;
                     case "SUBJECT CODE":
-                        if(args[0].equalsIgnoreCase("SUBJECT")){
-                            col.setCellFactory(
-                                    new Callback<TableColumn, TableCell>() {
-                                        public TableCell call(TableColumn p) {
-                                            return new WrappingTextFieldTableCell<ObservableList<String>>();
-                                        }
+                        if(args[0].equalsIgnoreCase("SUBJECT"))
+                            break;
+                      comboBoxItems = FXCollections.observableArrayList(Database.fetch("SELECT SUBJECT_CODE FROM SUBJECT"));
+                        col.setCellFactory(
+                                new Callback<TableColumn, TableCell>() {
+                                    public TableCell call(TableColumn p) {
+                                        return new ComboBoxTableCell(new DefaultStringConverter(), comboBoxItems);
                                     }
-                            );
-                        }
-                        else{
-                          ObservableList<String> comboBoxItems = FXCollections.observableArrayList(Database.fetch("SELECT SUBJECT_CODE FROM SUBJECT"));
-                            col.setCellFactory(
-                                    new Callback<TableColumn, TableCell>() {
-                                        public TableCell call(TableColumn p) {
-                                            return new ComboBoxTableCell(new DefaultStringConverter(), comboBoxItems);
-                                        }
-                                    }
-                            );
-                        }
+                                }
+                        );
                         break;
                     case "COURSE CODE":
+                        if(args[0].equalsIgnoreCase("COURSE"))
+                            break;
                         if(args[0].equalsIgnoreCase("STUDENT")){
-                            ObservableList<String> comboBoxItems = FXCollections.observableArrayList(Database.fetch("SELECT COURSE_CODE FROM COURSE"));
+                            comboBoxItems = FXCollections.observableArrayList(Database.fetch("SELECT COURSE_CODE FROM COURSE"));
                             col.setCellFactory(
                                     new Callback<TableColumn, TableCell>() {
                                         public TableCell call(TableColumn p) {
@@ -199,16 +183,15 @@ public class TableViewUtils {
                                         }
                                     }
                             );
+                            break;
                         }
-                        else{
-                            col.setCellFactory(
-                                    new Callback<TableColumn, TableCell>() {
-                                        public TableCell call(TableColumn p) {
-                                            return new TextFieldTableCell(new DefaultStringConverter());
-                                        }
+                        col.setCellFactory(
+                                new Callback<TableColumn, TableCell>() {
+                                    public TableCell call(TableColumn p) {
+                                        return new TextFieldTableCell(new DefaultStringConverter());
                                     }
-                            );
-                        }
+                                }
+                        );
                         break;
                     default:
                         col.setCellFactory(
@@ -317,13 +300,13 @@ public class TableViewUtils {
                 });
                 return r;
             });
+            resizeTable(tbl);
             tbl.setColumnResizePolicy(new Callback<TableView.ResizeFeatures, Boolean>() {
                 @Override
                 public Boolean call(TableView.ResizeFeatures p) {
                     return true;
                 }
             });
-            resizeTable(tbl);
 
 
         }catch(Exception e){

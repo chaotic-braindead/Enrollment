@@ -190,6 +190,7 @@ public class StudentDashboardController extends Controller {
             btnSubmit.setVisible(false);
             btnRemove.setVisible(false);
 //            btnSchedule.setDisable(true);
+            btnEnrollRegular.setVisible(false);
             tblSubjects.setPlaceholder(new Label("Please wait for your department chairperson to assign your schedule."));
         }
         else{
@@ -533,14 +534,14 @@ public class StudentDashboardController extends Controller {
         }
         else {
             btnAdd.setVisible(false);
-            btnEnrollRegular.setVisible(true);
             try {
                 ps = conn.prepareStatement("select v.subject_code, v.description, v.block, v.SCHEDULE, v.CREDITS, v.PROFESSOR from vwsubjectschedules v inner join student_schedule s on v.sy = s.sy and v.semester = s.semester and concat(v.course, v.year, v.block) = s.block_no and v.subject_code = s.subject_code "
                      +  "where s.student_no = ? and v.sy = ? and v.semester = ?");
                 ps.setString(1, student.getStudentNo());
                 ps.setString(2, currentSY);
-                ps.setString(3, currentSem);
+                ps.setString(3, currentSem);;
                 TableViewUtils.generateTableFromResultSet(tblSubjects, ps.executeQuery());
+                btnEnrollRegular.setVisible(!tblSubjects.getItems().isEmpty());
             }catch(Exception e){
                 AlertMessage.showErrorAlert("An error occurred while displaying your subjects: " + e);
             }

@@ -130,7 +130,7 @@
                                 <ToggleButton fx:id="btnEnrollment" alignment="CENTER" mnemonicParsing="false" onAction="#onBtnEnrollmentAction" prefHeight="67.0" prefWidth="177.0" text="Enrollment" textAlignment="CENTER" textFill="WHITE" toggleGroup="$sideBar" wrapText="true" GridPane.rowIndex="1" />
                                 <ToggleButton fx:id="btnClass" alignment="CENTER" mnemonicParsing="false" onAction="#onBtnClassAction" prefHeight="60.0" prefWidth="166.0" text="Class List" textAlignment="CENTER" textFill="WHITE" toggleGroup="$sideBar" wrapText="true" GridPane.rowIndex="6" />
                                 <ToggleButton fx:id="btnSchedule" alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#onBtnScheduleAction" prefHeight="69.0" prefWidth="166.0" text="Block Scheduling" textAlignment="CENTER" textFill="WHITE" toggleGroup="$sideBar" wrapText="true" GridPane.rowIndex="3" />
-                                <ToggleButton fx:id="btnLogout" mnemonicParsing="false" onAction="#onBtnLogoutAction" prefHeight="88.0" prefWidth="166.0" text="Log out" textFill="WHITE" GridPane.rowIndex="18" />
+                                <Button id="logoutButton" fx:id="btnLogout" mnemonicParsing="false" onAction="#onBtnLogoutAction" prefHeight="88.0" prefWidth="166.0" stylesheets="@assets/css/styles.css" text="Log out" textFill="WHITE" GridPane.rowIndex="18" />
                                 <ToggleButton fx:id="btnStudentEntry" alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#onBtnStudentEntryAction" prefHeight="98.0" prefWidth="166.0" text="Student" textAlignment="CENTER" textFill="WHITE" toggleGroup="$sideBar" wrapText="true" GridPane.rowIndex="8" />
                         <ToggleButton fx:id="btnStudentRecords" mnemonicParsing="false" onAction="#onBtnStudentRecordsAction" prefHeight="58.0" prefWidth="166.0" text="Student Records" textAlignment="CENTER" textFill="WHITE" toggleGroup="$sideBar" wrapText="true" GridPane.rowIndex="5" />
                         <ToggleButton fx:id="btnEmployeeEntry" mnemonicParsing="false" onAction="#onBtnEmployeeEntryAction" prefHeight="163.0" prefWidth="166.0" text="Employee" textAlignment="CENTER" textFill="WHITE" toggleGroup="$sideBar" wrapText="true" GridPane.rowIndex="9" />
@@ -473,7 +473,7 @@
                                                             <children>
                                                                 <HBox alignment="CENTER" layoutX="55.0" layoutY="80.0" prefHeight="96.0" prefWidth="1311.0" spacing="20.0">
                                                                 <children>
-                                                                    <Pane prefHeight="96.0" prefWidth="299.0" styleClass="dashboardPanes" stylesheets="@assets/css/styles.css">
+                                                                    <Pane fx:id="setSemStart" onMouseClicked="#onSetSemStartMouseClicked" prefHeight="96.0" prefWidth="299.0" styleClass="dashboardPanes" stylesheets="@assets/css/styles.css">
                                                                         <children>
                                                                             <FontIcon iconColor="#9c0000" iconLiteral="mdmz-person" iconSize="55" layoutX="12.0" layoutY="74.0" />
                                                                             <Label layoutX="155.0" layoutY="9.0" styleClass="dashboardPaneText" stylesheets="@assets/css/styles.css" text="Enrollment Status">
@@ -510,6 +510,9 @@
                                                                             </Group>
                                                                             <Label id="semesterCurrent" fx:id="lblSemester" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="29.0" layoutY="67.0" prefHeight="19.0" prefWidth="256.0" stylesheets="@assets/css/styles.css" text="First Semester A.Y. 2023-2024" textAlignment="RIGHT" />
                                                                         </children>
+                                                         <cursor>
+                                                            <Cursor fx:constant="HAND" />
+                                                         </cursor>
                                                                     </Pane>
                                                                     <Pane prefHeight="96.0" prefWidth="281.0" styleClass="dashboardPanes" stylesheets="@assets/css/styles.css">
                                                                         <children>

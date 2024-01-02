@@ -38,7 +38,7 @@
     -fx-background-color:  rgba(156, 0, 0, 0.8);
 }
 
-.toggle-button {
+.toggle-button, #logoutButton {
     -fx-background-color:  rgba(156, 0, 0, 0.0);
     -fx-font-weight: bold;
     -fx-font-family: "Noto Sans";
@@ -46,11 +46,11 @@
     -fx-font-size: 15px;
 }
 
-.toggle-button:hover {
+.toggle-button:hover, #logoutButton:hover {
     -fx-background-color:  rgba(255, 28, 28, 0.2);
 }
 
-.toggle-button:selected {
+.toggle-button:selected{
     -fx-background-color:  rgba(255, 28, 28, 0.2);
     -fx-cursor: default;
 }

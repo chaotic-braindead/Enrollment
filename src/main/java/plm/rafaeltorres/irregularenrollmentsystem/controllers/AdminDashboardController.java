@@ -129,7 +129,7 @@ public class AdminDashboardController extends Controller {
     @FXML
     private ToggleButton btnDashboard;
     @FXML
-    private ToggleButton btnLogout;
+    private Button btnLogout;
     @FXML
     private TableView tblStudents;
     @FXML
@@ -298,6 +298,8 @@ public class AdminDashboardController extends Controller {
     private TextField txtClassListSY;
     @FXML
     private Button btnManageAdd;
+    @FXML
+    private Pane setSemStart;
 
 
     @Override
@@ -516,7 +518,7 @@ public class AdminDashboardController extends Controller {
 
             String registrationStatus = (!btnApprove.isVisible()) ? "REGULAR" : "IRREGULAR";
 
-            ps = conn.prepareStatement("SELECT STUDENT_No, concat(LASTNAME, ', ', FIRSTNAME) as NAME, COURSE_CODE, REGISTRATION_STATUS FROM VWSTUDENTINFO WHERE COLLEGE_CODE = ? AND REGISTRATION_STATUS = ? and student_no not in(select student_no from enrollment where SY = ? and semester = ? and status = 'Enrolled') AND status = 'A'");
+            ps = conn.prepareStatement("SELECT STUDENT_No, concat(LASTNAME, ', ', FIRSTNAME) as NAME, COURSE_CODE, REGISTRATION_STATUS FROM VWSTUDENTINFO WHERE COLLEGE_CODE = ? AND REGISTRATION_STATUS = ? and student_no not in(select student_no from enrollment where SY = ? and semester = ? and status = 'Enrolled') AND status = 'A' ORDER BY registration_status");
             ps.setString(1, comboBoxCourse.getSelectionModel().getSelectedItem());
             ps.setString(2, registrationStatus);
             ps.setString(3, currentSY);
@@ -658,8 +660,7 @@ public class AdminDashboardController extends Controller {
         btnDisapprove.setDisable(o == null);
 
         if(o == null) {
-
-//            tblSubjects.getItems().clear();
+            tblSubjects.getItems().clear();
             comboBoxStudentNo.setPromptText("");
             comboBoxBlock.getSelectionModel().clearSelection();
             String query = "SELECT STUDENT_No, concat(LASTNAME, ', ', FIRSTNAME) as NAME, COURSE_CODE, REGISTRATION_STATUS FROM VWSTUDENTINFO WHERE REGISTRATION_STATUS = ? and student_no not in(select student_no from enrollment where SY = ? and semester = ? and status in ('Enrolled', 'Pending'))";
@@ -794,7 +795,7 @@ public class AdminDashboardController extends Controller {
 
             rs = ps.executeQuery();
             TableViewUtils.generateTableFromResultSet(tblEnrollees, rs);
-//            tblSubjects.getItems().clear();
+            tblSubjects.getItems().clear();
 
             comboBoxStudentNo.getSelectionModel().clearSelection();
         }catch(Exception e){
@@ -819,7 +820,7 @@ public class AdminDashboardController extends Controller {
         comboBoxCourse.getSelectionModel().clearSelection();
         comboBoxCourse.setPromptText("Filter students by course");
         comboBoxStudentNo.setPromptText("");
-        String registrationStatus = (!btnApprove.isVisible()) ? "REGULAR" : "IRREGULAR";
+        String registrationStatus = (!btnApprove.isVisible()) ? "Regular" : "Irregular";
         String query = "SELECT STUDENT_No, concat(LASTNAME, ', ', FIRSTNAME) as NAME, COURSE_CODE, REGISTRATION_STATUS FROM VWSTUDENTINFO WHERE REGISTRATION_STATUS = ? and student_no not in(select student_no from enrollment where SY = ? and semester = ? and status in ('Enrolled', 'Pending'))";
         if(registrationStatus.equalsIgnoreCase("IRREGULAR")){
             query = "SELECT STUDENT_No, concat(LASTNAME, ', ', FIRSTNAME) as NAME, COURSE_CODE, REGISTRATION_STATUS FROM VWSTUDENTINFO WHERE REGISTRATION_STATUS = ? and student_no in(select student_no from enrollment where SY = ? and semester = ? and status = 'Pending')";
@@ -932,7 +933,7 @@ public class AdminDashboardController extends Controller {
             displayTable("SELECT student_no, lastname, firstname, gender, bday, age, address, cp_num, email, plm_email, college_code, course_code case when status = 'A' then 'Active' when status = 'I' then 'Inactive' else 'Invalid status' end as status, registration_status from vwstudentinfo", tblStudents);
             return;
         }
-        if(!txtStudentSearch.getText().matches("[^A-Za-z0-9]")){
+        if(!txtStudentSearch.getText().matches("[A-Za-z0-9]+")){
             txtStudentSearch.setText("");
             return;
         }
@@ -1855,16 +1856,12 @@ public class AdminDashboardController extends Controller {
         }
 
         try{
-            ps = conn.prepareStatement("SELECT count(*) FROM STUDENT");
-            rs = ps.executeQuery();
-            rs.next();
-            int total = rs.getInt(1);
             ps = conn.prepareStatement("SELECT count(*) FROM ENROLLMENT WHERE status = 'Enrolled' and sy = ? and semester = ?");
             ps.setString(1, currentSY);
             ps.setString(2, currentSem);
             rs = ps.executeQuery();
             rs.next();
-            lblTotalStudents.setText(rs.getInt(1) + "/" + total + " Enrolled");
+            lblTotalStudents.setText(rs.getInt(1) + " Enrolled Students");
 
         }catch(Exception e){
             AlertMessage.showErrorAlert("There was an error while initializing the dashboard: " + e);
@@ -1890,10 +1887,10 @@ public class AdminDashboardController extends Controller {
         currentPane = studentRecordsContainer;
         currentPane.setVisible(true);
 
-//        tblStudentGradeRecord.getItems().clear();
+        tblStudentGradeRecord.getItems().clear();
 
         try{
-            ps = conn.prepareStatement("SELECT student_no, concat(lastname, ', ', firstname) as name, case when gender = 'M' then 'Male' when gender = 'F' then 'Female' else 'Invalid gender' end as gender, bday as birthday, course_code, registration_status FROM VWSTUDENTINFO");
+            ps = conn.prepareStatement("SELECT student_no, concat(lastname, ', ', firstname) as name, case when gender = 'M' then 'Male' when gender = 'F' then 'Female' else 'Invalid gender' end as gender, bday as birthday, course_code, registration_status FROM VWSTUDENTINFO ORDER BY registration_status");
             rs = ps.executeQuery();
             TableViewUtils.generateTableFromResultSet(tblStudentRecord, rs);
 //            TableFilter.forTableView(tblStudentRecord).apply();
@@ -1929,7 +1926,6 @@ public class AdminDashboardController extends Controller {
         try{
             ps = conn.prepareStatement("SELECT student_no, concat(lastname, ', ', firstname) as name, case when gender = 'M' then 'Male' when gender = 'F' then 'Female' else 'Invalid gender' end as gender, bday as birthday, course_code, registration_status FROM VWSTUDENTINFO where student_no = ?");
             ps.setString(1, tblStudentRecord.getSelectionModel().getSelectedItem().get(0));
-            System.out.println("here");
             rs = ps.executeQuery();
             TableViewUtils.generateTableFromResultSet(tblStudentRecord, rs);
             tblStudentRecord.getSelectionModel().select(0);
@@ -2844,8 +2840,64 @@ public class AdminDashboardController extends Controller {
     }
 
     @FXML
-    protected void btnDownloadOnMouseClicked(MouseEvent event) {
+    protected void onSetSemStartMouseClicked(MouseEvent event) {
+        ObjectProperty<LocalDate> date = new SimpleObjectProperty<>();
+        date.set(LocalDate.now());
+        SimpleObjectProperty<String> sem = new SimpleObjectProperty<>();
+        SimpleListProperty<String> l = new SimpleListProperty<>();
+        ObservableList<String> sems = FXCollections.observableArrayList(List.of("1", "2", "3", "S"));
+        l.set(sems);
+        Form setStart = Form.of(
+                Group.of(
+                        Field.ofSingleSelectionType(sems)
+                                .bind(l, sem)
+                                .required("Select a semester")
+                                .label("Semester"),
+                        Field.ofDate(LocalDate.now())
+                                .bind(date)
+                                .required("Input new start of selected semester.")
+                                .label("Start Date")
+                )
+        ).binding(BindingMode.CONTINUOUS);
 
+        FormRenderer formRenderer = new FormRenderer(setStart);
+        formRenderer.setPrefWidth(700);
+        Dialog dialog = new Dialog();
+        dialog.setTitle("Set semester starting date");
+        ButtonType saveConfigButtonType = new ButtonType("Set", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(saveConfigButtonType, ButtonType.CANCEL);
+        dialog.getDialogPane().setContent(formRenderer);
+        dialog.getDialogPane()
+                .lookupButton(saveConfigButtonType)
+                .disableProperty()
+                .bind(Bindings.createBooleanBinding(() -> !setStart.isValid(),setStart.validProperty()));
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == saveConfigButtonType) {
+                return List.of(date, sem);
+            }
+            return null;
+        });
+
+        Optional<List<ObjectProperty>> newDate = dialog.showAndWait();
+        if(newDate.isEmpty())
+            return;
+        switch(newDate.get().get(1).get().toString()){
+            case "1":
+                Maintenance.getInstance().setStartSem1((LocalDate) newDate.get().get(0).get());
+                break;
+            case "2":
+                Maintenance.getInstance().setStartSem2((LocalDate) newDate.get().get(0).get());
+                break;
+            case "3":
+            case "S":
+                Maintenance.getInstance().setStartSemS((LocalDate) newDate.get().get(0).get());
+                break;
+            default:
+                System.out.println("Invalid date");
+        }
+        Maintenance.getInstance().refresh();
+        AlertMessage.showInformationAlert("Successfully changed start of semester " + newDate.get().get(1).get());
+        btnDashboard.fire();
+        System.out.println(Maintenance.getInstance().getCurrentSem());
     }
-
 }
