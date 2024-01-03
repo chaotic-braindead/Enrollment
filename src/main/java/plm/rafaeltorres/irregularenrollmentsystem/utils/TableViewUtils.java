@@ -120,6 +120,7 @@ public class TableViewUtils {
                                                 } else {
                                                     Text text = new Text(item);
                                                     text.setStyle("-fx-text-alignment:left;");
+                                                    text.setStyle("-fx-text-fill: black");
                                                     text.wrappingWidthProperty().bind(getTableColumn().widthProperty().subtract(10));
                                                     setGraphic(text);
                                                 }
@@ -162,7 +163,9 @@ public class TableViewUtils {
                         col.setCellFactory(
                                 new Callback<TableColumn, TableCell>() {
                                     public TableCell call(TableColumn p) {
-                                        return new ComboBoxTableCell(new DefaultStringConverter(), FXCollections.observableArrayList("A", "I"));
+                                        ComboBoxTableCell comboBoxTableCell = new ComboBoxTableCell(new DefaultStringConverter(), FXCollections.observableArrayList("A", "I"));
+                                        comboBoxTableCell.setStyle("-fx-text-fill: black");
+                                        return comboBoxTableCell;
                                     }
                                 }
                         );
@@ -174,7 +177,9 @@ public class TableViewUtils {
                         col.setCellFactory(
                                 new Callback<TableColumn, TableCell>() {
                                     public TableCell call(TableColumn p) {
-                                        return new ComboBoxTableCell(new DefaultStringConverter(), comboBoxItems);
+                                        ComboBoxTableCell comboBoxTableCell = new ComboBoxTableCell(new DefaultStringConverter(), comboBoxItems);
+                                        comboBoxTableCell.setStyle("-fx-text-fill: black");
+                                        return comboBoxTableCell;
                                     }
                                 }
                         );
@@ -186,7 +191,9 @@ public class TableViewUtils {
                         col.setCellFactory(
                                 new Callback<TableColumn, TableCell>() {
                                     public TableCell call(TableColumn p) {
-                                        return new ComboBoxTableCell(new DefaultStringConverter(), comboBoxItems);
+                                        ComboBoxTableCell comboBoxTableCell = new ComboBoxTableCell(new DefaultStringConverter(), comboBoxItems);
+                                        comboBoxTableCell.setStyle("-fx-text-fill: black");
+                                        return comboBoxTableCell;
                                     }
                                 }
                         );
@@ -199,7 +206,9 @@ public class TableViewUtils {
                             col.setCellFactory(
                                     new Callback<TableColumn, TableCell>() {
                                         public TableCell call(TableColumn p) {
-                                            return new ComboBoxTableCell(new DefaultStringConverter(), comboBoxItems);
+                                            ComboBoxTableCell comboBoxTableCell = new ComboBoxTableCell(new DefaultStringConverter(), comboBoxItems);
+                                            comboBoxTableCell.setStyle("-fx-text-fill: black");
+                                            return comboBoxTableCell;
                                         }
                                     }
                             );

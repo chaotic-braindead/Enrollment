@@ -155,8 +155,6 @@ public class AdminDashboardController extends Controller {
     @FXML
     private Button btnEnrollStudent;
     @FXML
-    private Button btnPrintPreview;
-    @FXML
     private TableView<ObservableList<String>> tblEnrollees;
     @FXML
     private ComboBox<String> comboBoxYear;
@@ -304,6 +302,7 @@ public class AdminDashboardController extends Controller {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
         currentSY = Maintenance.getInstance().getCurrentSY();
         currentSem = Maintenance.getInstance().getCurrentSem();
         sideBar.selectedToggleProperty().addListener((obsVal, oldVal, newVal) -> {
@@ -694,7 +693,6 @@ public class AdminDashboardController extends Controller {
             if(item.getText().equals("STUDENT NO"))
                 comboBoxStudentNo.setPromptText(o.get(i));
         }
-
         try{
             Statement s = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             rs = s.executeQuery("select student_no, concat(LASTNAME, ', ', FIRSTNAME) as NAME, course_code, registration_status from vwstudentinfo where student_no =  '"+ o.get(0) + "'");
@@ -756,7 +754,6 @@ public class AdminDashboardController extends Controller {
             rs = ps.executeQuery();
             TableViewUtils.generateTableFromResultSet(tblSubjects, rs);
             btnEnrollStudent.setDisable(false);
-            btnPrintPreview.setDisable(false);
 
         }catch(Exception e){
             AlertMessage.showErrorAlert("An error occurred while displaying the schedules: "+e);
@@ -849,6 +846,8 @@ public class AdminDashboardController extends Controller {
     protected void onBtnApprovalAction(ActionEvent event) throws IllegalAccessException {
         btnApprove.setVisible(true);
         btnDisapprove.setVisible(true);
+        btnApprove.setDisable(true);
+        btnDisapprove.setDisable(true);
         btnEnrollStudent.setVisible(false);
         comboBoxBlock.setVisible(false);
 //        tblSubjects.getItems().clear();
@@ -1837,7 +1836,7 @@ public class AdminDashboardController extends Controller {
             return;
         }
         try{
-            ps = conn.prepareStatement("SELECT `student number`, `last name`, `first name` FROM VWCLASSLIST where SY = ? and semester = ? and block_no = ? and REGISTRATION_STATUS = 'Regular'");
+            ps = conn.prepareStatement("SELECT distinct `student number`, `last name`, `first name` FROM VWCLASSLIST where SY = ? and semester = ? and block_no = ? and REGISTRATION_STATUS = 'Regular'");
             ps.setString(1, currentSY);
             ps.setString(2, currentSem);
             ps.setString(3, course+year+block);
@@ -2589,6 +2588,9 @@ public class AdminDashboardController extends Controller {
                         AlertMessage.showErrorAlert("There must be one active school year.");
                         o.set(1, t.getOldValue());
                         tblManage.refresh();
+                        return;
+                    }
+                    if(t.getOldValue().equalsIgnoreCase("Closed") && t.getNewValue().equalsIgnoreCase("Closed")){
                         return;
                     }
                     o.set(1, t.getNewValue());

@@ -11,7 +11,7 @@
 }
 
 .loginContainer {
-    -fx-background-color:  rgba(255, 255, 255, 0.90);
+    -fx-background-color:  rgba(255, 255, 255, 0.87);
     -fx-background-radius:  15px;
 }
 
@@ -64,10 +64,18 @@
 }
 
 .button {
-    -fx-background-color: grey;
+    -fx-background-color: #b4b4b4;
     -fx-font-family: "Noto Sans";
     -fx-font-weight: bold;
-    -fx-background-radius: 5px;
+    -fx-background-radius: 3px;
+    -fx-cursor: hand;
+}
+
+.button:hover {
+    -fx-background-color: #989898;
+    -fx-font-family: "Noto Sans";
+    -fx-font-weight: bold;
+    -fx-background-radius: 3px;
     -fx-cursor: hand;
 }
 
@@ -138,3 +146,64 @@
 
 
 /* admin page */
+
+.rootPane .table-view .column-header-background{
+    -fx-background-color: #9c0000;
+    -fx-background-radius: 15px 15px 0px 0px;
+    -fx-background-insets: 0 11px 0 0;
+    -fx-padding: 0 0 5px 0;
+}
+
+.rootPane .table-view .column-header {
+    -fx-background-color: #9c0000;
+}
+.rootPane  .table-view .column-header .label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.rootPane .table-view .column-header-background .filler {
+    -fx-background-color: transparent;
+}
+
+.rootPane .table-view .virtual-flow .scroll-bar:vertical,
+.rootPane .table-view .virtual-flow .scroll-bar:vertical .track,
+.rootPane .table-view .virtual-flow .scroll-bar:vertical .track-background,
+.rootPane .table-view .virtual-flow .scroll-bar:horizontal,
+.rootPane .table-view .virtual-flow .scroll-bar:horizontal .track,
+.rootPane .table-view .virtual-flow .scroll-bar:horizontal .track-background {
+    -fx-background-color: rgba(157, 157, 157, 0.86);
+}
+
+.rootPane .table-view .virtual-flow .scroll-bar .increment-button,
+.rootPane .table-view .virtual-flow .scroll-bar .decrement-button {
+    -fx-opacity: 0;
+    -fx-padding: 2;
+}
+
+.rootPane .table-view .virtual-flow .scroll-bar:vertical .thumb{
+    -fx-background-color:  black;
+}
+.rootPane .table-view .virtual-flow .scroll-bar:horizontal .thumb {
+    -fx-background-color:  black;
+}
+
+.rootPane .table-view .table-cell{
+    -fx-border-color: transparent;
+    -fx-padding: 2 0 2 10px;
+}
+.rootPane .table-row-cell {
+    -fx-background-color: rgba(255, 255, 255, 0.8);
+}
+
+.rootPane .table-row-cell:selected {
+    -fx-background-color: #c7c7c7;
+    -fx-text-fill: black;
+}
+
+.combo-box-base {
+    -fx-background-color: -fx-shadow-highlight-color, -fx-outer-border, -fx-inner-border, white;
+    -fx-background-insets: 0 0 -1 0, 0, 1, 2;
+    -fx-background-radius: 8px;
+}
+

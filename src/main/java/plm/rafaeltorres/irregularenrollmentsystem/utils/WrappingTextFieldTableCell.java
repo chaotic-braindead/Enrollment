@@ -41,6 +41,7 @@ public class WrappingTextFieldTableCell<S> extends TextFieldTableCell<S, String>
         Text text = new Text();
         text.wrappingWidthProperty().bind(widthProperty().subtract(10));
         text.setStyle("-fx-alignment: center");
+        text.setStyle("-fx-text-fill: black");
         text.textProperty().bind(itemProperty());
         return text;
     }

@@ -29,7 +29,7 @@
 <?import org.controlsfx.control.SearchableComboBox?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1000.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="plm.rafaeltorres.irregularenrollmentsystem.controllers.AdminDashboardController">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1000.0" prefWidth="1920.0" styleClass="rootPane" stylesheets="@assets/css/styles.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="plm.rafaeltorres.irregularenrollmentsystem.controllers.AdminDashboardController">
     <children>
         <AnchorPane prefHeight="200.0" prefWidth="1163.0" StackPane.alignment="CENTER">
             <children>
@@ -219,7 +219,6 @@
                                                       <Button fx:id="btnDisapprove" disable="true" mnemonicParsing="false" onAction="#onBtnDisapproveAction" text="Disapprove" visible="false" />
                                                    </children>
                                                 </StackPane>
-                                                <Button fx:id="btnPrintPreview" disable="true" mnemonicParsing="false" text="Print Preview" />
                                              </children>
                                           </HBox>
                                           <TableView fx:id="tblEnrollees" layoutX="13.0" layoutY="184.0" onMouseClicked="#onTblEnrolleesMouseClicked" prefHeight="647.0" prefWidth="659.0">
@@ -412,8 +411,8 @@
                                               <TableColumn prefWidth="75.0" text="C2" />
                                             </columns>
                                           </TableView>
-                                          <Button fx:id="btnManageAdd" layoutX="751.0" layoutY="103.0" mnemonicParsing="false" onAction="#onBtnManageAddAction" text="Add" />
-                                          <Button fx:id="btnManageDelete" disable="true" layoutX="839.0" layoutY="101.0" mnemonicParsing="false" onAction="#onBtnManageDelete" text="Delete" />
+                                          <Button fx:id="btnManageAdd" layoutX="815.0" layoutY="103.0" mnemonicParsing="false" onAction="#onBtnManageAddAction" text="Add" />
+                                          <Button fx:id="btnManageDelete" disable="true" layoutX="864.0" layoutY="103.0" mnemonicParsing="false" onAction="#onBtnManageDelete" text="Delete" />
                                        </children>
                                     </AnchorPane>
                                     <Label fx:id="lblManage" layoutX="97.0" layoutY="34.0" styleClass="titleText" stylesheets="@assets/css/styles.css" text="MANAGE SCHOOL YEAR" />
