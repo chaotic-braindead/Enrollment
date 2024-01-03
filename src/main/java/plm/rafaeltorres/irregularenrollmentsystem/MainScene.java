@@ -3,6 +3,7 @@ package plm.rafaeltorres.irregularenrollmentsystem;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import plm.rafaeltorres.irregularenrollmentsystem.db.Database;
 import plm.rafaeltorres.irregularenrollmentsystem.utils.Maintenance;
@@ -24,6 +25,7 @@ public class MainScene extends Application {
         stage.setTitle("Login");
         stage.setScene(scene);
         stage.setResizable(false);
+        stage.getIcons().add(new Image(MainScene.class.getResourceAsStream("assets/img/PLM_Seal_2013.png")));
         stage.show();
     }
 
