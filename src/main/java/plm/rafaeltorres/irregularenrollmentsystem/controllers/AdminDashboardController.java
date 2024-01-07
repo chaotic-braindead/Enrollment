@@ -28,6 +28,7 @@ import javafx.scene.image.Image;
 import javafx.scene.input.InputEvent;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
@@ -300,6 +301,16 @@ public class AdminDashboardController extends Controller {
     private javafx.scene.Group searchManageGroup;
     @FXML
     private javafx.scene.Group irregularLabelGroup;
+    @FXML
+    private ComboBox<String> cmbSelectTableCategory;
+    @FXML
+    private GridPane gridDataEntry;
+    @FXML
+    private GridPane gridMaintenance;
+    @FXML
+    private GridPane gridRecords;
+    @FXML
+    private GridPane gridTransaction;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -393,6 +404,7 @@ public class AdminDashboardController extends Controller {
 
             comboBoxYear.setItems(FXCollections.observableArrayList("Any", "1", "2", "3", "4", "5"));
             comboBoxYear.getSelectionModel().selectFirst();
+            cmbSelectTableCategory.setItems(FXCollections.observableArrayList("Transaction", "Records", "Data Entry", "Maintenance"));
 
             ps = conn.prepareStatement("SELECT subject_code from subject where subject_code <> '00000'");
             rs = ps.executeQuery();
@@ -2769,6 +2781,64 @@ public class AdminDashboardController extends Controller {
             AlertMessage.showInformationAlert("Your password has been changed.");
         }catch(Exception e){
             AlertMessage.showErrorAlert("An error occurred while changing passwords: " + e);
+        }
+    }
+
+    @FXML
+    void onSelectTableCategory(ActionEvent event) {
+        String strChoice = cmbSelectTableCategory.getValue();
+
+        switch(strChoice){
+            case "Transaction":
+                //Visible Property
+                gridTransaction.setVisible(true);
+                gridRecords.setVisible(false);
+                gridDataEntry.setVisible(false);
+                gridMaintenance.setVisible(false);
+                //Disable Property
+                gridTransaction.setDisable(false);
+                gridRecords.setDisable(true);
+                gridDataEntry.setDisable(true);
+                gridMaintenance.setDisable(true);
+                break;
+            case "Records":
+                //Visible Property
+                gridTransaction.setVisible(false);
+                gridRecords.setVisible(true);
+                gridDataEntry.setVisible(false);
+                gridMaintenance.setVisible(false);
+                //Disable Property
+                gridTransaction.setDisable(true);
+                gridRecords.setDisable(false);
+                gridDataEntry.setDisable(true);
+                gridMaintenance.setDisable(true);
+                break;
+            case "Data Entry":
+                //Visible Property
+                gridTransaction.setVisible(false);
+                gridRecords.setVisible(false);
+                gridDataEntry.setVisible(true);
+                gridMaintenance.setVisible(false);
+                //Disable Property
+                gridTransaction.setDisable(true);
+                gridRecords.setDisable(true);
+                gridDataEntry.setDisable(false);
+                gridMaintenance.setDisable(true);
+                break;
+            case "Maintenance":
+                //Visible Property
+                gridTransaction.setVisible(false);
+                gridRecords.setVisible(false);
+                gridDataEntry.setVisible(false);
+                gridMaintenance.setVisible(true);
+                //Disable Property
+                gridTransaction.setDisable(true);
+                gridRecords.setDisable(true);
+                gridDataEntry.setDisable(true);
+                gridMaintenance.setDisable(false);
+                break;
+            default:
+                System.out.print("Logic Error"); //Di ko alam lalagay ko dito wahhah
         }
     }
 }

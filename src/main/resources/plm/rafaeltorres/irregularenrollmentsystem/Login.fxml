@@ -18,6 +18,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
 <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1000.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="plm.rafaeltorres.irregularenrollmentsystem.controllers.LoginController">
@@ -75,16 +76,13 @@
                               <Image url="@assets/img/pamantasan-lungsod-maynila.jpg" />
                            </image>
                         </ImageView>
-                        <BorderPane layoutX="207.0" layoutY="95.0" prefHeight="623.0" prefWidth="641.0" styleClass="loginContainer" stylesheets="@assets/css/styles.css">
+                        <BorderPane layoutX="291.0" layoutY="123.0" prefHeight="623.0" prefWidth="641.0" styleClass="loginContainer" stylesheets="@assets/css/styles.css">
                            <top>
-                              <Pane prefHeight="37.0" prefWidth="604.0" style="-fx-background-color: #bd1a1b; -fx-border-style: solid hidden hidden hidden; -fx-border-radius: 20px 20px 0px 0px; -fx-border-color: black;" BorderPane.alignment="CENTER" />
-                           </top>
-                           <center>
-                              <AnchorPane BorderPane.alignment="CENTER">
+                              <AnchorPane stylesheets="@assets/css/styles.css" BorderPane.alignment="CENTER">
                                  <children>
-                                    <VBox prefHeight="586.0" prefWidth="641.0" styleClass="loginText" stylesheets="@assets/css/styles.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                    <VBox layoutY="23.0" prefHeight="563.0" prefWidth="641.0" styleClass="loginText" stylesheets="@assets/css/styles.css" AnchorPane.bottomAnchor="37.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="23.0">
                                        <children>
-                                          <Label id="welcome" prefHeight="220.0" prefWidth="591.0" stylesheets="@assets/css/styles.css" text="Welcome to the CRS of Pamantasan ng Lungsod ng Maynila" wrapText="true">
+                                          <Label id="welcome" prefHeight="220.0" prefWidth="591.0" stylesheets="@assets/css/styles.css" text="Welcome to the CRS of Pamantasan ng Lungsod ng Maynila" textAlignment="CENTER" wrapText="true">
                                              <font>
                                                 <Font size="35.0" />
                                              </font>
@@ -95,17 +93,9 @@
                                                 <Insets top="10.0" />
                                              </VBox.margin>
                                           </Label>
-                                          <Label prefHeight="17.0" prefWidth="407.0" styleClass="fields" stylesheets="@assets/css/styles.css" text="For more inquiries, please email ithelp@plm.edu.ph">
-                                             <padding>
-                                                <Insets left="10.0" />
-                                             </padding>
-                                             <font>
-                                                <Font size="20.0" />
-                                             </font>
-                                          </Label>
-                                          <AnchorPane prefHeight="318.0" prefWidth="591.0">
+                                          <AnchorPane prefHeight="294.0" prefWidth="591.0">
                                              <children>
-                                                <Label layoutX="4.0" layoutY="41.0" prefHeight="35.0" prefWidth="288.0" text="Account Number:">
+                                                <Label layoutX="2.0" layoutY="64.0" prefHeight="35.0" prefWidth="288.0" text="Account Number:">
                                                    <padding>
                                                       <Insets left="20.0" top="10.0" />
                                                    </padding>
@@ -113,8 +103,8 @@
                                                       <Font size="17.0" />
                                                    </font>
                                                 </Label>
-                                                <TextField fx:id="txtStudentNo" depthTest="DISABLE" layoutX="20.0" layoutY="83.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyTyped="#onTxtFieldAction" prefHeight="32.0" prefWidth="557.0" />
-                                                <Label layoutX="21.0" layoutY="108.0" prefHeight="34.0" prefWidth="379.0" text="Password:">
+                                                <TextField fx:id="txtStudentNo" depthTest="DISABLE" layoutX="20.0" layoutY="107.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyTyped="#onTxtFieldAction" prefHeight="32.0" prefWidth="557.0" />
+                                                <Label layoutX="21.0" layoutY="131.0" prefHeight="34.0" prefWidth="379.0" text="Password:">
                                                    <padding>
                                                       <Insets top="15.0" />
                                                    </padding>
@@ -122,13 +112,13 @@
                                                       <Font size="17.0" />
                                                    </font>
                                                 </Label>
-                                                <StackPane layoutX="18.0" layoutY="151.0">
+                                                <StackPane layoutX="18.0" layoutY="180.0" prefWidth="558.0">
                                                    <children>
-                                                      <PasswordField fx:id="txtPassword" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyTyped="#onTxtPasswordKeyTyped" prefHeight="36.0" prefWidth="558.0" />
                                                       <TextField fx:id="txtShowPassword" onAction="#onTxtFieldAction" onKeyTyped="#onTxtShowPasswordKeyTyped" prefHeight="36.0" prefWidth="558.0" visible="false" />
+                                                      <PasswordField fx:id="txtPassword" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyTyped="#onTxtPasswordKeyTyped" prefHeight="36.0" prefWidth="558.0" />
                                                    </children>
                                                 </StackPane>
-                                                <Button id="loginButton" fx:id="btnLogin" alignment="CENTER" contentDisplay="CENTER" disable="true" layoutX="13.0" layoutY="244.0" mnemonicParsing="false" onAction="#onBtnLoginAction" prefHeight="43.0" prefWidth="565.0" stylesheets="@assets/css/styles.css" text="LOG IN" textFill="WHITE">
+                                                <Button id="loginButton" fx:id="btnLogin" alignment="CENTER" contentDisplay="CENTER" disable="true" layoutX="15.0" layoutY="275.0" mnemonicParsing="false" onAction="#onBtnLoginAction" prefHeight="0.0" prefWidth="565.0" stylesheets="@assets/css/styles.css" text="LOG IN" textFill="WHITE">
                                                    <cursor>
                                                       <Cursor fx:constant="HAND" />
                                                    </cursor>
@@ -136,11 +126,25 @@
                                                       <Font size="17.0" />
                                                    </font>
                                                 </Button>
-                                                <CheckBox fx:id="showPassword" layoutX="19.0" layoutY="198.0" mnemonicParsing="false" onAction="#onShowPasswordSelectedAction" prefHeight="28.0" prefWidth="270.0" styleClass="fields" stylesheets="@assets/css/styles.css" text="Show Password">
+                                                <CheckBox fx:id="showPassword" layoutX="21.0" layoutY="227.0" mnemonicParsing="false" onAction="#onShowPasswordSelectedAction" prefHeight="28.0" prefWidth="270.0" styleClass="fields" stylesheets="@assets/css/styles.css" text="Show Password">
                                                    <font>
                                                       <Font size="15.0" />
                                                    </font>
                                                 </CheckBox>
+                                                <Label layoutX="100.0" layoutY="38.0" prefHeight="21.0" prefWidth="229.0" styleClass="fields" stylesheets="@assets/css/styles.css" text="For more inquiries, please email ">
+                                                   <padding>
+                                                      <Insets left="10.0" />
+                                                   </padding>
+                                                   <font>
+                                                      <Font size="20.0" />
+                                                   </font>
+                                                </Label>
+                                                <Label layoutX="328.0" layoutY="39.0" text="ithelp@plm.edu.ph" textFill="#387cff">
+                                                   <font>
+                                                      <Font name="System Bold" size="14.0" />
+                                                   </font>
+                                                </Label>
+                                                <Line endX="453.0" layoutX="117.0" startX="-100.0" />
                                              </children>
                                           </AnchorPane>
                                        </children>
@@ -150,40 +154,36 @@
                                     </VBox>
                                  </children>
                               </AnchorPane>
-                           </center>
+                           </top>
                         </BorderPane>
-                        <Pane layoutX="1132.0" layoutY="176.0" prefHeight="463.0" prefWidth="478.0" styleClass="onPLMContainer" stylesheets="@assets/css/styles.css">
+                        <VBox alignment="CENTER" layoutX="1067.0" layoutY="105.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="562.0" prefWidth="628.0">
                            <children>
-                              <VBox alignment="CENTER" layoutX="12.0" layoutY="21.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="428.0" prefWidth="451.0">
-                                 <children>
-                                    <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="70.0" prefWidth="323.0" style="-fx-font-weight: bold; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0.5, 0, 3.0);" text="ONPLM" textFill="WHITE">
-                                       <font>
-                                          <Font size="65.0" />
-                                       </font>
-                                       <VBox.margin>
-                                          <Insets />
-                                       </VBox.margin>
-                                    </Label>
-                                    <Label alignment="CENTER" prefHeight="20.0" prefWidth="307.0" style="-fx-font-weight: bold; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0.5, 0, 3.0);" text="THE PLM ONLINE CAMPUS" textFill="WHITE">
-                                       <font>
-                                          <Font size="19.0" />
-                                       </font>
-                                    </Label>
-                                    <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="80.0" prefWidth="336.0" style="-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0.5, 0, 3.0); -fx-font-weight: bold;" text="You have reached the official CRS website of the Pamantasan ng Lungsod ng Maynila, Intramuros, Manila" textAlignment="CENTER" textFill="WHITE" wrapText="true">
-                                       <font>
-                                          <Font size="14.0" />
-                                       </font>
-                                       <VBox.margin>
-                                          <Insets top="60.0" />
-                                       </VBox.margin>
-                                       <padding>
-                                          <Insets top="20.0" />
-                                       </padding>
-                                    </Label>
-                                 </children>
-                              </VBox>
+                              <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="123.0" prefWidth="464.0" style="-fx-font-weight: bold; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0.5, 0, 3.0);" text="ONPLM" textFill="WHITE">
+                                 <font>
+                                    <Font size="120.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets />
+                                 </VBox.margin>
+                              </Label>
+                              <Label alignment="CENTER" prefHeight="58.0" prefWidth="592.0" style="-fx-font-weight: bold; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0.5, 0, 3.0);" text="THE PLM ONLINE CAMPUS" textFill="WHITE">
+                                 <font>
+                                    <Font size="30.0" />
+                                 </font>
+                              </Label>
+                              <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="119.0" prefWidth="388.0" style="-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0.5, 0, 3.0); -fx-font-weight: bold;" text="You have reached the official CRS application of the Pamantasan ng Lungsod ng Maynila, Intramuros, Manila" textAlignment="CENTER" textFill="WHITE" wrapText="true">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets top="60.0" />
+                                 </VBox.margin>
+                                 <padding>
+                                    <Insets top="20.0" />
+                                 </padding>
+                              </Label>
                            </children>
-                        </Pane>
+                        </VBox>
                      </children>
                   </AnchorPane>
                </center>
