@@ -127,7 +127,7 @@
                            <toggleGroup>
                               <ToggleGroup fx:id="sideBar" />
                            </toggleGroup></ToggleButton>
-                                <ToggleButton fx:id="btnEnrollment" alignment="CENTER_LEFT" mnemonicParsing="false" onAction="#onBtnEnrollmentAction" prefHeight="67.0" prefWidth="177.0" text="Enrollment" textAlignment="RIGHT" textFill="WHITE" toggleGroup="$sideBar" wrapText="true" GridPane.rowIndex="1" />
+                                <ToggleButton fx:id="btnEnrollment" alignment="CENTER_LEFT" mnemonicParsing="false" onAction="#onBtnEnrollmentAction" prefHeight="40.0" prefWidth="433.0" text="Enrollment" textAlignment="RIGHT" textFill="WHITE" toggleGroup="$sideBar" wrapText="true" GridPane.rowIndex="1" />
                                 <ToggleButton fx:id="btnClass" alignment="CENTER_LEFT" mnemonicParsing="false" onAction="#onBtnClassAction" prefHeight="60.0" prefWidth="166.0" text="Class List" textAlignment="CENTER" textFill="WHITE" toggleGroup="$sideBar" wrapText="true" GridPane.rowIndex="6" />
                                 <ToggleButton fx:id="btnSchedule" alignment="CENTER_LEFT" contentDisplay="TOP" mnemonicParsing="false" onAction="#onBtnScheduleAction" prefHeight="69.0" prefWidth="166.0" text="Block Scheduling" textAlignment="CENTER" textFill="WHITE" toggleGroup="$sideBar" wrapText="true" GridPane.rowIndex="3" />
                                 <Button id="logoutButton" fx:id="btnLogout" mnemonicParsing="false" onAction="#onBtnLogoutAction" prefHeight="88.0" prefWidth="166.0" stylesheets="@assets/css/styles.css" text="Log out" textFill="WHITE" GridPane.rowIndex="18" />
@@ -213,7 +213,7 @@
                                           <SearchableComboBox fx:id="comboBoxBlock" disable="true" layoutX="1380.0" layoutY="101.0" onAction="#onComboBoxBlockAction" prefHeight="25.0" prefWidth="289.0" />
                                           <Label fx:id="txtCurrentSYandSem" alignment="CENTER_RIGHT" layoutX="1517.0" layoutY="77.0" prefHeight="17.0" prefWidth="152.0" text="SY" />
                                           <SearchableComboBox fx:id="comboBoxCollege" layoutX="81.0" layoutY="74.0" onAction="#onComboBoxCollegeAction" prefHeight="25.0" prefWidth="262.0" promptText="Filter enrollees by college" />
-                                          <SearchableComboBox fx:id="comboBoxCourse" layoutX="81.0" layoutY="112.0" prefHeight="25.0" prefWidth="262.0" promptText="Filter enrollees by course" />
+                                          <SearchableComboBox fx:id="comboBoxCourse" layoutX="81.0" layoutY="112.0" onAction="#onComboBoxCourseAction" prefHeight="25.0" prefWidth="262.0" promptText="Filter enrollees by course" />
                                           <HBox alignment="CENTER_RIGHT" layoutX="1367.0" layoutY="140.0" prefHeight="25.0" prefWidth="314.0" spacing="20.0">
                                              <children>
                                                 <Button fx:id="btnApprove" disable="true" mnemonicParsing="false" onAction="#onBtnApproveAction" text="Approve" visible="false" />
