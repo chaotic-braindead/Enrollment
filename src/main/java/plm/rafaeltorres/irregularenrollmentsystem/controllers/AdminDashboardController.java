@@ -570,6 +570,44 @@ public class AdminDashboardController extends Controller {
 
     }
     @FXML
+    protected void onComboBoxCourseAction(Event event) {
+
+        comboBoxYear.setDisable(false);
+
+        if(comboBoxStudentNo.getPromptText() != null)
+            txtName.setText("");
+        if(comboBoxCourse.getSelectionModel().getSelectedItem() == null)
+            return;
+        ObservableList<String> o = FXCollections.observableArrayList();
+        ObservableList<String> ob = FXCollections.observableArrayList();
+
+        try{
+            ps = conn.prepareStatement("SELECT college_code from course where course_code = ? ");
+            ps.setString(1, comboBoxCourse.getSelectionModel().getSelectedItem());
+            rs = ps.executeQuery();
+            if(rs.next())
+                comboBoxCollege.getSelectionModel().select(rs.getString(1));
+
+            ps = conn.prepareStatement("select distinct block from vwSubjectSchedules where course = ? and sy = ? and semester = ?");
+            ps.setString(1, comboBoxCourse.getSelectionModel().getSelectedItem().replace("BS", ""));
+            ps.setString(2, currentSY);
+            ps.setString(3, currentSem);
+            rs = ps.executeQuery();
+            while(rs.next()){
+                ob.add(rs.getString(1));
+            }
+
+            comboBoxBlock.setItems(ob);
+            comboBoxBlock.setDisable(comboBoxCourse.getSelectionModel().getSelectedItem() == null);
+            comboBoxBlock.setPromptText("Select a block/section");
+
+
+        } catch(Exception e){
+            System.out.println(e);
+        }
+//        tblSubjects.getItems().clear();
+    }
+    @FXML
     protected void onTblEnrolleesMouseClicked(MouseEvent event){
         ObservableList<String> o = (ObservableList<String>) tblEnrollees.getSelectionModel().getSelectedItem();
 
@@ -587,15 +625,16 @@ public class AdminDashboardController extends Controller {
             tblSubjects.getItems().clear();
             comboBoxStudentNo.setPromptText("");
             comboBoxBlock.getSelectionModel().clearSelection();
-            String query = "SELECT STUDENT_No, concat(LASTNAME, ', ', FIRSTNAME) as NAME, COURSE_CODE, REGISTRATION_STATUS FROM VWSTUDENTINFO WHERE REGISTRATION_STATUS = ? and student_no not in(select student_no from enrollment where SY = ? and semester = ? and status in ('Enrolled', 'Pending'))";
+            String query = "SELECT STUDENT_No, concat(LASTNAME, ', ', FIRSTNAME) as NAME, COURSE_CODE, REGISTRATION_STATUS FROM VWSTUDENTINFO WHERE REGISTRATION_STATUS = ? and student_no not in(select student_no from enrollment where SY = ? and semester = ? and status in ('Enrolled', 'Pending'))  and (cast(substring(?, 1, 4) as signed) - cast(substring(student_no, 1, 4) as signed)) >= 0";
             if(registrationStatus.equalsIgnoreCase("IRREGULAR")){
-                query = "SELECT STUDENT_No, concat(LASTNAME, ', ', FIRSTNAME) as NAME, COURSE_CODE, REGISTRATION_STATUS FROM VWSTUDENTINFO WHERE REGISTRATION_STATUS = ? and student_no in(select student_no from enrollment where SY = ? and semester = ? and status = 'Pending')";
+                query = "SELECT STUDENT_No, concat(LASTNAME, ', ', FIRSTNAME) as NAME, COURSE_CODE, REGISTRATION_STATUS FROM VWSTUDENTINFO WHERE REGISTRATION_STATUS = ? and student_no in(select student_no from enrollment where SY = ? and semester = ? and status = 'Pending')  and (cast(substring(?, 1, 4) as signed) - cast(substring(student_no, 1, 4) as signed)) >= 0";
             }
             try{
                 ps = conn.prepareStatement(query);
                 ps.setString(1, registrationStatus);
                 ps.setString(2, currentSY);
                 ps.setString(3, currentSem);
+                ps.setString(4, currentSY.substring(0, 4));
                 rs = ps.executeQuery();
                 TableViewUtils.generateTableFromResultSet(tblEnrollees, rs);
 
@@ -705,6 +744,7 @@ public class AdminDashboardController extends Controller {
         if(confirmation.isEmpty() || confirmation.get() == ButtonType.NO)
             return;
 
+
         try{
             for(int i = 0; i < tblSubjects.getItems().size(); ++i){
                 ps = conn.prepareStatement("INSERT INTO STUDENT_SCHEDULE VALUES (?, ?, ?, ?, ?, ?)");
@@ -726,7 +766,7 @@ public class AdminDashboardController extends Controller {
             ps.executeUpdate();
 
 
-            ps = conn.prepareStatement("SELECT STUDENT_No, concat(LASTNAME, ', ', FIRSTNAME) as NAME, COURSE_CODE, REGISTRATION_STATUS FROM VWSTUDENTINFO WHERE COURSE_CODE = ? AND REGISTRATION_STATUS = 'REGULAR' and student_no not in(select student_no from enrollment where SY = ? and semester = ? and status in ('Enrolled', 'Pending'))");
+            ps = conn.prepareStatement("SELECT STUDENT_No, concat(LASTNAME, ', ', FIRSTNAME) as NAME, COURSE_CODE, REGISTRATION_STATUS FROM VWSTUDENTINFO WHERE COURSE_CODE = ? AND REGISTRATION_STATUS = 'REGULAR' and student_no not in(select student_no from enrollment where SY = ? and semester = ? and status in ('Enrolled', 'Pending')) and (cast(substring(?, 1, 4) as signed) - cast(substring(student_no, 1, 4) as signed)) >= 0");
             ps.setString(1, comboBoxCourse.getSelectionModel().getSelectedItem());
             ps.setString(2, currentSY);
             ps.setString(3, currentSem);
@@ -1284,15 +1324,15 @@ public class AdminDashboardController extends Controller {
 
         try{
             ps = conn.prepareStatement("SELECT distinct college_code from subject_schedule where block_no = ? and subject_code = ?");
-            ps.setString(1, o.get(3)+o.get(4)+o.get(5));
-            ps.setString(2, o.get(2));
+            ps.setString(1, o.get(4)+o.get(5)+o.get(6));
+            ps.setString(2, o.get(3));
             rs = ps.executeQuery();
             if(rs.next())
                 comboBoxCollegeSchedule.getSelectionModel().select(rs.getString(1));
 
             ps = conn.prepareStatement("SELECT EMPLOYEE_ID FROM EMPLOYEE WHERE LASTNAME = ? AND FIRSTNAME = ?");
-            ps.setString(1, o.get(9).split(" ")[1]);
-            ps.setString(2, o.get(9).split(" ")[0]);
+            ps.setString(1, o.get(10).split(" ")[1]);
+            ps.setString(2, o.get(10).split(" ")[0]);
             rs = ps.executeQuery();
             if(rs.next()){
                 comboBoxFaculty.getSelectionModel().select(rs.getString(1));
@@ -1301,13 +1341,13 @@ public class AdminDashboardController extends Controller {
             System.out.println(e);
         }
 
-        comboBoxSubjectSchedule.getSelectionModel().select(o.get(2));
-        txtAreaDescription.setText(o.get(6));
-        comboBoxCourseSchedule.getSelectionModel().select(o.get(3));
-        comboBoxYearSchedule.getSelectionModel().select(o.get(4));
-        comboBoxBlockSchedule.getSelectionModel().select(o.get(5));
+        comboBoxSubjectSchedule.getSelectionModel().select(o.get(3));
+        txtAreaDescription.setText(o.get(7));
+        comboBoxCourseSchedule.getSelectionModel().select(o.get(4));
+        comboBoxYearSchedule.getSelectionModel().select(o.get(5));
+        comboBoxBlockSchedule.getSelectionModel().select(o.get(6));
 
-        String[] schedule = o.get(7).split(",");
+        String[] schedule = o.get(8).split(",");
         for(String sched : schedule){
             String[] s = sched.split(" ");
             String day = s[0];
