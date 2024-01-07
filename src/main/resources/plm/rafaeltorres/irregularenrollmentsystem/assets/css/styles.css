@@ -29,7 +29,7 @@
 }
 
 #loginButton {
-    -fx-background-color: black;
+    -fx-background-color: #AA0A0A;
 }
 
 /* Student Dashboard */
@@ -136,8 +136,7 @@
     -fx-font-size: 20px;
 }
 
-
-.titleText {
+.titleText {2
     -fx-font-family: "Noto Sans";
     -fx-font-weight: bold;
     -fx-text-fill: #9c0000;
@@ -205,5 +204,41 @@
     -fx-background-color: -fx-shadow-highlight-color, -fx-outer-border, -fx-inner-border, white;
     -fx-background-insets: 0 0 -1 0, 0, 1, 2;
     -fx-background-radius: 8px;
+}
+
+#cmb-transaction text-field:focused {
+    -fx-background-color: rgba(0, 0, 0, 0.5);
+    -fx-prompt-text-fill: rgba(255, 0, 0, 0.5) ;
+
+}
+
+#navBar {
+    -fx-background-color:  rgba(156, 0, 0, 0.8);
+}
+
+#cmbSelectTableCategory .list-cell, #cmbSelectTableCategory {
+    -fx-alignment: CENTER;
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+    -fx-font-family: "Noto Sans";
+    -fx-font-weight: bold;
+
+}
+
+#cmbSelectTableCategory .list-view .list-cell {
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+    -fx-font-family: "Noto Sans";
+    -fx-font-weight: bold;
+}
+
+#cmbSelectTableCategory .arrow-button {
+    -fx-background-color: #7C0601;
+}
+
+
+#cmbSelectTableCategory .list-view {
+    -fx-control-inner-background: #262626;
 }
 
