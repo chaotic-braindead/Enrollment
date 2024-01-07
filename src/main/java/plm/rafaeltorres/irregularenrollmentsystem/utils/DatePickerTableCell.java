@@ -56,11 +56,11 @@ public class DatePickerTableCell<T> extends TableCell<T, String> {
     @Override
     public void updateItem(String date, boolean empty) {
         super.updateItem(date, empty);
-        if (date != null) {
-            setText(date);
-        }
         if (!isEmpty() && !isEditing()) {
             setGraphic(datePicker);
+        }
+        if (date != null) {
+            setText(date);
         }
         setStyle("-fx-alignment: center-left");
         setStyle("-fx-text-fill: black");
