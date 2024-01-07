@@ -29,7 +29,7 @@
 }
 
 #loginButton {
-    -fx-background-color: #AA0A0A;
+    -fx-background-color: #9c0000;
 }
 
 /* Student Dashboard */
@@ -148,7 +148,6 @@
 
 .rootPane .table-view .column-header-background{
     -fx-background-color: #9c0000;
-    -fx-background-radius: 15px 15px 0px 0px;
     -fx-background-insets: 0 11px 0 0;
     -fx-padding: 0 0 5px 0;
 }
@@ -171,7 +170,7 @@
 .rootPane .table-view .virtual-flow .scroll-bar:horizontal,
 .rootPane .table-view .virtual-flow .scroll-bar:horizontal .track,
 .rootPane .table-view .virtual-flow .scroll-bar:horizontal .track-background {
-    -fx-background-color: rgba(157, 157, 157, 0.86);
+    -fx-background-color: #C0C0C0;
 }
 
 .rootPane .table-view .virtual-flow .scroll-bar .increment-button,
@@ -181,10 +180,10 @@
 }
 
 .rootPane .table-view .virtual-flow .scroll-bar:vertical .thumb{
-    -fx-background-color:  black;
+    -fx-background-color:  #808080;
 }
 .rootPane .table-view .virtual-flow .scroll-bar:horizontal .thumb {
-    -fx-background-color:  black;
+    -fx-background-color:  #808080;
 }
 
 .rootPane .table-view .table-cell{
