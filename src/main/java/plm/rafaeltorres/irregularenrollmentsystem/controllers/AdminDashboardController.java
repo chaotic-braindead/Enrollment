@@ -311,6 +311,8 @@ public class AdminDashboardController extends Controller {
     private GridPane gridRecords;
     @FXML
     private GridPane gridTransaction;
+    @FXML
+    private Circle imgNavBar;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -332,6 +334,7 @@ public class AdminDashboardController extends Controller {
         Image defaultImage = new Image(f.toURI().toString(), false);
         ImagePattern pattern = new ImagePattern(defaultImage);
         imgContainer.setFill(pattern);
+        imgNavBar.setFill(pattern);
 
         tblSubjects.setPlaceholder(new Label("Please select a student to enroll."));
         tblSubjects.setPlaceholder(new Label("Please select a block/section."));
@@ -418,6 +421,7 @@ public class AdminDashboardController extends Controller {
 
 
 
+
     }
 
     public void setUser(User user){
@@ -460,6 +464,7 @@ public class AdminDashboardController extends Controller {
         if(newImg != null){
             ImagePattern ip = new ImagePattern(newImg);
             imgContainer.setFill(ip);
+            imgNavBar.setFill(ip);
         }
     }
 
@@ -770,6 +775,7 @@ public class AdminDashboardController extends Controller {
             ps.setString(1, comboBoxCourse.getSelectionModel().getSelectedItem());
             ps.setString(2, currentSY);
             ps.setString(3, currentSem);
+            ps.setString(4, currentSY.substring(0, 4));
 
             rs = ps.executeQuery();
             TableViewUtils.generateTableFromResultSet(tblEnrollees, rs);
@@ -777,7 +783,7 @@ public class AdminDashboardController extends Controller {
 
             comboBoxStudentNo.getSelectionModel().clearSelection();
         }catch(Exception e){
-            System.out.println(e);
+            AlertMessage.showErrorAlert("An error occurred while enrolling student: " + e);
         }
     }
     @FXML

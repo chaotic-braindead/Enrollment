@@ -28,7 +28,7 @@
     -fx-background-radius: 50px;
 }
 
-#loginButton {
+#loginButton{
     -fx-background-color: #AA0A0A;
 }
 
@@ -136,7 +136,7 @@
     -fx-font-size: 20px;
 }
 
-.titleText {2
+.titleText {
     -fx-font-family: "Noto Sans";
     -fx-font-weight: bold;
     -fx-text-fill: #9c0000;
