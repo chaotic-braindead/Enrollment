@@ -28,8 +28,8 @@
     -fx-background-radius: 50px;
 }
 
-#loginButton{
-    -fx-background-color: #AA0A0A;
+#loginButton {
+    -fx-background-color: #9c0000;
 }
 
 /* Student Dashboard */
@@ -72,7 +72,7 @@
 }
 
 .button:hover {
-    -fx-background-color: #989898;
+    -fx-opacity: 0.8;
     -fx-font-family: "Noto Sans";
     -fx-font-weight: bold;
     -fx-background-radius: 3px;
@@ -136,7 +136,7 @@
     -fx-font-size: 20px;
 }
 
-.titleText {
+.titleText {2
     -fx-font-family: "Noto Sans";
     -fx-font-weight: bold;
     -fx-text-fill: #9c0000;
@@ -148,7 +148,6 @@
 
 .rootPane .table-view .column-header-background{
     -fx-background-color: #9c0000;
-    -fx-background-radius: 15px 15px 0px 0px;
     -fx-background-insets: 0 11px 0 0;
     -fx-padding: 0 0 5px 0;
 }
@@ -171,7 +170,7 @@
 .rootPane .table-view .virtual-flow .scroll-bar:horizontal,
 .rootPane .table-view .virtual-flow .scroll-bar:horizontal .track,
 .rootPane .table-view .virtual-flow .scroll-bar:horizontal .track-background {
-    -fx-background-color: rgba(157, 157, 157, 0.86);
+    -fx-background-color: #C0C0C0;
 }
 
 .rootPane .table-view .virtual-flow .scroll-bar .increment-button,
@@ -181,10 +180,10 @@
 }
 
 .rootPane .table-view .virtual-flow .scroll-bar:vertical .thumb{
-    -fx-background-color:  black;
+    -fx-background-color:  #808080;
 }
 .rootPane .table-view .virtual-flow .scroll-bar:horizontal .thumb {
-    -fx-background-color:  black;
+    -fx-background-color:  #808080;
 }
 
 .rootPane .table-view .table-cell{
@@ -223,7 +222,7 @@
     -fx-font-size: 12px;
     -fx-font-family: "Noto Sans";
     -fx-font-weight: bold;
-
+    -fx-border-color: ;
 }
 
 #cmbSelectTableCategory .list-view .list-cell {
@@ -242,3 +241,25 @@
     -fx-control-inner-background: #262626;
 }
 
+.btn-red {
+    -fx-background-color: #B9122C;
+    -fx-border-color: white;
+    -fx-text-fill: white;
+}
+
+.btn-green {
+    -fx-background-color:  #32A826;
+    -fx-border-color: white;
+    -fx-text-fill: white;
+}
+.btn-orange {
+    -fx-background-color: #FF7F00;
+    -fx-border-color: white;
+    -fx-text-fill: white;
+
+}
+.btn-blue{
+    -fx-background-color: #2537A3;
+    -fx-border-color: white;
+    -fx-text-fill: white;
+}

@@ -96,7 +96,7 @@
                                  <children>
                                               <AnchorPane layoutX="21.0" layoutY="11.0" prefHeight="848.0" prefWidth="1657.0" styleClass="loginContainer" stylesheets="@assets/css/styles.css">
                                                   <children>
-                                                      <TableView fx:id="tblSubjects" layoutX="681.0" layoutY="184.0" onMouseClicked="#onTblSubjectsMouseClicked" prefHeight="647.0" prefWidth="961.0">
+                                                      <TableView fx:id="tblSubjects" layoutX="681.0" layoutY="224.0" onMouseClicked="#onTblSubjectsMouseClicked" prefHeight="588.0" prefWidth="945.0">
                                                           <columns>
                                                               <TableColumn prefWidth="124.0" text="SUBJECT_CODE" />
                                                               <TableColumn prefWidth="183.0" text="DESCRIPTION" />
@@ -106,7 +106,7 @@
                                                 <TableColumn prefWidth="223.3333740234375" text="PROFESSOR" />
                                                           </columns>
                                                       </TableView>
-                                          <Group fx:id="irregularLabelGroup" layoutX="361.0" layoutY="60.0">
+                                          <Group fx:id="irregularLabelGroup" layoutX="460.0" layoutY="72.0">
                                              <children>
                                                 <Label fx:id="txtName" layoutX="122.0" layoutY="51.0" prefHeight="25.0" prefWidth="263.0" text="Name" />
                                                 <Label layoutY="9.0" prefHeight="34.0" prefWidth="123.0" text="Student Number:" wrapText="true" />
@@ -114,24 +114,24 @@
                                                 <SearchableComboBox fx:id="comboBoxStudentNo" disable="true" layoutX="119.0" layoutY="16.0" prefHeight="25.0" prefWidth="265.0" promptText="Select a student number" />
                                              </children>
                                           </Group>
-                                          <Label layoutX="27.0" layoutY="77.0" prefHeight="17.0" prefWidth="55.0" text="College:" />
-                                          <Label layoutX="28.0" layoutY="114.0" prefHeight="17.0" prefWidth="53.0" text="Course:" />
-                                          <SearchableComboBox fx:id="comboBoxBlock" disable="true" layoutX="1353.0" layoutY="101.0" onAction="#onComboBoxBlockAction" prefHeight="25.0" prefWidth="289.0" />
-                                          <Label fx:id="txtCurrentSYandSem" alignment="CENTER_RIGHT" layoutX="1487.0" layoutY="77.0" prefHeight="17.0" prefWidth="152.0" text="SY" />
-                                          <SearchableComboBox fx:id="comboBoxCollege" layoutX="81.0" layoutY="74.0" onAction="#onComboBoxCollegeAction" prefHeight="25.0" prefWidth="262.0" promptText="Filter enrollees by college" />
-                                          <SearchableComboBox fx:id="comboBoxCourse" layoutX="81.0" layoutY="112.0" onAction="#onComboBoxCourseAction" prefHeight="25.0" prefWidth="262.0" promptText="Filter enrollees by course" />
-                                          <HBox alignment="CENTER_RIGHT" layoutX="1351.0" layoutY="140.0" prefHeight="25.0" prefWidth="314.0" spacing="20.0">
+                                          <Label layoutX="51.0" layoutY="92.0" prefHeight="17.0" prefWidth="55.0" text="College:" />
+                                          <Label layoutX="52.0" layoutY="129.0" prefHeight="17.0" prefWidth="53.0" text="Course:" />
+                                          <SearchableComboBox fx:id="comboBoxBlock" disable="true" layoutX="1337.0" layoutY="129.0" onAction="#onComboBoxBlockAction" prefHeight="25.0" prefWidth="275.0" />
+                                          <Label fx:id="txtCurrentSYandSem" alignment="CENTER_RIGHT" layoutX="1333.0" layoutY="105.0" prefHeight="17.0" prefWidth="276.0" text="School Year:" />
+                                          <SearchableComboBox fx:id="comboBoxCollege" layoutX="105.0" layoutY="89.0" onAction="#onComboBoxCollegeAction" prefHeight="25.0" prefWidth="262.0" promptText="Filter enrollees by college" />
+                                          <SearchableComboBox fx:id="comboBoxCourse" layoutX="105.0" layoutY="127.0" onAction="#onComboBoxCourseAction" prefHeight="25.0" prefWidth="262.0" promptText="Filter enrollees by course" />
+                                          <HBox alignment="CENTER_RIGHT" layoutX="1362.0" layoutY="168.0" prefHeight="27.0" prefWidth="262.0" spacing="20.0">
                                              <children>
-                                                <Button fx:id="btnApprove" disable="true" mnemonicParsing="false" onAction="#onBtnApproveAction" text="Approve" visible="false" />
+                                                <Button fx:id="btnApprove" disable="true" mnemonicParsing="false" onAction="#onBtnApproveAction" prefHeight="25.0" prefWidth="107.0" styleClass="btn-green" stylesheets="@assets/css/styles.css" text="APPROVE" visible="false" />
                                                 <StackPane prefHeight="27.0" prefWidth="122.0">
                                                    <children>
-                                                      <Button fx:id="btnDisapprove" disable="true" mnemonicParsing="false" onAction="#onBtnDisapproveAction" text="Disapprove" visible="false" />
-                                                      <Button fx:id="btnEnrollStudent" disable="true" mnemonicParsing="false" onAction="#onBtnEnrollStudentAction" text="Enroll" />
+                                                      <Button fx:id="btnDisapprove" disable="true" mnemonicParsing="false" onAction="#onBtnDisapproveAction" prefHeight="25.0" prefWidth="97.0" styleClass="btn-red" stylesheets="@assets/css/styles.css" text="DECLINE" visible="false" />
+                                                      <Button fx:id="btnEnrollStudent" disable="true" mnemonicParsing="false" onAction="#onBtnEnrollStudentAction" prefHeight="27.0" prefWidth="98.0" styleClass="btn-green" stylesheets="@assets/css/styles.css" text="ENROLL" />
                                                    </children>
                                                 </StackPane>
                                              </children>
                                           </HBox>
-                                          <TableView fx:id="tblEnrollees" layoutX="13.0" layoutY="184.0" onMouseClicked="#onTblEnrolleesMouseClicked" prefHeight="647.0" prefWidth="659.0">
+                                          <TableView fx:id="tblEnrollees" layoutX="56.0" layoutY="223.0" onMouseClicked="#onTblEnrolleesMouseClicked" prefHeight="590.0" prefWidth="616.0">
                                             <columns>
                                               <TableColumn prefWidth="133.66665649414062" text="STUDENT_NUMBER" />
                                               <TableColumn prefWidth="154.0" text="NAME" />
@@ -142,9 +142,9 @@
                                                 <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                                              </columnResizePolicy>
                                           </TableView>
-                                          <SearchableComboBox fx:id="comboBoxYear" layoutX="82.0" layoutY="150.0" prefHeight="27.0" prefWidth="188.0" promptText="Any" />
-                                          <Label layoutX="39.0" layoutY="153.0" text="Year:" />
-                                          <Button layoutX="293.0" layoutY="148.0" mnemonicParsing="false" onAction="#onBtnFilterAction" text="Filter" />
+                                          <SearchableComboBox fx:id="comboBoxYear" layoutX="106.0" layoutY="166.0" prefHeight="27.0" prefWidth="188.0" promptText="Any" />
+                                          <Label layoutX="63.0" layoutY="169.0" text="Year:" />
+                                          <Button layoutX="308.0" layoutY="167.0" mnemonicParsing="false" onAction="#onBtnFilterAction" prefHeight="27.0" prefWidth="93.0" styleClass="btn-blue" stylesheets="@assets/css/styles.css" text="FILTER" />
                                           <Label layoutX="71.0" layoutY="7.0" prefHeight="51.0" prefWidth="282.0" styleClass="titleText" stylesheets="@assets/css/styles.css" text="ENROLLMENT" />
                                           <Line endX="1525.0" layoutX="115.0" layoutY="59.0" startX="-87.0" stroke="#9c0000" />
                                           <FontIcon iconColor="#9c0000" iconLiteral="mdi2c-calendar" iconSize="35" layoutX="25.0" layoutY="47.0" />
@@ -156,12 +156,7 @@
                                  <children>
                                     <AnchorPane layoutX="14.0" layoutY="19.0" prefHeight="842.0" prefWidth="1672.0" styleClass="loginContainer" stylesheets="@assets/css/styles.css">
                                        <children>
-                                          <TableView fx:id="tblSubjectScheduling" layoutX="30.0" layoutY="335.0" onMouseClicked="#onTblSubjectSchedulingMouseClicked" prefHeight="483.0" prefWidth="1601.0">
-                                            <columns>
-                                              <TableColumn prefWidth="75.0" text="C1" />
-                                              <TableColumn prefWidth="75.0" text="C2" />
-                                            </columns>
-                                          </TableView>
+                                          <TableView fx:id="tblSubjectScheduling" layoutX="101.0" layoutY="335.0" onMouseClicked="#onTblSubjectSchedulingMouseClicked" prefHeight="483.0" prefWidth="1469.0" />
                                           <TextArea fx:id="txtAreaDescription" disable="true" layoutX="376.0" layoutY="266.0" prefHeight="45.0" prefWidth="249.0" wrapText="true" />
                                           <Group layoutX="788.0" layoutY="239.0">
                                              <children>
@@ -176,11 +171,11 @@
                                           </Group>
                                           <TextField fx:id="txtTime" layoutX="788.0" layoutY="148.0" prefHeight="27.0" prefWidth="219.0" />
                                           <TextField fx:id="txtRoom" layoutX="788.0" layoutY="190.0" prefHeight="27.0" prefWidth="220.0" />
-                                          <Button fx:id="btnAddSchedule" layoutX="1147.0" layoutY="253.0" mnemonicParsing="false" onAction="#onBtnAddScheduleAction" text="Add" />
-                                          <Button fx:id="btnRemoveSchedule" disable="true" layoutX="1266.0" layoutY="253.0" mnemonicParsing="false" onAction="#onBtnRemoveScheduleAction" text="Remove" />
+                                          <Button fx:id="btnAddSchedule" layoutX="1136.0" layoutY="253.0" mnemonicParsing="false" onAction="#onBtnAddScheduleAction" prefHeight="27.0" prefWidth="64.0" styleClass="btn-green" stylesheets="@assets/css/styles.css" text="ADD" />
+                                          <Button fx:id="btnRemoveSchedule" disable="true" layoutX="1274.0" layoutY="253.0" mnemonicParsing="false" onAction="#onBtnRemoveScheduleAction" styleClass="btn-red" stylesheets="@assets/css/styles.css" text="REMOVE" />
                                           <TextField fx:id="txtSchoolYearSchedule" disable="true" editable="false" layoutX="374.0" layoutY="105.0" prefHeight="27.0" prefWidth="251.0" />
                                           <TextField fx:id="txtSemesterSchedule" disable="true" layoutX="374.0" layoutY="144.0" prefHeight="27.0" prefWidth="249.0" />
-                                          <Button fx:id="btnUpdateSchedule" disable="true" layoutX="1198.0" layoutY="253.0" mnemonicParsing="false" onAction="#onBtnUpdateScheduleAction" text="Update" />
+                                          <Button fx:id="btnUpdateSchedule" disable="true" layoutX="1205.0" layoutY="253.0" mnemonicParsing="false" onAction="#onBtnUpdateScheduleAction" styleClass="btn-orange" stylesheets="@assets/css/styles.css" text="UPDATE" />
                                           <Label layoutX="291.0" layoutY="109.0" text="School Year:" />
                                           <Label layoutX="307.0" layoutY="148.0" text="Semester:" />
                                           <Label layoutX="282.0" layoutY="188.0" text="College Code:" />
@@ -195,12 +190,12 @@
                                           <Label layoutX="1069.0" layoutY="147.0" text="Faculty ID:" />
                                           <Label layoutX="1092.0" layoutY="201.0" text="Name:" />
                                           <TextField fx:id="txtNameProf" disable="true" layoutX="1147.0" layoutY="199.0" prefHeight="27.0" prefWidth="187.0" />
-                                          <Button fx:id="btnClearSchedule" layoutX="1195.0" layoutY="296.0" mnemonicParsing="false" onAction="#onBtnClearScheduleAction" text="Clear fields" />
+                                          <Button fx:id="btnClearSchedule" layoutX="1276.0" layoutY="298.0" mnemonicParsing="false" onAction="#onBtnClearScheduleAction" prefHeight="27.0" prefWidth="64.0" styleClass="btn-blue" stylesheets="@assets/css/styles.css" text="CLEAR" />
                                           <SearchableComboBox fx:id="comboBoxCollegeSchedule" disable="true" layoutX="375.0" layoutY="188.0" onAction="#onComboBoxCollegeScheduleAction" prefHeight="27.0" prefWidth="251.0" />
                                           <SearchableComboBox fx:id="comboBoxSubjectSchedule" disable="true" layoutX="374.0" layoutY="227.0" onAction="#onComboBoxSubjectScheduleAction" prefHeight="27.0" prefWidth="251.0" />
                                           <SearchableComboBox fx:id="comboBoxMode" layoutX="1148.0" layoutY="104.0" prefHeight="27.0" prefWidth="183.0" />
                                           <SearchableComboBox fx:id="comboBoxCourseSchedule" layoutX="791.0" layoutY="105.0" prefHeight="27.0" prefWidth="70.0" />
-                                          <Button fx:id="btnGo" layoutX="1015.0" layoutY="105.0" mnemonicParsing="false" onAction="#onBtnGoAction" text="Go" />
+                                          <Button fx:id="btnGo" layoutX="1015.0" layoutY="105.0" mnemonicParsing="false" onAction="#onBtnGoAction" prefHeight="27.0" prefWidth="49.0" styleClass="btn-blue" stylesheets="@assets/css/styles.css" text="GO" />
                                           <SearchableComboBox fx:id="comboBoxYearSchedule" layoutX="863.0" layoutY="105.0" prefHeight="27.0" prefWidth="71.0" />
                                           <SearchableComboBox fx:id="comboBoxBlockSchedule" layoutX="938.0" layoutY="105.0" prefHeight="27.0" prefWidth="70.0" />
                                           <Label layoutX="75.0" layoutY="21.0" prefHeight="51.0" prefWidth="282.0" styleClass="titleText" stylesheets="@assets/css/styles.css" text="SCHEDULING" />
@@ -214,25 +209,15 @@
                                  <children>
                                     <AnchorPane layoutX="14.0" layoutY="23.0" prefHeight="837.0" prefWidth="1672.0" styleClass="loginContainer" stylesheets="@assets/css/styles.css">
                                        <children>
-                                          <TableView fx:id="tblStudentRecord" layoutX="47.0" layoutY="129.0" onMouseClicked="#onTblStudentRecordMouseClicked" prefHeight="661.0" prefWidth="743.0">
-                                            <columns>
-                                              <TableColumn prefWidth="75.0" text="C1" />
-                                              <TableColumn prefWidth="75.0" text="C2" />
-                                            </columns>
-                                          </TableView>
-                                          <TableView fx:id="tblStudentGradeRecord" editable="true" layoutX="809.0" layoutY="128.0" prefHeight="663.0" prefWidth="821.0">
-                                            <columns>
-                                              <TableColumn prefWidth="75.0" text="C1" />
-                                              <TableColumn prefWidth="75.0" text="C2" />
-                                            </columns>
-                                          </TableView>
+                                          <TableView fx:id="tblStudentRecord" layoutX="47.0" layoutY="129.0" onMouseClicked="#onTblStudentRecordMouseClicked" prefHeight="661.0" prefWidth="743.0" />
+                                          <TableView fx:id="tblStudentGradeRecord" editable="true" layoutX="809.0" layoutY="128.0" prefHeight="663.0" prefWidth="821.0" />
                                           <TextField fx:id="txtStudentRecordSearch" layoutX="75.0" layoutY="85.0" prefHeight="27.0" prefWidth="305.0" promptText="Search for a student number, name or course" />
-                                          <SearchableComboBox fx:id="choiceSYRecords" disable="true" layoutX="1382.0" layoutY="85.0" onAction="#onChoiceSYRecordsAction" prefHeight="27.0" prefWidth="178.0" promptText="Select a school year" />
-                                          <Button fx:id="btnLoadStudentRecord" disable="true" layoutX="1582.0" layoutY="85.0" mnemonicParsing="false" onAction="#onBtnLoadStudentRecordAction" text="Load" />
+                                          <SearchableComboBox fx:id="choiceSYRecords" disable="true" layoutX="1332.0" layoutY="85.0" onAction="#onChoiceSYRecordsAction" prefHeight="27.0" prefWidth="178.0" promptText="Select a school year" />
+                                          <Button fx:id="btnLoadStudentRecord" disable="true" layoutX="1539.0" layoutY="85.0" mnemonicParsing="false" onAction="#onBtnLoadStudentRecordAction" prefHeight="27.0" prefWidth="78.0" styleClass="btn-green" stylesheets="@assets/css/styles.css" text="LOAD" />
                                           <Label layoutX="93.0" layoutY="19.0" styleClass="titleText" stylesheets="@assets/css/styles.css" text="STUDENT RECORDS" />
                                           <Line endX="1481.0" layoutX="148.0" layoutY="71.0" startX="-100.0" stroke="#9c0000" />
                                           <FontIcon iconColor="#9c0000" iconLiteral="mdi2c-clipboard-minus" iconSize="35" layoutX="48.0" layoutY="58.0" />
-                                          <Button layoutX="390.0" layoutY="85.0" mnemonicParsing="false" onAction="#onBtnStudentRecordSearch" text="Search" />
+                                          <Button layoutX="390.0" layoutY="85.0" mnemonicParsing="false" onAction="#onBtnStudentRecordSearch" prefHeight="27.0" prefWidth="81.0" styleClass="btn-blue" stylesheets="@assets/css/styles.css" text="SEARCH" />
                                           <FontIcon iconColor="#9c0000" iconLiteral="mdmz-search" iconSize="27" layoutX="47.0" layoutY="112.0" />
                                        </children>
                                     </AnchorPane>
@@ -242,20 +227,10 @@
                                  <children>
                                     <AnchorPane layoutX="20.0" layoutY="17.0" prefHeight="840.0" prefWidth="1664.0" styleClass="loginContainer" stylesheets="@assets/css/styles.css">
                                        <children>
-                                          <TableView fx:id="tblClassStudents" layoutX="41.0" layoutY="138.0" prefHeight="671.0" prefWidth="831.0">
-                                            <columns>
-                                              <TableColumn prefWidth="75.0" text="C1" />
-                                              <TableColumn prefWidth="75.0" text="C2" />
-                                            </columns>
-                                          </TableView>
-                                          <TableView fx:id="tblClassSchedule" layoutX="893.0" layoutY="135.0" prefHeight="673.0" prefWidth="744.0">
-                                            <columns>
-                                              <TableColumn prefWidth="75.0" text="C1" />
-                                              <TableColumn prefWidth="75.0" text="C2" />
-                                            </columns>
-                                          </TableView>
+                                          <TableView fx:id="tblClassStudents" layoutX="41.0" layoutY="138.0" prefHeight="671.0" prefWidth="831.0" />
+                                          <TableView fx:id="tblClassSchedule" layoutX="893.0" layoutY="135.0" prefHeight="673.0" prefWidth="744.0" />
                                           <SearchableComboBox fx:id="comboBoxClassListCourse" layoutX="179.0" layoutY="91.0" prefHeight="27.0" prefWidth="98.0" />
-                                          <Button fx:id="btnLoadClass" layoutX="497.0" layoutY="89.0" mnemonicParsing="false" onAction="#onBtnLoadClassAction" text="Load" />
+                                          <Button fx:id="btnLoadClass" layoutX="497.0" layoutY="89.0" mnemonicParsing="false" onAction="#onBtnLoadClassAction" prefHeight="27.0" prefWidth="72.0" styleClass="btn-green" stylesheets="@assets/css/styles.css" text="LOAD" />
                                           <Label layoutX="47.0" layoutY="95.0" text="Course/Year/Block:" />
                                           <Label layoutX="98.0" layoutY="20.0" styleClass="titleText" stylesheets="@assets/css/styles.css" text="CLASS LIST" />
                                           <Line endX="1483.0" layoutX="151.0" layoutY="73.0" startX="-100.0" stroke="#9c0000" />
@@ -274,22 +249,13 @@
                                                     <children>
                                                         <Label fx:id="lblCurrentMasterlist" layoutX="119.0" layoutY="26.0" styleClass="titleText" stylesheets="@assets/css/styles.css" text="STUDENT TABLE" />
                                                         <FontIcon iconColor="#9c0000" iconLiteral="mdal-list_alt" iconSize="50" layoutX="50.0" layoutY="76.0" />
-                                          <HBox layoutX="759.0" layoutY="91.0">
-                                             <children>
-                                                <Button fx:id="btnAddStudent" mnemonicParsing="false" onAction="#onBtnAddStudentAction" text="Add" />
-                                                <Button fx:id="btnDeleteStudent" disable="true" mnemonicParsing="false" onAction="#onBtnDeleteStudentAction" text="Delete" />
-                                             </children>
-                                          </HBox>
-                                          <TableView fx:id="tblStudents" editable="true" layoutX="22.0" layoutY="138.0" onMouseClicked="#onTblStudentsMouseClicked" prefHeight="679.0" prefWidth="1611.0">
-                                            <columns>
-                                              <TableColumn prefWidth="75.0" text="C1" />
-                                              <TableColumn prefWidth="75.0" text="C2" />
-                                            </columns>
-                                          </TableView>
-                                          <TextField fx:id="txtStudentSearch" layoutX="56.0" layoutY="96.0" prefHeight="25.0" prefWidth="400.0" promptText="Search for a student by student number, name, course, or college." />
+                                          <TableView fx:id="tblStudents" editable="true" layoutX="22.0" layoutY="138.0" onMouseClicked="#onTblStudentsMouseClicked" prefHeight="679.0" prefWidth="1611.0" />
+                                          <TextField fx:id="txtStudentSearch" layoutX="56.0" layoutY="98.0" prefHeight="25.0" prefWidth="400.0" promptText="Search for a student by student number, name, course, or college." />
                                           <FontIcon iconColor="#9c0000" iconLiteral="mdmz-search" iconSize="27" layoutX="25.0" layoutY="124.0" />
-                                          <Button layoutX="467.0" layoutY="96.0" mnemonicParsing="false" onAction="#onBtnSearchEntry" text="Search" />
+                                          <Button layoutX="467.0" layoutY="96.0" mnemonicParsing="false" onAction="#onBtnSearchEntry" prefHeight="27.0" prefWidth="80.0" styleClass="btn-blue" stylesheets="@assets/css/styles.css" text="SEARCH" />
                                           <Line endX="1498.0" layoutX="131.0" layoutY="84.0" startX="-100.0" stroke="#9c0000" />
+                                          <Button fx:id="btnDeleteStudent" disable="true" layoutX="830.0" layoutY="98.0" mnemonicParsing="false" onAction="#onBtnDeleteStudentAction" prefHeight="27.0" prefWidth="78.0" styleClass="btn-red" stylesheets="@assets/css/styles.css" text="DELETE" />
+                                          <Button fx:id="btnAddStudent" layoutX="724.0" layoutY="98.0" mnemonicParsing="false" onAction="#onBtnAddStudentAction" prefHeight="27.0" prefWidth="77.0" styleClass="btn-green" stylesheets="@assets/css/styles.css" text="ADD" />
                                                     </children>
                                                 </AnchorPane>
                                             </children>
@@ -315,7 +281,7 @@
                                                 <Font size="15.0" />
                                              </font>
                                           </Label>
-                                          <Button fx:id="btnLoadData" disable="true" layoutX="663.0" layoutY="118.0" mnemonicParsing="false" onAction="#onBtnLoadDataAction" text="Load Data" />
+                                          <Button fx:id="btnLoadData" disable="true" layoutX="663.0" layoutY="118.0" mnemonicParsing="false" onAction="#onBtnLoadDataAction" prefHeight="27.0" prefWidth="81.0" styleClass="btn-blue" stylesheets="@assets/css/styles.css" text="LOAD" />
                                           <SearchableComboBox fx:id="comboBoxCollegeGrade" layoutX="138.0" layoutY="117.0" onAction="#onComboBoxCollegeGradeAction" prefWidth="150.0" promptText="Select college" />
                                           <Line endX="1469.0" layoutX="135.0" layoutY="90.0" startX="-100.0" stroke="#9c0000" />
                                        </children>
@@ -328,19 +294,14 @@
                                        <children>
                                           <FontIcon iconColor="#9c0000" iconLiteral="mdmz-settings" iconSize="38" layoutX="31.0" layoutY="64.0" />
                                           <Line endX="1516.0" layoutX="132.0" layoutY="79.0" startX="-100.0" stroke="#9c0000" />
-                                          <TableView fx:id="tblManage" editable="true" layoutX="67.0" layoutY="129.0" onMouseClicked="#onTblManageMouseClicked" prefHeight="678.0" prefWidth="1585.0">
-                                            <columns>
-                                              <TableColumn prefWidth="75.0" text="C1" />
-                                              <TableColumn prefWidth="75.0" text="C2" />
-                                            </columns>
-                                          </TableView>
-                                          <Button fx:id="btnManageAdd" layoutX="815.0" layoutY="103.0" mnemonicParsing="false" onAction="#onBtnManageAddAction" text="Add" />
-                                          <Button fx:id="btnManageDelete" disable="true" layoutX="864.0" layoutY="103.0" mnemonicParsing="false" onAction="#onBtnManageDelete" text="Delete" />
+                                          <TableView fx:id="tblManage" editable="true" layoutX="67.0" layoutY="129.0" onMouseClicked="#onTblManageMouseClicked" prefHeight="678.0" prefWidth="1585.0" />
+                                          <Button fx:id="btnManageAdd" layoutX="776.0" layoutY="91.0" mnemonicParsing="false" onAction="#onBtnManageAddAction" prefHeight="25.0" prefWidth="73.0" styleClass="btn-green" stylesheets="@assets/css/styles.css" text="ADD" />
+                                          <Button fx:id="btnManageDelete" disable="true" layoutX="868.0" layoutY="92.0" mnemonicParsing="false" onAction="#onBtnManageDelete" prefHeight="25.0" prefWidth="73.0" styleClass="btn-red" text="DELETE" />
                                           <Group fx:id="searchManageGroup" layoutX="69.0" layoutY="90.0">
                                              <children>
                                                 <TextField fx:id="txtSearchManage" layoutX="37.0" prefHeight="27.0" prefWidth="408.0" />
                                                 <FontIcon iconColor="#9c0000" iconLiteral="mdmz-search" iconSize="27" layoutX="1.0" layoutY="28.0" />
-                                                <Button layoutX="462.0" mnemonicParsing="false" onAction="#onBtnSearchManage" text="Search" />
+                                                <Button layoutX="462.0" mnemonicParsing="false" onAction="#onBtnSearchManage" prefHeight="27.0" prefWidth="84.0" styleClass="btn-blue" stylesheets="@assets/css/styles.css" text="SEARCH" />
                                              </children>
                                           </Group>
                                        </children>
@@ -673,9 +634,9 @@
                                           <FontIcon iconColor="WHITE" iconLiteral="mdoal-calendar_today" iconSize="18" />
                                        </graphic>
                                     </Label>
-                                            <ToggleButton fx:id="btnStudentEntry" contentDisplay="TOP" mnemonicParsing="false" onAction="#onBtnStudentEntryAction" prefHeight="65.0" prefWidth="211.0" text="Student" textAlignment="CENTER" textFill="WHITE" toggleGroup="$sideBar" wrapText="true" GridPane.rowIndex="1" />
-                                    <ToggleButton fx:id="btnEmployeeEntry" mnemonicParsing="false" onAction="#onBtnEmployeeEntryAction" prefHeight="65.0" prefWidth="210.0" text="Employee" textAlignment="CENTER" textFill="WHITE" toggleGroup="$sideBar" wrapText="true" GridPane.rowIndex="2" />
-                                    <ToggleButton fx:id="btnGradesEntry" mnemonicParsing="false" onAction="#onBtnGradesEntryAction" prefHeight="60.0" prefWidth="200.0" stylesheets="@assets/css/styles.css" text="Grades" textAlignment="CENTER" textFill="WHITE" toggleGroup="$sideBar" wrapText="true" GridPane.rowIndex="3" />
+                                            <ToggleButton fx:id="btnStudentEntry" contentDisplay="TOP" mnemonicParsing="false" onAction="#onBtnStudentEntryAction" prefHeight="65.0" prefWidth="232.0" text="Student" textAlignment="CENTER" textFill="WHITE" toggleGroup="$sideBar" wrapText="true" GridPane.rowIndex="1" />
+                                    <ToggleButton fx:id="btnEmployeeEntry" mnemonicParsing="false" onAction="#onBtnEmployeeEntryAction" prefHeight="65.0" prefWidth="225.0" text="Employee" textAlignment="CENTER" textFill="WHITE" toggleGroup="$sideBar" wrapText="true" GridPane.rowIndex="2" />
+                                    <ToggleButton fx:id="btnGradesEntry" mnemonicParsing="false" onAction="#onBtnGradesEntryAction" prefHeight="60.0" prefWidth="218.0" stylesheets="@assets/css/styles.css" text="Grades" textAlignment="CENTER" textFill="WHITE" toggleGroup="$sideBar" wrapText="true" GridPane.rowIndex="3" />
                                  </children>
                               </GridPane>
                               <GridPane fx:id="gridRecords" layoutX="10.0" layoutY="10.0" visible="false">
@@ -700,7 +661,7 @@
                                        </graphic>
                                     </Label>
                                     <ToggleButton fx:id="btnStudentRecords" mnemonicParsing="false" onAction="#onBtnStudentRecordsAction" prefHeight="58.0" prefWidth="240.0" text="Student Records" textAlignment="CENTER" textFill="WHITE" toggleGroup="$sideBar" wrapText="true" GridPane.rowIndex="1" />
-                                            <ToggleButton fx:id="btnClass" alignment="TOP_CENTER" mnemonicParsing="false" onAction="#onBtnClassAction" prefHeight="60.0" prefWidth="268.0" text="Class List" textAlignment="CENTER" textFill="WHITE" toggleGroup="$sideBar" wrapText="true" GridPane.rowIndex="2" />
+                                            <ToggleButton fx:id="btnClass" mnemonicParsing="false" onAction="#onBtnClassAction" prefHeight="60.0" prefWidth="268.0" text="Class List" textAlignment="CENTER" textFill="WHITE" toggleGroup="$sideBar" wrapText="true" GridPane.rowIndex="2" />
                                  </children>
                               </GridPane>
                            </children>
@@ -716,7 +677,7 @@
                               <Font size="18.0" />
                            </font>
                         </ToggleButton>
-                        <ComboBox id="cmbSelectTableCategory" fx:id="cmbSelectTableCategory" layoutX="34.0" layoutY="230.0" onAction="#onSelectTableCategory" prefHeight="35.0" prefWidth="155.0" promptText="Table Category" stylesheets="@assets/css/styles.css" />
+                        <ComboBox id="cmbSelectTableCategory" fx:id="cmbSelectTableCategory" layoutX="27.0" layoutY="227.0" onAction="#onSelectTableCategory" prefHeight="35.0" prefWidth="189.0" promptText="Table Category" stylesheets="@assets/css/styles.css" />
                                 <Button id="logoutButton" fx:id="btnLogout" layoutY="806.0" mnemonicParsing="false" onAction="#onBtnLogoutAction" prefHeight="70.0" prefWidth="216.0" stylesheets="@assets/css/styles.css" text="Log Out" textFill="WHITE" />
                         <Circle fx:id="imgNavBar" fill="DODGERBLUE" layoutX="104.0" layoutY="87.0" radius="60.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="1.5" />
                      </children>
