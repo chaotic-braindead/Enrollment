@@ -2433,6 +2433,33 @@ public class AdminDashboardController extends Controller {
                     return new SimpleStringProperty(observableListStringCellDataFeatures.getValue().get(0));
                 }
             });
+            sy.setCellFactory(new Callback<TableColumn<ObservableList<String>, String>, TableCell<ObservableList<String>, String>>() {
+                @Override
+                public TableCell<ObservableList<String>, String> call(TableColumn<ObservableList<String>, String> param) {
+                    return new WrappingTextFieldTableCell("^2[0-9]{3}-2[0-9]{3}", "Must be a valid school year format ex: 2023-2024");
+                }
+            });
+            sy.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<ObservableList<String>, String>>() {
+                @Override
+                public void handle(TableColumn.CellEditEvent<ObservableList<String>, String> event) {
+                    Optional<ButtonType> confirm = AlertMessage.showConfirmationAlert("Editing this will affect all records in the database that use this school year. Do you still want to edit?");
+                    if(confirm.isEmpty() || confirm.get() == ButtonType.NO){
+                        AlertMessage.showInformationAlert("Cancelled edit.");
+                        btnSY.fire();
+                        return;
+                    }
+                    try{
+                        ps = conn.prepareStatement("UPDATE SY SET SY = ? WHERE SY = ?");
+                        ps.setString(1, event.getNewValue());
+                        ps.setString(2, event.getOldValue());
+                        ps.executeUpdate();
+                        AlertMessage.showInformationAlert("Successfully edited school year!");
+                    }catch(Exception e){
+                        AlertMessage.showErrorAlert("An error occurred while editing school year: "+ e);
+                    }
+                    btnSY.fire();
+                }
+            });
             tblManage.getColumns().add(sy);
             tblManage.getColumns().add(status);
             status.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<ObservableList<String>, String>, ObservableValue<String>>() {
@@ -2520,6 +2547,36 @@ public class AdminDashboardController extends Controller {
                     return new SimpleStringProperty(observableListStringCellDataFeatures.getValue().get(0));
                 }
             });
+
+            sem.setCellFactory(new Callback<TableColumn<ObservableList<String>, String>, TableCell<ObservableList<String>, String>>() {
+                @Override
+                public TableCell<ObservableList<String>, String> call(TableColumn<ObservableList<String>, String> param) {
+                    return new WrappingTextFieldTableCell("[A-Z1-9]{1}", "Must have a length of 1 and be alphanumeric.");
+                }
+            });
+            sem.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<ObservableList<String>, String>>() {
+                @Override
+                public void handle(TableColumn.CellEditEvent<ObservableList<String>, String> event) {
+                    Optional<ButtonType> confirm = AlertMessage.showConfirmationAlert("Editing this will affect all records in the database that use this school year. Do you still want to edit?");
+                    if(confirm.isEmpty() || confirm.get() == ButtonType.NO){
+                        AlertMessage.showInformationAlert("Cancelled edit.");
+                        btnSemester.fire();
+                        return;
+                    }
+                    try{
+                        ps = conn.prepareStatement("UPDATE SY SET SY = ? WHERE SY = ?");
+                        ps.setString(1, event.getNewValue());
+                        ps.setString(2, event.getOldValue());
+                        ps.executeUpdate();
+                        AlertMessage.showInformationAlert("Successfully edited school year!");
+                    }catch(Exception e){
+                        AlertMessage.showErrorAlert("An error occurred while editing school year: "+ e);
+                    }
+                    btnSemester.fire();
+                }
+            });
+
+
             tblManage.getColumns().add(sem);
             tblManage.getColumns().add(status);
             status.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<ObservableList<String>, String>, ObservableValue<String>>() {

@@ -1,20 +1,15 @@
 package plm.rafaeltorres.irregularenrollmentsystem.utils;
-import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.text.Text;
 import javafx.util.Callback;
 import javafx.util.converter.DefaultStringConverter;
-import org.controlsfx.control.table.TableFilter;
-import plm.rafaeltorres.irregularenrollmentsystem.controllers.AdminDashboardController;
-import plm.rafaeltorres.irregularenrollmentsystem.controllers.Controller;
 import plm.rafaeltorres.irregularenrollmentsystem.db.Database;
 
 import java.sql.Connection;
@@ -22,6 +17,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Optional;
 
 public class TableViewUtils {
@@ -62,16 +58,15 @@ public class TableViewUtils {
                                 }
                             }
 
-                            ps = conn.prepareStatement("UPDATE " + args[0] + " SET " + rs.getMetaData().getColumnName(j+1) + " = ? "+ "WHERE "+ args[1] +" = ?");
-                            ps.setString(1, t.getNewValue().toString());
-                            ps.setString(2, o.get(0));
-                            ps.executeUpdate();
+                            List<String> pk = List.of("STUDENT_NO", "EMPLOYEE_ID", "COLLEGE_CODE", "COURSE_CODE", "SUBJECT_CODE");
 
-                            if(rs.getMetaData().getColumnName(j+1).equalsIgnoreCase("STUDENT_NO") || rs.getMetaData().getColumnName(j+1).equalsIgnoreCase("EMPLOYEE_ID")){
+                            if(pk.contains(rs.getMetaData().getColumnName(j+1))){
                                 Optional<ButtonType> confirm = AlertMessage.showConfirmationAlert("Warning: Editing this value will cascade to all other records in the database which uses this value. Do you wish to proceed?");
-                                if(confirm.isEmpty() || confirm.get() == ButtonType.CANCEL)
+                                if(confirm.isEmpty() || confirm.get() == ButtonType.NO){
+                                    AlertMessage.showInformationAlert("Cancelled edit.");
+                                    callback.run();
                                     return;
-
+                                }
                                 ps = conn.prepareStatement("UPDATE ACCOUNT SET ACCOUNT_NO = ? WHERE ACCOUNT_NO = ?");
                                 ps.setString(1, t.getNewValue().toString());
                                 ps.setString(2, o.get(0));
@@ -88,6 +83,11 @@ public class TableViewUtils {
                                 ps.setString(1, o.get(0));
                                 ps.executeUpdate();
                             }
+
+                            ps = conn.prepareStatement("UPDATE " + args[0] + " SET " + rs.getMetaData().getColumnName(j+1) + " = ? "+ "WHERE "+ args[1] +" = ?");
+                            ps.setString(1, t.getNewValue().toString());
+                            ps.setString(2, o.get(0));
+                            ps.executeUpdate();
                             callback.run();
                         }catch(Exception e){
                             System.out.println(e);
@@ -102,7 +102,6 @@ public class TableViewUtils {
                     case "REGISTRATION STATUS":
                     case "STUDENT NUMBER":
                     case "DATE CLOSED":
-                    case "EMPLOYEE ID":
                         col.setCellFactory(
                                 new Callback<TableColumn, TableCell>() {
                                     public TableCell call(TableColumn p) {
@@ -126,11 +125,39 @@ public class TableViewUtils {
                                 }
                         );
                         break;
+                    case "EMPLOYEE ID":
+                        col.setCellFactory(
+                                new Callback<TableColumn, TableCell>() {
+                                    public TableCell call(TableColumn p) {
+                                        return new WrappingTextFieldTableCell<ObservableList<String>>("^E[0-9]{3}", "Enter a valid employee id format. Ex: E001");
+                                    }
+                                }
+                        );
+                        break;
                     case "STUDENT NO":
                         col.setCellFactory(
                                 new Callback<TableColumn, TableCell>() {
                                     public TableCell call(TableColumn p) {
-                                        return new WrappingTextFieldTableCell<ObservableList<String>>();
+                                        return new WrappingTextFieldTableCell<ObservableList<String>>("^[0-9]{4}-[0-9]{5}", "Enter a valid student number format. Ex: 2022-34000");
+                                    }
+                                }
+                        );
+                        break;
+                    case "LASTNAME":
+                    case "FIRSTNAME":
+                        col.setCellFactory(
+                                new Callback<TableColumn, TableCell>() {
+                                    public TableCell call(TableColumn p) {
+                                        return new WrappingTextFieldTableCell<ObservableList<String>>("^[A-Z]{1}([a-z]+)?( )?([A-Z]{1}[a-z]+)?", "Must have a valid name format ex: Dela Cruz");
+                                    }
+                                }
+                        );
+                        break;
+                    case "EMAIL":
+                        col.setCellFactory(
+                                new Callback<TableColumn, TableCell>() {
+                                    public TableCell call(TableColumn p) {
+                                        return new WrappingTextFieldTableCell<ObservableList<String>>("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", "Must be a valid email.");
                                     }
                                 }
                         );
@@ -140,6 +167,15 @@ public class TableViewUtils {
                                 new Callback<TableColumn, TableCell>() {
                                     public TableCell call(TableColumn p) {
                                         return new ComboBoxTableCell(new DefaultStringConverter(), FXCollections.observableArrayList("M", "F"));
+                                    }
+                                }
+                        );
+                        break;
+                    case "CP NUM":
+                        col.setCellFactory(
+                                new Callback<TableColumn, TableCell>() {
+                                    public TableCell call(TableColumn p) {
+                                        return new WrappingTextFieldTableCell("^(09|\\+639)\\d{9}$", "Must be a valid Philippine phone number ex: 09123456789.");
                                     }
                                 }
                         );
@@ -166,39 +202,83 @@ public class TableViewUtils {
                                 }
                         );
                         break;
-                    case "COLLEGE CODE":
-                        if(!args[0].equalsIgnoreCase("SUBJECT") && !args[0].equalsIgnoreCase("COURSE"))
-                            break;
-                        ObservableList<String> comboBoxItems = FXCollections.observableArrayList(Database.fetch("SELECT COLLEGE_CODE FROM COLLEGE"));
+                    case "DESCRIPTION":
                         col.setCellFactory(
                                 new Callback<TableColumn, TableCell>() {
                                     public TableCell call(TableColumn p) {
-                                        ComboBoxTableCell comboBoxTableCell = new ComboBoxTableCell(new DefaultStringConverter(), comboBoxItems);
-                                        comboBoxTableCell.setStyle("-fx-text-fill: black");
-                                        return comboBoxTableCell;
+                                        return new WrappingTextFieldTableCell("^.{1,100}$", "Length must be between 1 and 100");
                                     }
                                 }
                         );
                         break;
+                    case "COLLEGE CODE":
+                        if(args[0].equalsIgnoreCase("COLLEGE")){
+                            col.setCellFactory(
+                                    new Callback<TableColumn, TableCell>() {
+                                        public TableCell call(TableColumn p) {
+                                            return new WrappingTextFieldTableCell("^.{1,20}$", "Length must be between 1 and 20");
+                                        }
+                                    }
+                            );
+                        }
+                        else{
+                            ObservableList<String> comboBoxItems = FXCollections.observableArrayList(Database.fetch("SELECT COLLEGE_CODE FROM COLLEGE"));
+                            col.setCellFactory(
+                                    new Callback<TableColumn, TableCell>() {
+                                        public TableCell call(TableColumn p) {
+                                            ComboBoxTableCell comboBoxTableCell = new ComboBoxTableCell(new DefaultStringConverter(), comboBoxItems);
+                                            comboBoxTableCell.setStyle("-fx-text-fill: black");
+                                            return comboBoxTableCell;
+                                        }
+                                    }
+                            );
+                        }
+                        break;
                     case "SUBJECT CODE":
-                        if(args[0].equalsIgnoreCase("SUBJECT"))
-                            break;
-                      comboBoxItems = FXCollections.observableArrayList(Database.fetch("SELECT SUBJECT_CODE FROM SUBJECT"));
+                        if(args[0].equalsIgnoreCase("SUBJECT")){
+                            col.setCellFactory(
+                                    new Callback<TableColumn, TableCell>() {
+                                        public TableCell call(TableColumn p) {
+                                            return new WrappingTextFieldTableCell("^.{1,20}$", "Length must be between 1 and 20");
+                                        }
+                                    }
+                            );
+                        }
+                        else{
+                            ObservableList<String> comboBoxItems = FXCollections.observableArrayList(Database.fetch("SELECT SUBJECT_CODE FROM SUBJECT"));
+                            col.setCellFactory(
+                                    new Callback<TableColumn, TableCell>() {
+                                        public TableCell call(TableColumn p) {
+                                            ComboBoxTableCell comboBoxTableCell = new ComboBoxTableCell(new DefaultStringConverter(), comboBoxItems);
+                                            comboBoxTableCell.setStyle("-fx-text-fill: black");
+                                            return comboBoxTableCell;
+                                        }
+                                    }
+                            );
+                        }
+                        break;
+                    case "UNITS":
                         col.setCellFactory(
                                 new Callback<TableColumn, TableCell>() {
                                     public TableCell call(TableColumn p) {
-                                        ComboBoxTableCell comboBoxTableCell = new ComboBoxTableCell(new DefaultStringConverter(), comboBoxItems);
-                                        comboBoxTableCell.setStyle("-fx-text-fill: black");
-                                        return comboBoxTableCell;
+                                        return new WrappingTextFieldTableCell("^[1-9]{1}", "Must be numeric and greater than 0 but less than 10");
                                     }
                                 }
                         );
                         break;
                     case "COURSE CODE":
-                        if(args[0].equalsIgnoreCase("COURSE"))
+                        if(args[0].equalsIgnoreCase("COURSE")){
+                            col.setCellFactory(
+                                    new Callback<TableColumn, TableCell>() {
+                                        public TableCell call(TableColumn p) {
+                                            return new WrappingTextFieldTableCell("^.{1,20}$", "Length must be between 1 and 20");
+                                        }
+                                    }
+                            );
                             break;
+                        }
                         if(args[0].equalsIgnoreCase("STUDENT")){
-                            comboBoxItems = FXCollections.observableArrayList(Database.fetch("SELECT COURSE_CODE FROM COURSE"));
+                            ObservableList<String> comboBoxItems = FXCollections.observableArrayList(Database.fetch("SELECT COURSE_CODE FROM COURSE"));
                             col.setCellFactory(
                                     new Callback<TableColumn, TableCell>() {
                                         public TableCell call(TableColumn p) {

@@ -8,16 +8,19 @@ public class WrappingTextFieldTableCell<S> extends TextFieldTableCell<S, String>
 
     private final Text cellText;
     private String regex;
+    private String errorMessage;
+
 
     public WrappingTextFieldTableCell() {
         super(new DefaultStringConverter());
         this.cellText = createText();
-        regex = "^[0-9]*$";
     }
-    public WrappingTextFieldTableCell(String regex) {
+
+    public WrappingTextFieldTableCell(String regex, String errorMessage) {
         super(new DefaultStringConverter());
         this.cellText = createText();
         this.regex = regex;
+        this.errorMessage = errorMessage;
     }
 
     @Override
@@ -29,10 +32,22 @@ public class WrappingTextFieldTableCell<S> extends TextFieldTableCell<S, String>
     @Override
     public void updateItem(String item, boolean empty) {
         super.updateItem(item, empty);
-        if (!isEmpty() && !isEditing())
-            setGraphic(cellText);
-        if(item == null || empty)
+        if(item == null || empty){
             setGraphic(null);
+            return;
+        }
+        if (!isEditing()){
+            setGraphic(cellText);
+        }
+    }
+
+    @Override
+    public void commitEdit(String newValue) {
+        if(regex != null && !newValue.matches(regex)){
+            AlertMessage.showErrorAlert(errorMessage);
+            return;
+        }
+        super.commitEdit(newValue);
     }
 
     private Text createText() {
