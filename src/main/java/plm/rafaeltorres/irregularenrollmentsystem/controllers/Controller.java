@@ -1,19 +1,15 @@
 package plm.rafaeltorres.irregularenrollmentsystem.controllers;
 
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.ToggleButton;
 import plm.rafaeltorres.irregularenrollmentsystem.db.Database;
-import plm.rafaeltorres.irregularenrollmentsystem.model.Student;
 import plm.rafaeltorres.irregularenrollmentsystem.model.User;
 import plm.rafaeltorres.irregularenrollmentsystem.utils.AlertMessage;
 import plm.rafaeltorres.irregularenrollmentsystem.utils.SceneSwitcher;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.net.URL;
 import java.sql.Connection;
 import java.util.Optional;

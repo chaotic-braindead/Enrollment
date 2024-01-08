@@ -1,18 +1,14 @@
 package plm.rafaeltorres.irregularenrollmentsystem.model;
 
-import javafx.beans.property.StringProperty;
 import plm.rafaeltorres.irregularenrollmentsystem.db.Database;
-import plm.rafaeltorres.irregularenrollmentsystem.utils.StringUtils;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.ResultSet;
 
 // only used for checking types in sceneswitcher
 public abstract class User {
-    public User(){}
     public User(ResultSet rs){
         Field[] fields = this.getClass().getDeclaredFields();
         Connection conn = Database.getInstance().getConnection();
@@ -20,7 +16,6 @@ public abstract class User {
             for(Field f : fields){
                 f.setAccessible(true);
                 Object o = rs.getObject(f.getName());
-                System.out.println(o);
                 if(o == null) continue;
                 if(o.getClass().equals(byte[].class)){
                     Blob blob = conn.createBlob();
@@ -35,7 +30,6 @@ public abstract class User {
         } catch(Exception e){
             System.out.println(e);
         }
-        System.out.println(this);
     }
 
 

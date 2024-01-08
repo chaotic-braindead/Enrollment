@@ -538,7 +538,7 @@
                                     </AnchorPane>
                                  </children>
                               </AnchorPane>
-                              <AnchorPane fx:id="gradesContainer" prefHeight="551.0" prefWidth="1014.0" stylesheets="@assets/css/styles.css">
+                              <AnchorPane fx:id="gradesContainer" prefHeight="551.0" prefWidth="1014.0" stylesheets="@assets/css/styles.css" visible="false">
                                  <children>
                                     <AnchorPane layoutX="27.0" layoutY="18.0" prefHeight="830.0" prefWidth="1720.0" styleClass="loginContainer" stylesheets="@assets/css/styles.css">
                                        <children>

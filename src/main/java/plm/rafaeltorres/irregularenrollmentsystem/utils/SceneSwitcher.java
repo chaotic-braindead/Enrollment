@@ -6,7 +6,6 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import plm.rafaeltorres.irregularenrollmentsystem.MainScene;
 import plm.rafaeltorres.irregularenrollmentsystem.controllers.Controller;
-import plm.rafaeltorres.irregularenrollmentsystem.model.Student;
 import plm.rafaeltorres.irregularenrollmentsystem.model.User;
 
 import java.io.IOException;

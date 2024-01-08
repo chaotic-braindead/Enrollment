@@ -1,44 +1,32 @@
 package plm.rafaeltorres.irregularenrollmentsystem.controllers;
-import com.dlsc.formsfx.model.event.FieldEvent;
 import com.dlsc.formsfx.model.structure.*;
-import com.dlsc.formsfx.model.structure.PasswordField;
 import com.dlsc.formsfx.model.util.BindingMode;
 import com.dlsc.formsfx.model.validators.*;
-import com.dlsc.formsfx.view.controls.SimpleRadioButtonControl;
 import com.dlsc.formsfx.view.renderer.FormRenderer;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.event.Event;
 import javafx.event.ActionEvent;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.image.Image;
-import javafx.scene.input.InputEvent;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
-import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.converter.DefaultStringConverter;
-import org.controlsfx.control.SearchableComboBox;
-import org.controlsfx.control.table.TableFilter;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import plm.rafaeltorres.irregularenrollmentsystem.MainScene;
 import plm.rafaeltorres.irregularenrollmentsystem.db.Database;
@@ -48,21 +36,16 @@ import plm.rafaeltorres.irregularenrollmentsystem.model.StudentProperty;
 import plm.rafaeltorres.irregularenrollmentsystem.model.User;
 import plm.rafaeltorres.irregularenrollmentsystem.utils.*;
 
-import javax.swing.*;
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.sql.*;
-import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.Year;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.Date;
-import java.util.function.Predicate;
 
 
 public class AdminDashboardController extends Controller {
@@ -183,8 +166,6 @@ public class AdminDashboardController extends Controller {
     private ToggleButton btnSubject;
     @FXML
     private Pane studentEntryContainer;
-    @FXML
-    private Pane employeEntryContainer;
     @FXML
     private TableView<ObservableList<String>> tblStudentGrades;
     @FXML
@@ -478,8 +459,7 @@ public class AdminDashboardController extends Controller {
         File img = fc.showOpenDialog(stage);
         try{
             byte[] imgBytes = Files.readAllBytes(img.toPath());
-            String b64Img = Base64.getEncoder().encodeToString(imgBytes);
-            System.out.println(b64Img);
+
             ps = conn.prepareStatement(Database.Query.updateImage);
             Blob blob = conn.createBlob();
             blob.setBytes(1, imgBytes);
@@ -610,7 +590,6 @@ public class AdminDashboardController extends Controller {
         } catch(Exception e){
             System.out.println(e);
         }
-//        tblSubjects.getItems().clear();
     }
     @FXML
     protected void onTblEnrolleesMouseClicked(MouseEvent event){
@@ -828,7 +807,6 @@ public class AdminDashboardController extends Controller {
         currentPane.setVisible(false);
         currentPane = enrollContainer;
         currentPane.setVisible(true);
-//        onBtnClick(event);
     }
     @FXML
     protected void onBtnApprovalAction(ActionEvent event) throws IllegalAccessException {
@@ -897,7 +875,6 @@ public class AdminDashboardController extends Controller {
     protected void onBtnStudentEntryAction(ActionEvent event) throws IllegalAccessException {
         txtStudentSearch.clear();
         tblStudents.getSelectionModel().clearSelection();
-//        tblStudents.getItems().clear();
         tblStudents.getColumns().clear();
         currentPane.setVisible(false);
         currentPane = studentEntryContainer;
@@ -913,7 +890,6 @@ public class AdminDashboardController extends Controller {
                     btnStudentEntry.fire();
                 }
             });
-//            TableFilter.forTableView(tblStudents).apply();
         }catch(Exception e){
             AlertMessage.showErrorAlert("An error occurred while displaying student masterlist: "+e);
         }
@@ -927,7 +903,6 @@ public class AdminDashboardController extends Controller {
             displayTable("SELECT student_no, lastname, firstname, gender, bday, age, address, cp_num, email, plm_email, college_code, course_code, case when status = 'A' then 'Active' when status = 'I' then 'Inactive' else 'Invalid status' end as status, registration_status from vwstudentinfo", tblStudents);
             return;
         }
-        System.out.println("HERE");
 
         String query = "SELECT student_no, lastname, firstname, gender, bday, age, address, cp_num, email, plm_email, college_code, course_code, case when status = 'A' then 'Active' when status = 'I' then 'Inactive' else 'Invalid status' end as status, registration_status from vwstudentinfo where student_no regexp(?) or firstname regexp(?) or lastname regexp(?) or college_code regexp(?) or course_code regexp(?)";
         try {
@@ -946,7 +921,6 @@ public class AdminDashboardController extends Controller {
                     btnStudentEntry.fire();
                 }
             });
-//            TableFilter.forTableView(tblStudents).apply();
 
         }catch (Exception e) {
             AlertMessage.showErrorAlert("An error occurred while displaying student masterlist:"+e);
@@ -1030,6 +1004,7 @@ public class AdminDashboardController extends Controller {
             }
             return null;
         });
+        AlertMessage.addIcon(dialog);
 
         Optional<StudentProperty> newStudent = dialog.showAndWait();
         if(newStudent.isEmpty())
@@ -1116,6 +1091,7 @@ public class AdminDashboardController extends Controller {
             }
             return null;
         });
+        AlertMessage.addIcon(dialog);
 
         Optional<StudentProperty> newEmployee = dialog.showAndWait();
         if(newEmployee.isEmpty())
@@ -1223,14 +1199,12 @@ public class AdminDashboardController extends Controller {
             ps = conn.prepareStatement("SELECT trim(replace(course_code, 'BS', '')) from course where college_code = ?");
             ps.setString(1, comboBoxCollegeSchedule.getSelectionModel().getSelectedItem());
             rs = ps.executeQuery();
-//            comboBoxCourseSchedule.getItems().clear();
             while(rs.next()){
                 comboBoxCourseSchedule.getItems().add(rs.getString(1));
             }
             ps = conn.prepareStatement("SELECT subject_code from subject where college_code = ? and subject_code <> '00000'");
             ps.setString(1, comboBoxCollegeSchedule.getSelectionModel().getSelectedItem());
             rs = ps.executeQuery();
-//            comboBoxSubjectSchedule.getItems().clear();
             while(rs.next()){
                 comboBoxSubjectSchedule.getItems().add(rs.getString(1));
             }
@@ -1268,7 +1242,6 @@ public class AdminDashboardController extends Controller {
     }
     @FXML
     protected void onBtnGoAction(ActionEvent event){
-//        tblSubjectScheduling.getItems().clear();
         comboBoxSubjectSchedule.setDisable(false);
 
         try{
@@ -1302,7 +1275,6 @@ public class AdminDashboardController extends Controller {
             ps.setString(3, comboBoxCourseSchedule.getSelectionModel().getSelectedItem()+comboBoxYearSchedule.getSelectionModel().getSelectedItem()+comboBoxBlockSchedule.getSelectionModel().getSelectedItem());
             rs = ps.executeQuery();
             TableViewUtils.generateTableFromResultSet(tblSubjectScheduling, rs);
-//            TableFilter.forTableView(tblSubjectScheduling).apply();
 
         }catch(Exception e){
             AlertMessage.showErrorAlert("An error occurred while displaying block schedule: " + e);
@@ -1416,7 +1388,6 @@ public class AdminDashboardController extends Controller {
         }catch (Exception e){
             System.out.println(e);
         }
-//        tblSubjectScheduling.getItems().clear();
         comboBoxCollegeSchedule.getSelectionModel().clearSelection();
         comboBoxCollegeSchedule.setDisable(true);
         comboBoxSubjectSchedule.getSelectionModel().clearSelection();
@@ -1545,7 +1516,6 @@ public class AdminDashboardController extends Controller {
             ps.setString(3, comboBoxCollegeSchedule.getSelectionModel().getSelectedItem());
             ps.setString(4, comboBoxCourseSchedule.getSelectionModel().getSelectedItem() + comboBoxYearSchedule.getSelectionModel().getSelectedItem() + comboBoxBlockSchedule.getSelectionModel().getSelectedItem());
             ps.setString(5, comboBoxSubjectSchedule.getSelectionModel().getSelectedItem());
-            System.out.println(comboBoxCourseSchedule.getSelectionModel().getSelectedItem() + comboBoxYearSchedule.getSelectionModel().getSelectedItem() + comboBoxBlockSchedule.getSelectionModel().getSelectedItem());
             ps.executeUpdate();
             AlertMessage.showInformationAlert("Removed subject schedule successfully!");
 
@@ -1580,7 +1550,6 @@ public class AdminDashboardController extends Controller {
         currentPane.setVisible(true);
         tblStudents.getSelectionModel().clearSelection();
         btnDeleteStudent.setDisable(tblStudents.getSelectionModel().getSelectedItem() == null);
-//        tblStudents.getItems().clear();
         tblStudents.getColumns().clear();
         lblCurrentMasterlist.setText("EMPLOYEE MASTERLIST");
         txtStudentSearch.setPromptText("Search for an employee by employee id or name");
@@ -1594,7 +1563,6 @@ public class AdminDashboardController extends Controller {
                     btnEmployeeEntry.fire();
                 }
             });
-//            TableFilter.forTableView(tblStudents).apply();
 
 
         }catch(Exception e){
@@ -1630,7 +1598,6 @@ public class AdminDashboardController extends Controller {
                     btnEmployeeEntry.fire();
                 }
             });
-//            TableFilter.forTableView(tblStudents).apply();
 
         }catch (Exception e) {
             AlertMessage.showErrorAlert("An error occurred while displaying employee masterlist:"+e);
@@ -1734,7 +1701,6 @@ public class AdminDashboardController extends Controller {
             ps = conn.prepareStatement("SELECT student_no, concat(lastname, ', ', firstname) as name, case when gender = 'M' then 'Male' when gender = 'F' then 'Female' else 'Invalid gender' end as gender, bday as birthday, course_code, registration_status FROM VWSTUDENTINFO ORDER BY registration_status");
             rs = ps.executeQuery();
             TableViewUtils.generateTableFromResultSet(tblStudentRecord, rs);
-//            TableFilter.forTableView(tblStudentRecord).apply();
         }catch (Exception e){
             AlertMessage.showErrorAlert("An error occurred while displaying students: " + e);
         }
@@ -1756,7 +1722,6 @@ public class AdminDashboardController extends Controller {
                 ps = conn.prepareStatement("SELECT student_no, concat(lastname, ', ', firstname) as name, case when gender = 'M' then 'Male' when gender = 'F' then 'Female' else 'Invalid gender' end as gender, bday as birthday, course_code, registration_status FROM VWSTUDENTINFO ORDER BY registration_status");
                 rs = ps.executeQuery();
                 TableViewUtils.generateTableFromResultSet(tblStudentRecord, rs);
-//                TableFilter.forTableView(tblStudentRecord).apply();
 
             }catch(Exception e){
                 System.out.println(e);
@@ -1788,7 +1753,6 @@ public class AdminDashboardController extends Controller {
         }catch (Exception e){
             AlertMessage.showErrorAlert("An error occurred while retrieving school years: " + e);
         }
-//        tblStudentGradeRecord.getItems().clear();
         tblStudentGradeRecord.getColumns().clear();
     }
     @FXML
@@ -1798,7 +1762,6 @@ public class AdminDashboardController extends Controller {
     @FXML
     protected void onBtnLoadStudentRecordAction(ActionEvent event) {
         if(choiceSYRecords.getSelectionModel().getSelectedItem() == null){
-//            tblStudentGradeRecord.getItems().clear();
             return;
         }
         try{
@@ -1896,7 +1859,6 @@ public class AdminDashboardController extends Controller {
 
     @FXML
     protected void onBtnGradesEntryAction(ActionEvent event) throws IllegalAccessException {
-//        tblStudentGrades.getItems().clear();
         tblStudentGrades.getColumns().clear();
         currentPane.setVisible(false);
         currentPane = gradesEntryContainer;
@@ -1952,7 +1914,6 @@ public class AdminDashboardController extends Controller {
     }
     @FXML
     protected void onBtnLoadDataAction(ActionEvent event){
-//        tblStudentGrades.getItems().clear();
         tblStudentGrades.getColumns().clear();
 
         try{
@@ -1962,7 +1923,6 @@ public class AdminDashboardController extends Controller {
             ps.setString(3, comboBoxYearBlock.getSelectionModel().getSelectedItem());
             ps.setString(4, comboBoxSubjectCode.getSelectionModel().getSelectedItem());
             rs = ps.executeQuery();
-            System.out.println(rs.getRow());
             for(int i = 0; i < rs.getMetaData().getColumnCount(); ++i) {
 
                 final int j = i;
@@ -1992,7 +1952,6 @@ public class AdminDashboardController extends Controller {
                                 return;
                             }
                             o.set(o.size()-2, t.getNewValue());
-                            System.out.println(o);
                             try {
                                 Connection conn = Database.getInstance().getConnection();
                                 PreparedStatement ps = conn.prepareStatement("REPLACE INTO GRADE(sy, semester, student_no, subject_code, block_no, grade) VALUES(?, ?, ?, ?, ?, ?)");
@@ -2054,6 +2013,8 @@ public class AdminDashboardController extends Controller {
             }
             return null;
         });
+        AlertMessage.addIcon(dialog);
+
 
         Optional<SimpleStringProperty> newSY = dialog.showAndWait();
         if(newSY.isEmpty())
@@ -2098,6 +2059,8 @@ public class AdminDashboardController extends Controller {
             }
             return null;
         });
+        AlertMessage.addIcon(dialog);
+
 
         Optional<SimpleStringProperty> newSem = dialog.showAndWait();
         if(newSem.isEmpty())
@@ -2148,6 +2111,8 @@ public class AdminDashboardController extends Controller {
             }
             return null;
         });
+        AlertMessage.addIcon(dialog);
+
 
         Optional<List<SimpleStringProperty>> newCollege = dialog.showAndWait();
         if(newCollege.isEmpty())
@@ -2207,6 +2172,8 @@ public class AdminDashboardController extends Controller {
             }
             return null;
         });
+        AlertMessage.addIcon(dialog);
+
 
         Optional<List<Property>> newCourse = dialog.showAndWait();
         if(newCourse.isEmpty())
@@ -2276,6 +2243,8 @@ public class AdminDashboardController extends Controller {
             }
             return null;
         });
+        AlertMessage.addIcon(dialog);
+
 
         Optional<List<Property>> newSubject = dialog.showAndWait();
         if(newSubject.isEmpty())
@@ -2334,7 +2303,7 @@ public class AdminDashboardController extends Controller {
     }
     private void searchSubject(){
         try{
-            ps = conn.prepareStatement("SELECT * FROM SUBJECT WHERE subject_code regexp(?) or description regexp(?) or college_code regexp(?) or curriculum regexp(?)");
+            ps = conn.prepareStatement("SELECT subject_code, description, units, curriculum, college_code, case when status = 'A' then 'Active' when status = 'I' then 'Inactive' else 'Invalid status' end as status FROM SUBJECT WHERE SUBJECT_CODE <> '00000' and (subject_code regexp(?) or description regexp(?) or college_code regexp(?) or curriculum regexp(?))");
             ps.setString(1, txtSearchManage.getText());
             ps.setString(2, txtSearchManage.getText());
             ps.setString(3, txtSearchManage.getText());
@@ -2606,7 +2575,6 @@ public class AdminDashboardController extends Controller {
                             tblManage.getItems().get(i).set(1, "Closed");
                         tblManage.refresh();
                     }
-                    System.out.println(tblManage.getItems());
                 }
             });
             while(rs.next()){
@@ -2692,12 +2660,11 @@ public class AdminDashboardController extends Controller {
         currentPane = manageContainer;
         currentPane.setVisible(true);
         tblManage.getColumns().clear();
-//        tblManage.getItems().clear();
         lblManage.setText("MANAGE SUBJECTS");
         searchManageGroup.setVisible(true);
 
         try{
-            ps = conn.prepareStatement("SELECT subject_code, description, units, college_code, case when status = 'A' then 'Active' when status = 'I' then 'Inactive' else 'Invalid status' end as status FROM SUBJECT WHERE SUBJECT_CODE <> '00000'");
+            ps = conn.prepareStatement("SELECT subject_code, description, units, curriculum, college_code, case when status = 'A' then 'Active' when status = 'I' then 'Inactive' else 'Invalid status' end as status FROM SUBJECT WHERE SUBJECT_CODE <> '00000'");
             rs = ps.executeQuery();
             TableViewUtils.generateEditableTableFromResultSet(tblManage, rs, new String[]{"SUBJECT", "SUBJECT_CODE"},  new Runnable() {
                 @Override
@@ -2705,7 +2672,6 @@ public class AdminDashboardController extends Controller {
                     btnSubject.fire();
                 }
             });
-//            TableFilter.forTableView(tblManage).apply();
 
         } catch(Exception e){
             AlertMessage.showErrorAlert("An error occurred while displaying subjects: " + e);
@@ -2844,7 +2810,7 @@ public class AdminDashboardController extends Controller {
                 gridMaintenance.setDisable(false);
                 break;
             default:
-                System.out.print("Logic Error"); //Di ko alam lalagay ko dito wahhah
+                System.out.print("Logic Error");
         }
     }
 }

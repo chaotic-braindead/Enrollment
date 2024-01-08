@@ -1,11 +1,6 @@
 package plm.rafaeltorres.irregularenrollmentsystem.model;
 
-import plm.rafaeltorres.irregularenrollmentsystem.db.Database;
-
-import java.lang.reflect.Field;
-import java.math.BigInteger;
 import java.sql.Blob;
-import java.sql.Connection;
 import java.sql.Date;
 import java.sql.ResultSet;
 

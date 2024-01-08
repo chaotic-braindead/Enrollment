@@ -5,16 +5,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
-import plm.rafaeltorres.irregularenrollmentsystem.db.Database;
-import plm.rafaeltorres.irregularenrollmentsystem.utils.Maintenance;
-import plm.rafaeltorres.irregularenrollmentsystem.utils.PDFGenerator;
 
-
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Properties;
 
 public class MainScene extends Application {
 

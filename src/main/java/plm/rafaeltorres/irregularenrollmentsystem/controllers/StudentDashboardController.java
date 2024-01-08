@@ -33,14 +33,11 @@ import plm.rafaeltorres.irregularenrollmentsystem.utils.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.sql.*;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.Date;
 
@@ -198,14 +195,12 @@ public class StudentDashboardController extends Controller {
         if(student.getRegistrationStatus().equalsIgnoreCase("REGULAR")) {
             btnSubmit.setVisible(false);
             btnRemove.setVisible(false);
-//            btnSchedule.setDisable(true);
             btnEnrollRegular.setVisible(false);
             tblSubjects.setPlaceholder(new Label("Please wait for your department chairperson to assign your schedule."));
         }
         else{
             btnSubmit.setVisible(true);
             btnRemove.setVisible(true);
-//            btnSchedule.setDisable(false);
             tblSubjects.setPlaceholder(new Label("No schedules to display."));
 
             try{
@@ -214,8 +209,6 @@ public class StudentDashboardController extends Controller {
                 ps.setString(2, currentSY);
                 ps.setString(3, currentSem);
                 rs = ps.executeQuery();
-//                btnSchedule.setDisable(!rs.next());
-                System.out.println(btnSchedule.isDisabled());
             }catch(Exception e){
                 System.out.println(e);
             }
@@ -238,7 +231,6 @@ public class StudentDashboardController extends Controller {
 
             btnTuition.setDisable(!status.equalsIgnoreCase("ENROLLED"));
             btnEnroll.setDisable(status.equalsIgnoreCase("ENROLLED"));
-//            btnSchedule.setDisable(status.isEmpty() || status.equalsIgnoreCase("PENDING"));
             notEnrolledGroup.setVisible(!status.equalsIgnoreCase("ENROLLED"));
             enrolledGroup.setVisible(status.equalsIgnoreCase("ENROLLED"));
             btnDownloadSER.setDisable(!status.equalsIgnoreCase("ENROLLED"));
@@ -315,8 +307,6 @@ public class StudentDashboardController extends Controller {
         File img = fc.showOpenDialog(stage);
         try{
             byte[] imgBytes = Files.readAllBytes(img.toPath());
-            String b64Img = Base64.getEncoder().encodeToString(imgBytes);
-            System.out.println(b64Img);
             ps = conn.prepareStatement(Database.Query.updateImage);
             Blob blob = conn.createBlob();
             blob.setBytes(1, imgBytes);
@@ -501,7 +491,6 @@ public class StudentDashboardController extends Controller {
             ps.setString(3, currentSem);
             rs = ps.executeQuery();
             boolean res = rs.next();
-//            btnSchedule.setDisable(!res);
             btnEnroll.setDisable(res);
             btnTuition.setDisable(!res);
             notEnrolledGroup.setVisible(!res);
@@ -561,7 +550,6 @@ public class StudentDashboardController extends Controller {
             btnEnroll.setSelected(false);
             btnEnroll.setDisable(true);
             btnTuition.setDisable(false);
-//            btnSchedule.setDisable(false);
             btnDownloadSER.setDisable(false);
             onBtnDashboardAction(event);
         }catch(Exception e){
@@ -742,7 +730,6 @@ public class StudentDashboardController extends Controller {
             tblSubjects.getItems().clear();
             tblSubjects.getColumns().clear();
             displayAvailableScheds();
-//            btnSchedule.setDisable(false);
             AlertMessage.showInformationAlert("Successfully added "+sched.getSubjectCode());
             btnEnroll.fire();
         } catch(Exception e){
@@ -757,29 +744,6 @@ public class StudentDashboardController extends Controller {
         String semester = choiceSemester.getSelectionModel().getSelectedItem();
         if(sy == null)
             return;
-//        if(semester != null){
-//            try{
-//                ps = conn.prepareStatement("select " +
-//                        "ss.subject_code as `SUBJECT CODE`," +
-//                        "    ss.description as `SUBJECT DESCRIPTION`," +
-//                        "    ss.units as UNITS," +
-//                        "    ss.grade as GRADE " +
-//                        "from vwStudentGradeForSYAndSem ss where ss.student_no = ? and ss.sy = ? and ss.semester = ?");
-//                ps.setString(1, student.getStudentNo());
-//                ps.setString(2, choiceSY.getSelectionModel().getSelectedItem());
-//                ps.setString(3, semester);
-//                rs = ps.executeQuery();
-//                if(rs.getRow() == 0){
-//                    tblGrades.getItems().clear();
-//                    tblGrades.setPlaceholder(new Label("Select a valid semester."));
-//                }
-//                tblGrades.getColumns().clear();
-//                TableViewUtils.generateTableFromResultSet(tblGrades, rs);
-//
-//            }catch(Exception e){
-//                AlertMessage.showErrorAlert("An error occurred while fetching your grades.");
-//            }
-//        }
 
         try{
             ps = conn.prepareStatement("SELECT DISTINCT SEMESTER FROM GRADE WHERE STUDENT_NO = ? AND SY = ?");

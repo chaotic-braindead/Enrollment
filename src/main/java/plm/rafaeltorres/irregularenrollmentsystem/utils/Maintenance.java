@@ -3,21 +3,13 @@ package plm.rafaeltorres.irregularenrollmentsystem.utils;
 import plm.rafaeltorres.irregularenrollmentsystem.MainScene;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.time.LocalDate;
-import java.time.Month;
-import java.time.format.DateTimeFormatter;
 import java.util.Properties;
 
 public class Maintenance {
     private String currentSY;
     private String currentSem;
     private final static Maintenance instance = new Maintenance();
-    private String startSem1;
-    private String startSem2;
-    private String startSemS;
     private final Properties properties = new Properties();
     private final String path = MainScene.class.getResource("app.properties").getPath();
 

@@ -1,5 +1,4 @@
 package plm.rafaeltorres.irregularenrollmentsystem.db;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 import plm.rafaeltorres.irregularenrollmentsystem.utils.AlertMessage;
 
 import java.sql.*;

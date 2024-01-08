@@ -1,9 +1,6 @@
 package plm.rafaeltorres.irregularenrollmentsystem.utils;
 
-import javafx.event.EventHandler;
-import javafx.scene.control.TextInputControl;
 import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.text.Text;
 import javafx.util.converter.DefaultStringConverter;
 

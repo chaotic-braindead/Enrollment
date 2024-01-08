@@ -5,11 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import plm.rafaeltorres.irregularenrollmentsystem.db.Database;
 
-import java.lang.reflect.Field;
-import java.math.BigInteger;
-import java.sql.*;
 import java.time.LocalDate;
-import java.util.List;
 
 public class StudentProperty {
     private StringProperty student_number;
