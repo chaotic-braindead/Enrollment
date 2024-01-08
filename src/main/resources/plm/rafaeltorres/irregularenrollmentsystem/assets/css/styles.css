@@ -30,7 +30,13 @@
 
 #loginButton {
     -fx-background-color: #9c0000;
+    -fx-font-size: 17px;
 }
+
+#loginButton:hover{
+    -fx-opacity: 0.9;
+}
+
 
 /* Student Dashboard */
 
