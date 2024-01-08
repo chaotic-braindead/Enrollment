@@ -421,6 +421,7 @@ public class StudentDashboardController extends Controller {
         ps.setString(3, currentSem);
         rs = ps.executeQuery();
         PDFGenerator.generateSER(stage, student, rs);
+        AlertMessage.showInformationAlert("Successfully downloaded your SER!");
     }
 
     @FXML

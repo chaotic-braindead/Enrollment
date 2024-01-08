@@ -399,10 +399,6 @@ public class AdminDashboardController extends Controller {
         }catch (Exception e){
             System.out.println(e);
         }
-
-
-
-
     }
 
     public void setUser(User user){
