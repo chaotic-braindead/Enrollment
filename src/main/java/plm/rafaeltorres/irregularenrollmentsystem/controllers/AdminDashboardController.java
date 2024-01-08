@@ -27,6 +27,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.converter.DefaultStringConverter;
+import org.kordamp.ikonli.javafx.FontIcon;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import plm.rafaeltorres.irregularenrollmentsystem.MainScene;
 import plm.rafaeltorres.irregularenrollmentsystem.db.Database;
@@ -294,6 +295,8 @@ public class AdminDashboardController extends Controller {
     private GridPane gridTransaction;
     @FXML
     private Circle imgNavBar;
+    @FXML
+    private FontIcon navIkonli;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -2750,6 +2753,7 @@ public class AdminDashboardController extends Controller {
                 gridRecords.setDisable(true);
                 gridDataEntry.setDisable(true);
                 gridMaintenance.setDisable(true);
+                navIkonli.setIconLiteral("mdal-credit_card");
                 break;
             case "Records":
                 //Visible Property
@@ -2762,6 +2766,7 @@ public class AdminDashboardController extends Controller {
                 gridRecords.setDisable(false);
                 gridDataEntry.setDisable(true);
                 gridMaintenance.setDisable(true);
+                navIkonli.setIconLiteral("mdmz-receipt");
                 break;
             case "Data Entry":
                 //Visible Property
@@ -2774,6 +2779,7 @@ public class AdminDashboardController extends Controller {
                 gridRecords.setDisable(true);
                 gridDataEntry.setDisable(false);
                 gridMaintenance.setDisable(true);
+                navIkonli.setIconLiteral("mdoal-calendar_today");
                 break;
             case "Maintenance":
                 //Visible Property
@@ -2786,6 +2792,7 @@ public class AdminDashboardController extends Controller {
                 gridRecords.setDisable(true);
                 gridDataEntry.setDisable(true);
                 gridMaintenance.setDisable(false);
+                navIkonli.setIconLiteral("eli-wrench");
                 break;
             default:
                 System.out.print("Logic Error");

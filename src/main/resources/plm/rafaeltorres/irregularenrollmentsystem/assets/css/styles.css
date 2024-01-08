@@ -235,7 +235,7 @@
 
 #cmbSelectTableCategory .list-view .list-cell {
     -fx-text-fill: white;
-    -fx-font-size: 12px;
+    -fx-font-size: 10px;
     -fx-font-family: "Noto Sans";
     -fx-font-weight: bold;
 }
@@ -244,9 +244,20 @@
     -fx-background-color: #7C0601;
 }
 
+#cmbSelectTableCategory .text {
+    -fx-font-size: 13px;
+}
 
 #cmbSelectTableCategory .list-view {
-    -fx-control-inner-background: #262626;
+    -fx-control-inner-background: #7C0601;
+    -fx-opacity: 0.95;
+    -fx-translate-x: 176px;
+    -fx-translate-y: -35px;
+    -fx-text-fill: white;
+}
+
+#cmbSelectTableCategory .list-view .list-cell:hover {
+    -fx-opacity: 0.7;
 }
 
 .btn-red {

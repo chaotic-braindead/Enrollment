@@ -409,19 +409,14 @@
                                  <children>
                                     <AnchorPane layoutX="29.0" layoutY="27.0" prefHeight="827.0" prefWidth="1740.0" styleClass="loginContainer" stylesheets="@assets/css/styles.css">
                                        <children>
-                                          <TableView fx:id="tblIrregScheds" layoutX="46.0" layoutY="154.0" onMouseClicked="#onTblIrregSchedsMouseClicked" prefHeight="622.0" prefWidth="1654.0">
-                                            <columns>
-                                              <TableColumn prefWidth="75.0" text="C1" />
-                                              <TableColumn prefWidth="75.0" text="C2" />
-                                            </columns>
-                                          </TableView>
+                                          <TableView fx:id="tblIrregScheds" layoutX="68.0" layoutY="154.0" onMouseClicked="#onTblIrregSchedsMouseClicked" prefHeight="609.0" prefWidth="1609.0" />
                                           <TextField fx:id="txtSubjectSearch" layoutX="82.0" layoutY="104.0" prefHeight="27.0" prefWidth="341.0" promptText="Search for a subject code" />
                                           <FontIcon iconColor="#9c0000" iconLiteral="mdmz-search" iconSize="27" layoutX="50.0" layoutY="133.0" />
-                                          <Button layoutX="439.0" layoutY="103.0" mnemonicParsing="false" onAction="#onBtnSearchScheduleAction" text="Search" />
+                                          <Button layoutX="439.0" layoutY="103.0" mnemonicParsing="false" onAction="#onBtnSearchScheduleAction" prefHeight="27.0" prefWidth="85.0" styleClass="btn-blue" text="SEARCH" />
                                           <Label layoutX="112.0" layoutY="33.0" prefHeight="51.0" prefWidth="281.0" styleClass="titleText" stylesheets="@assets/css/styles.css" text="ENROLLMENT" />
                                           <Line endX="1504.0" layoutX="185.0" layoutY="88.0" startX="-130.0" stroke="#9c0000" />
                                           <FontIcon iconColor="#9c0000" iconLiteral="mdoal-assignment" iconSize="45" layoutX="55.0" layoutY="81.0" />
-                                          <Button fx:id="btnAddIrreg" disable="true" layoutX="836.0" layoutY="786.0" mnemonicParsing="false" onAction="#onBtnAddIrregAction" text="Add" />
+                                          <Button fx:id="btnAddIrreg" disable="true" layoutX="827.0" layoutY="779.0" mnemonicParsing="false" onAction="#onBtnAddIrregAction" prefHeight="25.0" prefWidth="86.0" styleClass="btn-green" text="ADD" />
                                        </children>
                                     </AnchorPane>
                                  </children>
@@ -431,10 +426,10 @@
                                     <AnchorPane layoutX="28.0" layoutY="21.0" prefHeight="835.0" prefWidth="1742.0" styleClass="loginContainer" stylesheets="@assets/css/styles.css">
                                        <children>
                                           <TableView fx:id="tblSubjects" layoutX="57.0" layoutY="101.0" onMouseClicked="#onTblSubjectsMouseClicked" prefHeight="647.0" prefWidth="1635.0" />
-                                          <StackPane layoutX="867.0" layoutY="778.0">
+                                          <StackPane layoutX="828.0" layoutY="774.0">
                                              <children>
-                                                <Button fx:id="btnAdd" disable="true" mnemonicParsing="false" onAction="#onBtnAddAction" prefHeight="36.0" prefWidth="84.0" text="Add" />
-                                                <Button fx:id="btnEnrollRegular" mnemonicParsing="false" onAction="#onBtnEnrollRegularAction" prefHeight="27.0" prefWidth="76.0" text="Enroll" />
+                                                <Button fx:id="btnAdd" disable="true" mnemonicParsing="false" onAction="#onBtnAddAction" prefHeight="20.0" prefWidth="84.0" styleClass="btn-green" text="ADD" />
+                                                <Button fx:id="btnEnrollRegular" mnemonicParsing="false" onAction="#onBtnEnrollRegularAction" prefHeight="27.0" prefWidth="93.0" styleClass="btn-green" text="ENROLL" />
                                              </children>
                                           </StackPane>
                                           <Label layoutX="106.0" layoutY="30.0" prefHeight="51.0" prefWidth="281.0" styleClass="titleText" stylesheets="@assets/css/styles.css" text="ENROLLMENT" />
@@ -449,16 +444,12 @@
                                     <AnchorPane layoutX="38.0" layoutY="29.0" prefHeight="827.0" prefWidth="1556.0" styleClass="loginContainer" stylesheets="@assets/css/styles.css" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="38.0" AnchorPane.rightAnchor="44.0" AnchorPane.topAnchor="29.0">
                                        <children>
                                           <TableView fx:id="tblSchedule" layoutX="156.0" layoutY="102.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#onTblScheduleMouseClicked" prefHeight="579.0" prefWidth="1396.0">
-                                            <columns>
-                                              <TableColumn prefWidth="75.0" text="C1" />
-                                              <TableColumn prefWidth="75.0" text="C2" />
-                                            </columns>
                                              <columnResizePolicy>
                                                 <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                                              </columnResizePolicy>
                                           </TableView>
-                                          <Button fx:id="btnRemove" alignment="CENTER" contentDisplay="CENTER" disable="true" layoutX="862.0" layoutY="733.0" mnemonicParsing="false" onAction="#onBtnRemoveAction" prefHeight="25.0" prefWidth="84.0" text="Remove" />
-                                          <Button fx:id="btnSubmit" layoutX="776.0" layoutY="734.0" mnemonicParsing="false" onAction="#onBtnSubmitAction" prefHeight="27.0" prefWidth="70.0" text="Submit" />
+                                          <Button fx:id="btnRemove" alignment="CENTER" contentDisplay="CENTER" disable="true" layoutX="862.0" layoutY="734.0" mnemonicParsing="false" onAction="#onBtnRemoveAction" prefHeight="27.0" prefWidth="92.0" styleClass="btn-red" text="REMOVE" />
+                                          <Button fx:id="btnSubmit" layoutX="754.0" layoutY="734.0" mnemonicParsing="false" onAction="#onBtnSubmitAction" prefHeight="27.0" prefWidth="92.0" styleClass="btn-green" text="SUBMIT" />
                                           <Label fx:id="lblTotalUnits" layoutX="812.0" layoutY="694.0" text="Total Units: 15" textFill="#9c0000" />
                                           <Label layoutX="97.0" layoutY="22.0" styleClass="titleText" stylesheets="@assets/css/styles.css" text="YOUR SCHEDULE" />
                                           <Line endX="1494.0" layoutX="165.0" layoutY="78.0" startX="-112.66667175292969" stroke="#9c0000" />
@@ -542,7 +533,7 @@
                                  <children>
                                     <AnchorPane layoutX="27.0" layoutY="18.0" prefHeight="830.0" prefWidth="1720.0" styleClass="loginContainer" stylesheets="@assets/css/styles.css">
                                        <children>
-                                          <TableView fx:id="tblGrades" layoutX="43.0" layoutY="90.0" prefHeight="704.0" prefWidth="1610.0">
+                                          <TableView fx:id="tblGrades" layoutX="49.0" layoutY="90.0" prefHeight="704.0" prefWidth="1597.0">
                                             <columns>
                                               <TableColumn prefWidth="248.0" text="SUBJECT CODE" />
                                               <TableColumn minWidth="0.0" prefWidth="246.0" text="SUBJECT DESCRIPTION" />
