@@ -30,7 +30,7 @@
 
 #loginButton {
     -fx-background-color: #9c0000;
-    -fx-font-size: 17px;
+    -fx-font-size: 15px;
 }
 
 #loginButton:hover{
