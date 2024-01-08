@@ -96,7 +96,7 @@
                                  <children>
                                               <AnchorPane layoutX="21.0" layoutY="11.0" prefHeight="848.0" prefWidth="1657.0" styleClass="loginContainer" stylesheets="@assets/css/styles.css">
                                                   <children>
-                                                      <TableView fx:id="tblSubjects" layoutX="681.0" layoutY="224.0" onMouseClicked="#onTblSubjectsMouseClicked" prefHeight="588.0" prefWidth="945.0">
+                                                      <TableView fx:id="tblSubjects" layoutX="681.0" layoutY="224.0" prefHeight="588.0" prefWidth="945.0">
                                                           <columns>
                                                               <TableColumn prefWidth="124.0" text="SUBJECT_CODE" />
                                                               <TableColumn prefWidth="183.0" text="DESCRIPTION" />

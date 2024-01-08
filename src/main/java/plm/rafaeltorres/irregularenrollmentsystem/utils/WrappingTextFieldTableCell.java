@@ -29,9 +29,10 @@ public class WrappingTextFieldTableCell<S> extends TextFieldTableCell<S, String>
     @Override
     public void updateItem(String item, boolean empty) {
         super.updateItem(item, empty);
-        if (!isEmpty() && !isEditing()) {
+        if (!isEmpty() && !isEditing())
             setGraphic(cellText);
-        }
+        if(item == null || empty)
+            setGraphic(null);
     }
 
     private Text createText() {

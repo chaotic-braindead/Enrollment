@@ -5,11 +5,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import plm.rafaeltorres.irregularenrollmentsystem.db.Database;
 
 import java.io.IOException;
+import java.sql.Connection;
 
 public class MainScene extends Application {
-
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(MainScene.class.getResource("Login.fxml"));

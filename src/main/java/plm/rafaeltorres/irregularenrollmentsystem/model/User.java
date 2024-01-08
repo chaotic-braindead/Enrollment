@@ -11,7 +11,7 @@ import java.sql.ResultSet;
 public abstract class User {
     public User(ResultSet rs){
         Field[] fields = this.getClass().getDeclaredFields();
-        Connection conn = Database.getInstance().getConnection();
+        Connection conn = Database.connect();
         try{
             for(Field f : fields){
                 f.setAccessible(true);

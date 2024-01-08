@@ -16,7 +16,7 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 public abstract class Controller implements Initializable {
-    protected final Connection conn = Database.getInstance().getConnection();
+    protected Connection conn = Database.connect();
     public abstract void initialize(URL location, ResourceBundle resources);
 
     public abstract void setUser(User arg);

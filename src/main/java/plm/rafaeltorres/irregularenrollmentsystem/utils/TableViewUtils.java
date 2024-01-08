@@ -1,4 +1,5 @@
 package plm.rafaeltorres.irregularenrollmentsystem.utils;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -27,7 +28,7 @@ public class TableViewUtils {
     public static void generateEditableTableFromResultSet(TableView tbl, ResultSet rs, String[] args, Runnable callback){
         try{
             tbl.getColumns().clear();
-//            tbl.getItems().clear();
+            tbl.getItems().clear();
             for(int i = 0; i < rs.getMetaData().getColumnCount(); ++i){
                 final int j = i;
                 TableColumn col = new TableColumn(rs.getMetaData().getColumnName(i+1).toUpperCase());
@@ -40,7 +41,7 @@ public class TableViewUtils {
                 col.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent>() {
                     @Override public void handle(TableColumn.CellEditEvent t) {
                         ObservableList<String> o = (ObservableList<String>) t.getRowValue();
-                        Connection conn = Database.getInstance().getConnection();
+                        Connection conn = Database.connect();
                         PreparedStatement ps = null;
                         try{
                             if(rs.getMetaData().getColumnName(j+1).equalsIgnoreCase("COURSE_CODE") && args[0].equalsIgnoreCase("STUDENT")){
@@ -96,7 +97,6 @@ public class TableViewUtils {
                     }
                 });
                 String txt = col.getText().replaceAll("_", " ").toUpperCase();
-                System.out.println(txt);
                 switch(txt){
                     case "AGE":
                     case "PLM EMAIL":
@@ -111,10 +111,9 @@ public class TableViewUtils {
                                             @Override
                                             protected void updateItem(String item, boolean empty) {
                                                 super.updateItem(item, empty);
-
                                                 if (item == null || empty) {
                                                     setText(null);
-                                                    setStyle("");
+                                                    setGraphic(null);
                                                 } else {
                                                     Text text = new Text(item);
                                                     text.setStyle("-fx-text-alignment:left;");
@@ -239,7 +238,6 @@ public class TableViewUtils {
                 }
                 scheds.add(row);
             }
-            tbl.setItems(scheds);
 
             tbl.setColumnResizePolicy(new Callback<TableView.ResizeFeatures, Boolean>() {
                 @Override
@@ -247,7 +245,6 @@ public class TableViewUtils {
                     return true;
                 }
             });
-            resizeTable(tbl);
             tbl.setRowFactory(tblView -> {
                 final TableRow<ObservableList<String>> r = new TableRow<>();
                 r.hoverProperty().addListener((observable) -> {
@@ -260,6 +257,8 @@ public class TableViewUtils {
                 });
                 return r;
             });
+            tbl.setItems(scheds);
+            resizeTable(tbl);
 
         }catch(Exception e){
             System.out.println(e);
@@ -311,7 +310,6 @@ public class TableViewUtils {
                 }
                 scheds.add(row);
             }
-            tbl.setItems(scheds);
 
 
             tbl.setRowFactory(tblView -> {
@@ -327,14 +325,14 @@ public class TableViewUtils {
                 });
                 return r;
             });
-            resizeTable(tbl);
             tbl.setColumnResizePolicy(new Callback<TableView.ResizeFeatures, Boolean>() {
                 @Override
                 public Boolean call(TableView.ResizeFeatures p) {
                     return true;
                 }
             });
-
+            tbl.setItems(scheds);
+            resizeTable(tbl);
 
         }catch(Exception e){
             System.out.println(e);

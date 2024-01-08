@@ -7,10 +7,9 @@ import java.util.List;
 
 
 public final class Database {
-    public static final Database INSTANCE = new Database();
-    private Connection conn;
     private static final String DB = "enrollment_system";
-    private Database(){
+    public static Connection connect(){
+        Connection conn = null;
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/"+DB,
@@ -19,13 +18,6 @@ public final class Database {
         } catch(Exception e) {
             AlertMessage.showInformationAlert("An error occurred while connecting to database: " + e);
         }
-    }
-
-    public static Database getInstance(){
-        return INSTANCE;
-    }
-
-    public Connection getConnection(){
         return conn;
     }
 
@@ -55,7 +47,7 @@ public final class Database {
     public static List<String> fetch(String query){
         List<String> res = new ArrayList<>();
         try{
-            Connection conn = Database.getInstance().getConnection();
+            Connection conn = connect();
             PreparedStatement ps = conn.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
             while(rs.next()){

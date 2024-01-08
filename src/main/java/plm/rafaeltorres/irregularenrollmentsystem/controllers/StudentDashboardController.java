@@ -45,9 +45,7 @@ public class StudentDashboardController extends Controller {
     private String currentSY = "2023-2024";
     private String currentSem = "1";
     private Student student;
-    private Desktop desktop = Desktop.getDesktop();
     private Pane currentPane;
-
     private PreparedStatement ps;
     private ResultSet rs;
 
@@ -174,14 +172,6 @@ public class StudentDashboardController extends Controller {
             lblSemester.setText("Summer Semester A.Y. " + currentSY);
         }
 
-        // display default image
-        File f = new File(MainScene.class.getResource("assets/img/md-person-2.png").getPath());
-        Image defaultImage = new Image(f.toURI().toString(), false);
-        ImagePattern pattern = new ImagePattern(defaultImage);
-        imgContainer.setFill(pattern);
-        imgDashboardContainer.setFill(pattern);
-
-
 
         // set default text for empty tables
         tblSchedule.setPlaceholder(new Label("You currently have no subjects in your schedule. Please enroll now."));
@@ -280,6 +270,14 @@ public class StudentDashboardController extends Controller {
 
         if(student.getImage() != null){
             setImage(student.getImage());
+        }
+        else{
+            // display default image
+            File f = new File(MainScene.class.getResource("assets/img/md-person-2.png").getPath());
+            Image defaultImage = new Image(f.toURI().toString(), false);
+            ImagePattern pattern = new ImagePattern(defaultImage);
+            imgContainer.setFill(pattern);
+            imgDashboardContainer.setFill(pattern);
         }
     }
     public void setImage(Blob img){;

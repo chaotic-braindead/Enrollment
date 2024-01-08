@@ -59,9 +59,11 @@ public class DatePickerTableCell<T> extends TableCell<T, String> {
         if (!isEmpty() && !isEditing()) {
             setGraphic(datePicker);
         }
-        if (date != null) {
+        if (date != null)
             setText(date);
-        }
+        else
+            setText(null);
+
         setStyle("-fx-alignment: center-left");
         setStyle("-fx-text-fill: black");
 

@@ -297,7 +297,6 @@ public class AdminDashboardController extends Controller {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
         currentSY = Maintenance.getInstance().getCurrentSY();
         currentSem = Maintenance.getInstance().getCurrentSem();
         sideBar.selectedToggleProperty().addListener((obsVal, oldVal, newVal) -> {
@@ -309,13 +308,6 @@ public class AdminDashboardController extends Controller {
         lblDateNow.setText("Today is "+ formatter.format(new Date()));
         btnDashboard.setSelected(true);
         currentPane = dashboardContainer;
-
-        // display default image
-        File f = new File(MainScene.class.getResource("assets/img/md-person-2.png").getPath());
-        Image defaultImage = new Image(f.toURI().toString(), false);
-        ImagePattern pattern = new ImagePattern(defaultImage);
-        imgContainer.setFill(pattern);
-        imgNavBar.setFill(pattern);
 
         tblSubjects.setPlaceholder(new Label("Please select a student to enroll."));
         tblSubjects.setPlaceholder(new Label("Please select a block/section."));
@@ -354,7 +346,6 @@ public class AdminDashboardController extends Controller {
         }catch(Exception e){
             System.out.println(e);
         }
-
 
         try{
             ps = conn.prepareStatement("SELECT count(*) FROM ENROLLMENT WHERE status = 'Enrolled' and sy = ? and semester = ?");
@@ -426,6 +417,14 @@ public class AdminDashboardController extends Controller {
 
         if(employee.getImage() != null){
             setImage(employee.getImage());
+        }
+        else{
+            // display default image
+            File f = new File(MainScene.class.getResource("assets/img/md-person-2.png").getPath());
+            Image defaultImage = new Image(f.toURI().toString(), false);
+            ImagePattern pattern = new ImagePattern(defaultImage);
+            imgContainer.setFill(pattern);
+            imgNavBar.setFill(pattern);
         }
     }
 
@@ -921,20 +920,6 @@ public class AdminDashboardController extends Controller {
         }catch (Exception e) {
             AlertMessage.showErrorAlert("An error occurred while displaying student masterlist:"+e);
         }
-    }
-
-    private List<String> fetch(String query){
-        List<String> res = new ArrayList<>();
-        try{
-            ps = conn.prepareStatement(query);
-            rs = ps.executeQuery();
-            while(rs.next()){
-                res.add(rs.getString(1));
-            }
-        } catch(Exception e){
-            System.out.println(e);
-        }
-        return res;
     }
 
     private void addStudentEntry(){
@@ -1675,11 +1660,6 @@ public class AdminDashboardController extends Controller {
             AlertMessage.showErrorAlert("There was an error while initializing the dashboard: " + e);
         }
     }
-    @FXML
-    protected void onTblSubjectsMouseClicked(MouseEvent event) {
-
-    }
-
 
     @FXML
     protected void onBtnStudentRecordsAction(ActionEvent event) {
@@ -1795,7 +1775,7 @@ public class AdminDashboardController extends Controller {
                             }
                             o.set(o.size()-2, t.getNewValue());
                             try {
-                                Connection conn = Database.getInstance().getConnection();
+                                Connection conn = Database.connect();
                                 PreparedStatement ps = conn.prepareStatement("REPLACE INTO GRADE(sy, semester, student_no, subject_code, block_no, grade) VALUES(?, ?, ?, ?, ?, ?)");
                                 ps.setString(1, choiceSYRecords.getSelectionModel().getSelectedItem());
                                 ps.setString(2, o.get(2));
@@ -1949,7 +1929,7 @@ public class AdminDashboardController extends Controller {
                             }
                             o.set(o.size()-2, t.getNewValue());
                             try {
-                                Connection conn = Database.getInstance().getConnection();
+                                Connection conn = Database.connect();
                                 PreparedStatement ps = conn.prepareStatement("REPLACE INTO GRADE(sy, semester, student_no, subject_code, block_no, grade) VALUES(?, ?, ?, ?, ?, ?)");
                                 ps.setString(1, currentSY);
                                 ps.setString(2, currentSem);
