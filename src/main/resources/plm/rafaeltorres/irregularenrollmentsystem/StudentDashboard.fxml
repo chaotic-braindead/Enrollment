@@ -538,7 +538,7 @@
                                     </AnchorPane>
                                  </children>
                               </AnchorPane>
-                              <AnchorPane fx:id="gradesContainer" prefHeight="551.0" prefWidth="1014.0" stylesheets="@assets/css/styles.css" visible="false">
+                              <AnchorPane fx:id="gradesContainer" prefHeight="551.0" prefWidth="1014.0" stylesheets="@assets/css/styles.css">
                                  <children>
                                     <AnchorPane layoutX="27.0" layoutY="18.0" prefHeight="830.0" prefWidth="1720.0" styleClass="loginContainer" stylesheets="@assets/css/styles.css">
                                        <children>
@@ -557,7 +557,7 @@
                                           <FontIcon iconColor="#9c0000" iconLiteral="mdal-list_alt" iconSize="50" layoutX="50.0" layoutY="76.0" />
                                           <ComboBox fx:id="choiceSY" layoutX="1309.0" layoutY="40.0" onAction="#onSYComboAction" prefHeight="25.0" prefWidth="131.0" promptText="School Year" />
                                           <ComboBox fx:id="choiceSemester" layoutX="1454.0" layoutY="40.0" onAction="#onSemesterComboAction" prefHeight="25.0" prefWidth="117.0" promptText="Semester" />
-                                          <Button fx:id="btnLoadGrades" layoutX="1605.0" layoutY="40.0" mnemonicParsing="false" onAction="#onBtnLoadGradesAction" text="Load" />
+                                          <Button fx:id="btnLoadGrades" layoutX="1582.0" layoutY="39.0" mnemonicParsing="false" onAction="#onBtnLoadGradesAction" prefHeight="25.0" prefWidth="65.0" styleClass="btn-blue" stylesheets="@assets/css/styles.css" text="LOAD" />
                                           <Line endX="1462.3333740234375" layoutX="185.0" layoutY="77.0" startX="-135.0" startY="-1.0" stroke="#9c0000" />
                                        </children>
                                     </AnchorPane>
