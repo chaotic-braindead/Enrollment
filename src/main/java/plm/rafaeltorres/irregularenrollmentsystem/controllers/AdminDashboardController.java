@@ -373,7 +373,6 @@ public class AdminDashboardController extends Controller {
             rs = ps.executeQuery();
             while(rs.next()){
                 comboBoxCourse.getItems().add(rs.getString(1));
-                comboBoxCourseSchedule.getItems().add(rs.getString(1).replace("BS", ""));
                 comboBoxClassListCourse.getItems().add(rs.getString(1).replace("BS", ""));
             }
 
@@ -1177,18 +1176,24 @@ public class AdminDashboardController extends Controller {
             return;
         }
         try{
+            ObservableList<String> courses = FXCollections.observableArrayList();
+            ObservableList<String> subjects = FXCollections.observableArrayList();
+
             ps = conn.prepareStatement("SELECT trim(replace(course_code, 'BS', '')) from course where college_code = ?");
             ps.setString(1, comboBoxCollegeSchedule.getSelectionModel().getSelectedItem());
             rs = ps.executeQuery();
             while(rs.next()){
-                comboBoxCourseSchedule.getItems().add(rs.getString(1));
+                courses.add(rs.getString(1));
             }
+            comboBoxCourseSchedule.setItems(courses);
+
             ps = conn.prepareStatement("SELECT subject_code from subject where college_code = ? and subject_code <> '00000'");
             ps.setString(1, comboBoxCollegeSchedule.getSelectionModel().getSelectedItem());
             rs = ps.executeQuery();
             while(rs.next()){
-                comboBoxSubjectSchedule.getItems().add(rs.getString(1));
+                subjects.add(rs.getString(1));
             }
+            comboBoxSubjectSchedule.setItems(subjects);
         }catch (Exception e){
             System.out.println(e);
         }
@@ -1202,7 +1207,7 @@ public class AdminDashboardController extends Controller {
             ps.setString(1, comboBoxSubjectSchedule.getSelectionModel().getSelectedItem());
             rs = ps.executeQuery();
             if(rs.next())
-            txtAreaDescription.setText(rs.getString(1));
+                txtAreaDescription.setText(rs.getString(1));
         }catch(Exception e){
             System.out.println(e);
         }
@@ -1631,8 +1636,6 @@ public class AdminDashboardController extends Controller {
         }catch (Exception e){
             AlertMessage.showErrorAlert("An error occurred while generating the student class list: " + e);
         }
-
-
     }
     @FXML
     protected void onBtnDashboardAction(ActionEvent event) throws IllegalAccessException {
@@ -1954,7 +1957,6 @@ public class AdminDashboardController extends Controller {
                 tblStudentGrades.getColumns().addAll(col);
             }
             TableViewUtils.generateTable(tblStudentGrades, rs);
-
         }catch(Exception e){
             AlertMessage.showErrorAlert("There was an error while trying to fetch the grades: "+e);
         }

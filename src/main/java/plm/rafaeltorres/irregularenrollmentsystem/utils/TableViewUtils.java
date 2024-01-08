@@ -64,7 +64,6 @@ public class TableViewUtils {
 
                             ps = conn.prepareStatement("UPDATE " + args[0] + " SET " + rs.getMetaData().getColumnName(j+1) + " = ? "+ "WHERE "+ args[1] +" = ?");
                             ps.setString(1, t.getNewValue().toString());
-//                            o.set(j, t.getNewValue().toString());
                             ps.setString(2, o.get(0));
                             ps.executeUpdate();
 
@@ -259,6 +258,7 @@ public class TableViewUtils {
             });
             tbl.setItems(scheds);
             resizeTable(tbl);
+            tbl.refresh();
 
         }catch(Exception e){
             System.out.println(e);
@@ -268,7 +268,7 @@ public class TableViewUtils {
     public static void generateTableFromResultSet(TableView tbl, ResultSet rs){
         try{
             tbl.getColumns().clear();
-//            tbl.getItems().clear();
+            tbl.getItems().clear();
             for(int i = 0; i < rs.getMetaData().getColumnCount(); ++i){
                 final int j = i;
                 TableColumn col = new TableColumn(rs.getMetaData().getColumnName(i+1).toUpperCase().replaceAll("_", " "));
@@ -304,7 +304,6 @@ public class TableViewUtils {
             ObservableList<ObservableList<String>> scheds = FXCollections.observableArrayList();
             while(rs.next()){
                 ObservableList<String> row = FXCollections.observableArrayList();
-//
                 for (int i = 1; i <= rs.getMetaData().getColumnCount(); ++i) {
                     row.add(rs.getString(i));
                 }
@@ -333,6 +332,8 @@ public class TableViewUtils {
             });
             tbl.setItems(scheds);
             resizeTable(tbl);
+            tbl.refresh();
+
 
         }catch(Exception e){
             System.out.println(e);
@@ -396,7 +397,6 @@ public class TableViewUtils {
             ObservableList<ObservableList<String>> scheds = FXCollections.observableArrayList();
             while (rs.next()) {
                 ObservableList<String> row = FXCollections.observableArrayList();
-//
                 for (int i = 1; i <= rs.getMetaData().getColumnCount(); ++i) {
                     row.add(rs.getString(i));
                 }
@@ -419,6 +419,7 @@ public class TableViewUtils {
             });
 
             resizeTable(tbl);
+            tbl.refresh();
 
         }catch (Exception e){
             System.out.println(e);
