@@ -313,6 +313,8 @@ public class AdminDashboardController extends Controller {
     private TextField txtSearchEnrollee;
     @FXML
     private Button btnFilterEnrollees;
+    @FXML
+    private Label lblBlockSection;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -600,7 +602,6 @@ public class AdminDashboardController extends Controller {
 
             comboBoxBlock.setItems(ob);
             comboBoxBlock.setDisable(comboBoxCourse.getSelectionModel().getSelectedItem() == null);
-            comboBoxBlock.setPromptText("Select a block/section");
 
 
         } catch(Exception e){
@@ -611,7 +612,7 @@ public class AdminDashboardController extends Controller {
     protected void onTblEnrolleesMouseClicked(MouseEvent event){
         ObservableList<String> o = (ObservableList<String>) tblEnrollees.getSelectionModel().getSelectedItem();
 
-        if(o.equals(selectedInTable)){
+        if(selectedInTable != null && o.equals(selectedInTable)){
             o = null;
             selectedInTable = null;
         }
@@ -631,7 +632,7 @@ public class AdminDashboardController extends Controller {
             comboBoxCollege.getSelectionModel().select("Any");
             comboBoxCourse.getSelectionModel().select("Any");
             comboBoxYear.getSelectionModel().select("Any");
-            comboBoxBlock.getSelectionModel().clearSelection();
+            comboBoxBlock.setValue(null);
             txtSearchEnrollee.clear();
             comboBoxBlock.setDisable(true);
             String query = "SELECT STUDENT_No, concat(LASTNAME, ', ', FIRSTNAME) as NAME, COURSE_CODE, REGISTRATION_STATUS FROM VWSTUDENTINFO WHERE REGISTRATION_STATUS = ? and student_no not in(select student_no from enrollment where SY = ? and semester = ? and status in ('Enrolled', 'Pending'))  and (cast(substring(?, 1, 4) as signed) - cast(substring(student_no, 1, 4) as signed)) >= 0";
@@ -654,7 +655,7 @@ public class AdminDashboardController extends Controller {
             return;
         }
         for(int i = 0; i < tblEnrollees.getColumns().size(); ++i) {
-            TableColumn item = tblEnrollees.getColumns().get(i);
+            TableColumn<ObservableList<String>, ?> item = tblEnrollees.getColumns().get(i);
             if (item.getText().equals("COURSE CODE"))
                 comboBoxCourse.getSelectionModel().select(o.get(i));
         }
@@ -804,10 +805,11 @@ public class AdminDashboardController extends Controller {
         btnEnrollStudent.setVisible(true);
         btnEnrollStudent.setDisable(true);
         comboBoxBlock.setVisible(true);
+        lblBlockSection.setVisible(true);
         txtSearchEnrollee.clear();
         tblSubjects.getItems().clear();
         txtCurrentSYandSem.setText("SY " + currentSY + " - " + currentSem);
-        comboBoxBlock.getSelectionModel().clearSelection();
+        comboBoxBlock.setValue(null);
         comboBoxCollege.getSelectionModel().select("Any");
         comboBoxCollege.setDisable(false);
         comboBoxCourse.getSelectionModel().select("Any");
@@ -864,6 +866,7 @@ public class AdminDashboardController extends Controller {
         tblEnrollees.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         tblSubjects.setPlaceholder(new Label("Select a student."));
         irregularLabelGroup.setVisible(true);
+        lblBlockSection.setVisible(false);
         onEnroll(event);
 
 
@@ -1839,7 +1842,7 @@ public class AdminDashboardController extends Controller {
     @FXML
     protected void onTblStudentRecordMouseClicked(MouseEvent event){
         ObservableList<String> o = tblStudentRecord.getSelectionModel().getSelectedItem();
-        if(o.equals(selectedInTable)){
+        if(selectedInTable != null && o.equals(selectedInTable)){
             o = null;
             selectedInTable = null;
         }
