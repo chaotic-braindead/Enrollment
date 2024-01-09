@@ -411,7 +411,7 @@ public class AdminDashboardController extends Controller {
 
             comboBoxYear.setItems(FXCollections.observableArrayList("Any", "1", "2", "3", "4", "5"));
             comboBoxYear.getSelectionModel().selectFirst();
-            cmbSelectTableCategory.setItems(FXCollections.observableArrayList("Transaction", "Records", "Data Entry", "Maintenance"));
+            cmbSelectTableCategory.setItems(FXCollections.observableArrayList("TRANSACTION", "RECORDS", "DATA ENTRY", "MAINTENANCE"));
 
             ps = conn.prepareStatement("SELECT subject_code from subject where subject_code <> '00000'");
             rs = ps.executeQuery();
@@ -2946,7 +2946,7 @@ public class AdminDashboardController extends Controller {
         String strChoice = cmbSelectTableCategory.getValue();
 
         switch(strChoice){
-            case "Transaction":
+            case "TRANSACTION":
                 //Visible Property
                 gridTransaction.setVisible(true);
                 gridRecords.setVisible(false);
@@ -2959,7 +2959,7 @@ public class AdminDashboardController extends Controller {
                 gridMaintenance.setDisable(true);
                 navIkonli.setIconLiteral("mdal-credit_card");
                 break;
-            case "Records":
+            case "RECORDS":
                 //Visible Property
                 gridTransaction.setVisible(false);
                 gridRecords.setVisible(true);
@@ -2972,7 +2972,7 @@ public class AdminDashboardController extends Controller {
                 gridMaintenance.setDisable(true);
                 navIkonli.setIconLiteral("mdmz-receipt");
                 break;
-            case "Data Entry":
+            case "DATA ENTRY":
                 //Visible Property
                 gridTransaction.setVisible(false);
                 gridRecords.setVisible(false);
@@ -2985,7 +2985,7 @@ public class AdminDashboardController extends Controller {
                 gridMaintenance.setDisable(true);
                 navIkonli.setIconLiteral("mdoal-calendar_today");
                 break;
-            case "Maintenance":
+            case "MAINTENANCE":
                 //Visible Property
                 gridTransaction.setVisible(false);
                 gridRecords.setVisible(false);
