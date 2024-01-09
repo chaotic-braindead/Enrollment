@@ -115,7 +115,7 @@
                                                 <StackPane layoutX="18.0" layoutY="180.0" prefWidth="558.0">
                                                    <children>
                                                       <TextField fx:id="txtShowPassword" onAction="#onTxtFieldAction" onKeyTyped="#onTxtShowPasswordKeyTyped" prefHeight="36.0" prefWidth="558.0" visible="false" />
-                                                      <PasswordField fx:id="txtPassword" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyTyped="#onTxtPasswordKeyTyped" prefHeight="36.0" prefWidth="558.0" />
+                                                      <PasswordField fx:id="txtPassword" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#onBtnLoginAction" onKeyTyped="#onTxtPasswordKeyTyped" prefHeight="36.0" prefWidth="558.0" />
                                                    </children>
                                                 </StackPane>
                                                 <Button id="loginButton" fx:id="btnLogin" alignment="CENTER" contentDisplay="CENTER" disable="true" layoutX="15.0" layoutY="288.0" mnemonicParsing="false" onAction="#onBtnLoginAction" prefHeight="35.0" prefWidth="565.0" stylesheets="@assets/css/styles.css" text="LOG IN" textFill="WHITE">
