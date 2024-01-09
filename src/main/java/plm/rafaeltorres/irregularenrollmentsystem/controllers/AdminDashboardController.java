@@ -545,7 +545,10 @@ public class AdminDashboardController extends Controller {
         String year = comboBoxYear.getSelectionModel().getSelectedItem();
 
         String status = (!btnApprove.isVisible()) ? "Regular" : "Irregular";
-        StringBuilder sb = new StringBuilder("SELECT student_no,  concat(LASTNAME, ', ', FIRSTNAME) as NAME, course_code, registration_status from vwstudentinfo where registration_status = '" + status + "' and student_no not in(select student_no from enrollment where SY = ? and semester = ? and status in ('Enrolled', 'Pending', 'Disapproved')) AND status = 'A'");
+        StringBuilder sb = new StringBuilder("SELECT student_no,  concat(LASTNAME, ', ', FIRSTNAME) as NAME, course_code, registration_status from vwstudentinfo where registration_status = 'Regular' and student_no not in(select student_no from enrollment where SY = ? and semester = ? and status in ('Enrolled', 'Pending')) AND status = 'A' and (cast(substring(?, 1, 4) as signed) - cast(substring(student_no, 1, 4) as signed)) >= 0");
+        if(status.equalsIgnoreCase("Irregular")){
+            sb = new StringBuilder("SELECT student_no,  concat(LASTNAME, ', ', FIRSTNAME) as NAME, course_code, registration_status from vwstudentinfo where registration_status = 'Irregular' and student_no in(select student_no from enrollment where SY = ? and semester = ? and status = 'Pending') and (cast(substring(?, 1, 4) as signed) - cast(substring(student_no, 1, 4) as signed)) >= 0");
+        }
         if(!college.equalsIgnoreCase("Any"))
             sb.append(" and college_code = '" + college + "'");
 
@@ -561,6 +564,7 @@ public class AdminDashboardController extends Controller {
             ps = conn.prepareStatement(sb.toString());
             ps.setString(1, currentSY);
             ps.setString(2, currentSem);
+            ps.setString(3, currentSY);
             rs = ps.executeQuery();
             TableViewUtils.generateTableFromResultSet(tblEnrollees, rs);
         }catch(Exception e) {
@@ -805,9 +809,14 @@ public class AdminDashboardController extends Controller {
         txtCurrentSYandSem.setText("SY " + currentSY + " - " + currentSem);
         comboBoxBlock.getSelectionModel().clearSelection();
         comboBoxCollege.getSelectionModel().select("Any");
+        comboBoxCollege.setDisable(false);
         comboBoxCourse.getSelectionModel().select("Any");
+        comboBoxCourse.setDisable(false);
         comboBoxYear.getSelectionModel().select("Any");
+        comboBoxYear.setDisable(false);
         comboBoxBlock.setDisable(true);
+        txtSearchEnrollee.setDisable(false);
+        btnFilterEnrollees.setDisable(false);
         tblEnrollees.getSelectionModel().clearSelection();
         onEnroll(event);
     }
@@ -844,9 +853,14 @@ public class AdminDashboardController extends Controller {
         comboBoxBlock.setVisible(false);
         txtSearchEnrollee.clear();
         comboBoxCollege.getSelectionModel().select("Any");
+        comboBoxCollege.setDisable(false);
         comboBoxCourse.getSelectionModel().select("Any");
+        comboBoxCourse.setDisable(false);
         comboBoxYear.getSelectionModel().select("Any");
+        comboBoxYear.setDisable(false);
         tblSubjects.getItems().clear();
+        txtSearchEnrollee.setDisable(false);
+        btnFilterEnrollees.setDisable(false);
         tblEnrollees.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         tblSubjects.setPlaceholder(new Label("Select a student."));
         irregularLabelGroup.setVisible(true);
