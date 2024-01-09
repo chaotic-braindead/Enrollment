@@ -515,6 +515,7 @@ public class StudentDashboardController extends Controller {
         if(student.getRegistrationStatus().equals("Irregular")){
             currentPane = irregularEnrollmentContainer;
             currentPane.setVisible(true);
+            btnSubmit.setDisable(false);
             displayAvailableScheds();
         }
         else {
@@ -539,10 +540,11 @@ public class StudentDashboardController extends Controller {
     @FXML
     protected void onBtnEnrollRegularAction(ActionEvent event){
         try{
-            ps = conn.prepareStatement("UPDATE ENROLLMENT SET status = 'Enrolled' where sy = ? and semester = ? and student_no = ?");
-            ps.setString(1, currentSY);
-            ps.setString(2, currentSem);
-            ps.setString(3, student.getStudentNo());
+            ps = conn.prepareStatement("UPDATE ENROLLMENT SET status = 'Enrolled', timestamp = ? where sy = ? and semester = ? and student_no = ?");
+            ps.setString(1, new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+            ps.setString(2, currentSY);
+            ps.setString(3, currentSem);
+            ps.setString(4, student.getStudentNo());
             ps.executeUpdate();
             AlertMessage.showInformationAlert("You have been successfully enrolled! Click on 'Schedule' or 'Tuition' to view more details about your enrollment.");
             btnDashboard.setSelected(true);
@@ -568,6 +570,7 @@ public class StudentDashboardController extends Controller {
                 rs.next();
                 if(rs.getString(1).equalsIgnoreCase("PENDING")){
                     AlertMessage.showInformationAlert("Please wait for your schedule to be approved.");
+                    btnSubmit.setDisable(true);
                     return;
                 }
                 else if(rs.getString(1).equalsIgnoreCase("ENROLLED")){
@@ -656,10 +659,11 @@ public class StudentDashboardController extends Controller {
             return;
         }
         try{
-            ps = conn.prepareStatement("replace into enrollment values(?, ?, ?, 'Pending')");
+            ps = conn.prepareStatement("replace into enrollment values(?, ?, ?, 'Pending', ?)");
             ps.setString(1, currentSY);
             ps.setString(2, currentSem);
             ps.setString(3, student.getStudentNo());
+            ps.setString(4, new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
             ps.executeUpdate();
             AlertMessage.showInformationAlert("Successfully submitted your schedule for approval. Please wait for your chairperson to approve your schcedule.");
             btnDashboard.fire();
