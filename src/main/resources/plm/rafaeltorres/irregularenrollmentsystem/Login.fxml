@@ -76,7 +76,7 @@
                               <Image url="@assets/img/pamantasan-lungsod-maynila.jpg" />
                            </image>
                         </ImageView>
-                        <BorderPane layoutX="291.0" layoutY="123.0" prefHeight="623.0" prefWidth="641.0" styleClass="loginContainer" stylesheets="@assets/css/styles.css">
+                        <BorderPane layoutX="292.0" layoutY="113.0" prefHeight="640.0" prefWidth="641.0" styleClass="loginContainer" stylesheets="@assets/css/styles.css">
                            <top>
                               <AnchorPane stylesheets="@assets/css/styles.css" BorderPane.alignment="CENTER">
                                  <children>
@@ -118,7 +118,7 @@
                                                       <PasswordField fx:id="txtPassword" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyTyped="#onTxtPasswordKeyTyped" prefHeight="36.0" prefWidth="558.0" />
                                                    </children>
                                                 </StackPane>
-                                                <Button id="loginButton" fx:id="btnLogin" alignment="CENTER" contentDisplay="CENTER" disable="true" layoutX="15.0" layoutY="275.0" mnemonicParsing="false" onAction="#onBtnLoginAction" prefHeight="0.0" prefWidth="565.0" stylesheets="@assets/css/styles.css" text="LOG IN" textFill="WHITE">
+                                                <Button id="loginButton" fx:id="btnLogin" alignment="CENTER" contentDisplay="CENTER" disable="true" layoutX="15.0" layoutY="288.0" mnemonicParsing="false" onAction="#onBtnLoginAction" prefHeight="35.0" prefWidth="565.0" stylesheets="@assets/css/styles.css" text="LOG IN" textFill="WHITE">
                                                    <cursor>
                                                       <Cursor fx:constant="HAND" />
                                                    </cursor>
