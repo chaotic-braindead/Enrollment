@@ -27,6 +27,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.converter.DefaultStringConverter;
+import org.controlsfx.control.SearchableComboBox;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import plm.rafaeltorres.irregularenrollmentsystem.MainScene;
@@ -37,8 +38,10 @@ import plm.rafaeltorres.irregularenrollmentsystem.model.StudentProperty;
 import plm.rafaeltorres.irregularenrollmentsystem.model.User;
 import plm.rafaeltorres.irregularenrollmentsystem.utils.*;
 
+import javax.swing.*;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.math.BigDecimal;
 import java.net.URL;
 import java.nio.file.Files;
 import java.sql.*;
@@ -274,6 +277,8 @@ public class AdminDashboardController extends Controller {
     @FXML
     private TableView<String> tblClassSchedule;
     @FXML
+    private TableView<ObservableList<String>> tblTuitionFee;
+    @FXML
     private TextField txtClassListSY;
     @FXML
     private TextField txtSearchManage;
@@ -313,6 +318,13 @@ public class AdminDashboardController extends Controller {
     private TextField txtSearchEnrollee;
     @FXML
     private Button btnFilterEnrollees;
+    @FXML
+    private Pane tuitionContainer;
+    @FXML
+    private TextField txtTuitionAmount;
+    @FXML
+    private TextField txtTuitionDesc;
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -2930,7 +2942,7 @@ public class AdminDashboardController extends Controller {
     }
 
     @FXML
-    void onSelectTableCategory(ActionEvent event) {
+    protected void onSelectTableCategory(ActionEvent event) {
         String strChoice = cmbSelectTableCategory.getValue();
 
         switch(strChoice){
@@ -2990,4 +3002,119 @@ public class AdminDashboardController extends Controller {
                 System.out.print("Logic Error");
         }
     }
+
+    @FXML
+    protected void onBtnTuitionAction(ActionEvent event){
+        currentPane.setVisible(false);
+        currentPane = tuitionContainer;
+        currentPane.setVisible(true);
+        try{
+            ps = conn.prepareStatement("SELECT * FROM tuition");
+            rs = ps.executeQuery();
+            TableViewUtils.generateTableFromResultSet(tblTuitionFee, rs);
+        }catch(Exception e){
+            AlertMessage.showErrorAlert("An error occurred while displaying tuition table " + e);
+        }
+    }
+
+    @FXML
+    protected void onTblTuitionClick(MouseEvent event){
+        txtTuitionDesc.setText(tblTuitionFee.getSelectionModel().getSelectedItem().get(0));
+        txtTuitionAmount.setText(tblTuitionFee.getSelectionModel().getSelectedItem().get(1));
+    }
+
+    @FXML
+    protected void onBtnAddTuition(ActionEvent event){
+        String description = txtTuitionDesc.getText();
+        BigDecimal amount;
+
+        try {
+            amount = new BigDecimal(txtTuitionAmount.getText());
+        } catch (NumberFormatException e) {
+            AlertMessage.showErrorAlert("Invalid amount. Please enter a numeric value.");
+            return;
+        }
+
+        try {
+            ps = conn.prepareStatement("INSERT INTO tuition VALUES (?, ?)");
+            ps.setString(1, description);
+            ps.setBigDecimal(2, amount);
+
+            int rowsAffected = ps.executeUpdate();
+            if (rowsAffected > 0) {
+                AlertMessage.showInformationAlert("Fee successfully added!");
+            }
+
+            ps = conn.prepareStatement("SELECT * FROM tuition");
+            rs = ps.executeQuery();
+            TableViewUtils.generateTableFromResultSet(tblTuitionFee, rs);
+        } catch (SQLException e) {
+            AlertMessage.showErrorAlert("Error adding fee: " + e.getMessage());
+        }
+    }
+
+    @FXML
+    protected void onBtnUpdateTuition(ActionEvent event) {
+        String description = txtTuitionDesc.getText();
+        BigDecimal amount;
+
+        try {
+            amount = new BigDecimal(txtTuitionAmount.getText());
+        } catch (NumberFormatException e) {
+            AlertMessage.showErrorAlert("Invalid amount. Please enter a numeric value.");
+            return;
+        }
+
+        try {
+            ps = conn.prepareStatement("UPDATE tuition SET amount = ? WHERE description = ?");
+            ps.setBigDecimal(1, amount);
+            ps.setString(2, description);
+
+            int rowsAffected = ps.executeUpdate();
+            if (rowsAffected > 0) {
+                AlertMessage.showInformationAlert("Update successful!");
+            } else {
+                AlertMessage.showErrorAlert("No rows were updated. Check if the description exists.");
+            }
+
+            ps = conn.prepareStatement("SELECT * FROM tuition");
+            rs = ps.executeQuery();
+            TableViewUtils.generateTableFromResultSet(tblTuitionFee, rs);
+        } catch (SQLException e) {
+            AlertMessage.showErrorAlert("Error updating tuition: " + e.getMessage());
+        }
+    }
+
+    @FXML
+    protected void onBtnDeleteTuition(ActionEvent event){
+        String description = txtTuitionDesc.getText();
+        BigDecimal amount;
+
+        try {
+            amount = new BigDecimal(txtTuitionAmount.getText());
+        } catch (NumberFormatException e) {
+            AlertMessage.showErrorAlert("Invalid amount. Please enter a numeric value.");
+            return;
+        }
+
+        try {
+            ps = conn.prepareStatement("DELETE FROM tuition WHERE description = ? AND amount = ?");
+            ps.setString(1, description);
+            ps.setBigDecimal(2, amount);
+
+            int rowsAffected = ps.executeUpdate();
+            if (rowsAffected > 0) {
+                AlertMessage.showInformationAlert("Fee was successfully deleted!");
+            } else {
+                AlertMessage.showErrorAlert("No fees were deleted. Check if the desription exists.");
+            }
+
+            ps = conn.prepareStatement("SELECT * FROM tuition");
+            rs = ps.executeQuery();
+            TableViewUtils.generateTableFromResultSet(tblTuitionFee, rs);
+        } catch (SQLException e) {
+            AlertMessage.showErrorAlert("Error deleting fee: " + e.getMessage());
+        }
+    }
+
 }
