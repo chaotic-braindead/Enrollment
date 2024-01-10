@@ -138,7 +138,7 @@
                      <children>
                         <StackPane prefHeight="598.0" prefWidth="1081.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
-                              <AnchorPane fx:id="dashboardContainer" prefHeight="880.0" prefWidth="1803.0">
+                              <AnchorPane fx:id="dashboardContainer" prefHeight="880.0" prefWidth="1803.0" visible="false">
                                  <children>
                                     <BorderPane layoutX="27.0" layoutY="21.0" prefHeight="835.0" prefWidth="1742.0" styleClass="loginContainer" stylesheets="@assets/css/styles.css">
                                        <top>
@@ -458,73 +458,81 @@
                                     </AnchorPane>
                                  </children>
                               </AnchorPane>
-                              <AnchorPane fx:id="tuitionContainer" prefHeight="200.0" prefWidth="200.0" visible="false">
+                              <AnchorPane fx:id="tuitionContainer" prefHeight="200.0" prefWidth="200.0">
                                  <children>
                                     <AnchorPane layoutX="28.0" layoutY="31.0" prefHeight="822.0" prefWidth="1742.0" styleClass="loginContainer" stylesheets="@assets/css/styles.css">
                                        <children>
                                           <Label layoutX="107.0" layoutY="25.0" styleClass="titleText" stylesheets="@assets/css/styles.css" text="ENROLLMENT FEES" />
                                           <Line endX="1486.3333740234375" layoutX="192.0" layoutY="75.0" startX="-137.6666717529297" stroke="#9c0000" />
                                           <FontIcon iconColor="#9c0000" iconLiteral="mdal-account_balance_wallet" iconSize="45" layoutX="52.0" layoutY="73.0" />
-                                          <GridPane layoutX="526.0" layoutY="135.0" prefHeight="649.0" prefWidth="647.0">
-                                            <columnConstraints>
-                                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="962.3333129882812" minWidth="10.0" prefWidth="962.3333129882812" />
-                                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="802.0" minWidth="10.0" prefWidth="636.6666870117188" />
-                                            </columnConstraints>
-                                            <rowConstraints>
-                                                <RowConstraints maxHeight="221.33334350585938" minHeight="10.0" prefHeight="32.0" vgrow="SOMETIMES" />
-                                                <RowConstraints maxHeight="264.0" minHeight="10.0" prefHeight="144.33334350585938" vgrow="SOMETIMES" />
-                                              <RowConstraints maxHeight="336.6666564941406" minHeight="10.0" prefHeight="95.6666259765625" vgrow="SOMETIMES" />
-                                              <RowConstraints maxHeight="358.0" minHeight="10.0" prefHeight="137.3333740234375" vgrow="SOMETIMES" />
-                                                <RowConstraints maxHeight="398.0" minHeight="10.0" prefHeight="233.0" vgrow="SOMETIMES" />
-                                            </rowConstraints>
-                                             <children>
-                                                <Label prefHeight="70.0" prefWidth="515.0" text="TUITION FEE" GridPane.rowIndex="1">
-                                                   <font>
-                                                      <Font size="23.0" />
-                                                   </font>
-                                                </Label>
-                                                <Label prefHeight="69.0" prefWidth="486.0" text="DESCRIPTION" underline="true">
-                                                   <font>
-                                                      <Font size="28.0" />
-                                                   </font>
-                                                </Label>
-                                                <Label text="AMOUNT" underline="true" GridPane.columnIndex="1">
-                                                   <font>
-                                                      <Font size="28.0" />
-                                                   </font>
-                                                </Label>
-                                                <Label text="27,600.00" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                                                   <font>
-                                                      <Font size="23.0" />
-                                                   </font>
-                                                </Label>
-                                                <Label prefHeight="83.0" prefWidth="248.0" text="MISCELLANEOUS FEES" GridPane.rowIndex="2">
-                                                   <font>
-                                                      <Font size="23.0" />
-                                                   </font>
-                                                </Label>
-                                                <Label text="1,686.00" GridPane.columnIndex="1" GridPane.rowIndex="2">
-                                                   <font>
-                                                      <Font size="23.0" />
-                                                   </font>
-                                                </Label>
-                                                <Label text="LABORATORY FEE" GridPane.rowIndex="3">
-                                                   <font>
-                                                      <Font size="23.0" />
-                                                   </font>
-                                                </Label>
-                                                <Label text="1,800.00" GridPane.columnIndex="1" GridPane.rowIndex="3">
-                                                   <font>
-                                                      <Font size="23.0" />
-                                                   </font>
-                                                </Label>
-                                                <Label text="31,086" underline="true" GridPane.columnIndex="1" GridPane.rowIndex="4">
-                                                   <font>
-                                                      <Font size="26.0" />
-                                                   </font>
-                                                </Label>
-                                             </children>
-                                          </GridPane>
+                                          <TableView fx:id="tblTuitionFees" layoutX="121.0" layoutY="130.0" prefHeight="619.0" prefWidth="600.0">
+                                            <columns>
+                                              <TableColumn prefWidth="75.0" />
+                                            </columns>
+                                          </TableView>
+                                          <Label fx:id="lblTotalFee" layoutX="771.0" layoutY="319.0" prefHeight="30.0" prefWidth="325.0" styleClass="txt-tuition" text="TOTAL FEE:">
+                                             <font>
+                                                <Font size="20.0" />
+                                             </font>
+                                          </Label>
+                                          <Label layoutX="808.0" layoutY="130.0" styleClass="txt-tuition" text="RECEIPT:">
+                                             <font>
+                                                <Font size="25.0" />
+                                             </font>
+                                          </Label>
+                                          <Label layoutX="770.0" layoutY="183.0" styleClass="txt-tuition" text="Description">
+                                             <font>
+                                                <Font name="System Italic" size="20.0" />
+                                             </font>
+                                          </Label>
+                                          <Label layoutX="1050.0" layoutY="183.0" styleClass="txt-tuition" text="Amount">
+                                             <font>
+                                                <Font size="20.0" />
+                                             </font>
+                                          </Label>
+                                          <Label fx:id="lblNumberUnits" layoutX="770.0" layoutY="224.0" styleClass="txt-tuition" text="TUITION FEE * # of Units">
+                                             <font>
+                                                <Font size="18.0" />
+                                             </font>
+                                          </Label>
+                                          <Label layoutX="771.0" layoutY="256.0" prefHeight="20.0" prefWidth="162.0" styleClass="txt-tuition" text="Total Miscellaneous">
+                                             <font>
+                                                <Font size="18.0" />
+                                             </font>
+                                          </Label>
+                                          <Label fx:id="lblTuitionF" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="1020.0" layoutY="228.0" prefHeight="20.0" prefWidth="90.0" styleClass="txt-tuition" text="Tuition Price" textAlignment="RIGHT">
+                                             <font>
+                                                <Font size="14.0" />
+                                             </font>
+                                          </Label>
+                                          <Label fx:id="lblMiscF" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="1019.0" layoutY="260.0" prefHeight="20.0" prefWidth="90.0" styleClass="txt-tuition" text="Misc Price" textAlignment="RIGHT">
+                                             <font>
+                                                <Font size="14.0" />
+                                             </font>
+                                          </Label>
+                                          <ImageView fitHeight="348.0" fitWidth="410.0" layoutX="1331.0" layoutY="401.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@assets/img/PLM_Seal_2013.png" />
+                                             </image>
+                                          </ImageView>
+                                          <FontIcon iconLiteral="eli-tags" layoutX="769.0" layoutY="162.0">
+                                             <font>
+                                                <Font size="32.0" />
+                                             </font>
+                                          </FontIcon>
+                                          <Button layoutX="771.0" layoutY="440.0" mnemonicParsing="false" prefHeight="65.0" prefWidth="279.0" styleClass="btn-blue" text="SAVE A COPY">
+                                             <font>
+                                                <Font size="30.0" />
+                                             </font>
+                                          </Button>
+                                          <Label alignment="TOP_CENTER" layoutX="1395.0" layoutY="132.0" prefHeight="107.0" prefWidth="219.0" style="-fx-border-color: black;" />
+                                          <Label layoutX="1461.0" layoutY="149.0" styleClass="txt-tuition" text="Your Status:">
+                                             <font>
+                                                <Font size="15.0" />
+                                             </font>
+                                          </Label>
+                                          <Label layoutX="1452.0" layoutY="179.0" styleClass="txt-tuition" text="Paying: Covered by" />
+                                          <Label layoutX="1466.0" layoutY="200.0" styleClass="txt-tuition" text="CHED Unifast" textFill="#9c0000" />
                                        </children>
                                     </AnchorPane>
                                  </children>

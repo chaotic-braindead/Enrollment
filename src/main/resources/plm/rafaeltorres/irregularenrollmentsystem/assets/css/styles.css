@@ -282,3 +282,7 @@
     -fx-border-color: white;
     -fx-text-fill: white;
 }
+
+.txt-tuition {
+    -fx-font-family: "Times New Roman";
+}
