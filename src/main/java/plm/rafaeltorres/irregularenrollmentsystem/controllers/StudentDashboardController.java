@@ -765,7 +765,7 @@ public class StudentDashboardController extends Controller {
             lblMiscF.setText(String.format("%,.2f", flSumFee));
             lblNumberUnits.setText("Tuition Fee x "+totalUnits+" Units");
 
-            lblTotalFee.setText("Total Fee: "+String.format("%,.2f", flTotalFee));
+            lblTotalFee.setText("Amount Due: "+String.format("%,.2f", flTotalFee));
         }
 
         catch(Exception e)

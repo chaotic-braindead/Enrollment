@@ -92,7 +92,245 @@
                             <children>
                                 <StackPane prefHeight="876.0" prefWidth="1737.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="-15.0" AnchorPane.topAnchor="0.0">
                                     <children>
-                              <AnchorPane fx:id="enrollContainer" visible="false">
+                                        <AnchorPane fx:id="dashboardContainer" prefHeight="876.0" prefWidth="1701.0" visible="false">
+                                            <children>
+                                                <BorderPane layoutX="90.0" layoutY="22.0" prefHeight="835.0" prefWidth="1525.0" styleClass="loginContainer" stylesheets="@assets/css/styles.css">
+                                                    <top>
+                                                        <AnchorPane prefHeight="85.0" prefWidth="1431.0" BorderPane.alignment="CENTER">
+                                                            <children>
+                                                                <Label id="studentDashboardText" layoutX="112.0" layoutY="11.0" prefHeight="73.0" prefWidth="496.0" stylesheets="@assets/css/styles.css" text="ADMIN DASHBOARD" textFill="#9c0000">
+                                                                    <font>
+                                                                        <Font size="35.0" />
+                                                                    </font>
+                                                                </Label>
+                                                                <FontIcon iconColor="#9c0000" iconLiteral="eli-edit" iconSize="40" layoutX="54.0" layoutY="66.0" wrappingWidth="28.0" />
+                                                <Line endX="1325.0" layoutX="157.0" layoutY="84.0" startX="-118.0" stroke="#9c0000" />
+                                                            </children>
+                                                        </AnchorPane>
+                                                    </top>
+                                                    <left>
+                                                        <AnchorPane prefHeight="750.0" prefWidth="142.0" BorderPane.alignment="CENTER">
+                                                            <children>
+                                                                <Group layoutX="106.0" layoutY="83.0">
+                                                                    <children>
+                                                                        <Circle fx:id="imgContainer" fill="DODGERBLUE" layoutX="43.0" layoutY="9.0" radius="80.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="2.0" />
+                                                                        <Button id="cameraButton" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="0.0" layoutX="71.0" layoutY="44.0" mnemonicParsing="false" onAction="#onChangePictureAction" prefHeight="40.0" prefWidth="43.0">
+                                                                            <graphic>
+                                                                                <FontIcon iconColor="WHITE" iconLiteral="mdal-camera_alt" iconSize="18" tabSize="0" textAlignment="CENTER" wrappingWidth="18.0" />
+                                                                            </graphic>
+                                                                            <cursor>
+                                                                                <Cursor fx:constant="HAND" />
+                                                                            </cursor>
+                                                                        </Button>
+                                                                    </children>
+                                                                </Group>
+                                                                <Group layoutX="23.0" layoutY="177.0">
+                                                                    <children>
+                                                                        <Label fx:id="lblFullName" alignment="CENTER" layoutX="1.3859996795654297" prefHeight="29.0" prefWidth="241.0" styleClass="dashboardText" stylesheets="@assets/css/styles.css" text="John Cena Batumbakal" textAlignment="CENTER">
+                                                                            <font>
+                                                                                <Font size="20.0" />
+                                                                            </font>
+                                                                        </Label>
+                                                                        <Label id="emailText" fx:id="lblEmail1" alignment="CENTER" contentDisplay="CENTER" layoutX="3.0" layoutY="19.0" prefHeight="39.0" prefWidth="240.0" stylesheets="@assets/css/styles.css" text="jcmbatumbakal@plm.edu.ph" textAlignment="CENTER" wrapText="true">
+                                                                            <font>
+                                                                                <Font size="15.0" />
+                                                                            </font>
+                                                                        </Label>
+                                                                    </children>
+                                                                </Group>
+                                                            </children>
+                                                        </AnchorPane>
+                                                    </left>
+                                                    <center>
+                                                        <AnchorPane prefHeight="750.0" prefWidth="1206.0" stylesheets="@assets/css/styles.css" BorderPane.alignment="CENTER">
+                                                            <children>
+                                                                <HBox alignment="CENTER" layoutX="58.0" layoutY="97.0" prefHeight="96.0" prefWidth="1093.0" spacing="20.0">
+                                                                <children>
+                                                                    <Pane prefHeight="96.0" prefWidth="332.0" styleClass="dashboardPanes" stylesheets="@assets/css/styles.css">
+                                                                        <children>
+                                                                            <FontIcon iconColor="#9c0000" iconLiteral="mdmz-person" iconSize="55" layoutX="19.0" layoutY="74.0" />
+                                                                            <Label layoutX="155.0" layoutY="9.0" styleClass="dashboardPaneText" stylesheets="@assets/css/styles.css" text="Enrollment Status">
+                                                                                <font>
+                                                                                    <Font size="15.0" />
+                                                                                </font>
+                                                                            </Label>
+                                                                            <Group fx:id="enrolledGroup" layoutX="53.0" layoutY="33.0">
+                                                                                <children>
+                                                                                    <Label fx:id="lblTotalStudents" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="1.0" layoutY="-10.0" prefHeight="50.0" prefWidth="230.0" text="500/1000 Enrolled" textAlignment="RIGHT" textFill="#549054" wrapText="true">
+                                                                                        <font>
+                                                                                            <Font size="16.0" />
+                                                                                        </font>
+                                                                                    </Label>
+                                                                                </children>
+                                                                            </Group>
+                                                                            <Group fx:id="notEnrolledGroup" layoutX="53.0" layoutY="24.0" visible="false">
+                                                                                <children>
+                                                                                    <Label layoutX="60.0" layoutY="7.0" text="Not Enrolled">
+                                                                                        <font>
+                                                                                            <Font size="14.0" />
+                                                                                        </font>
+                                                                                    </Label>
+                                                                                    <FontIcon iconLiteral="mdal-error" iconSize="25" layoutX="-2.0" layoutY="29.0" />
+                                                                                    <Label layoutX="39.0" layoutY="26.0" style="-fx-font-style: italic;" text="CLICK HERE TO ENROLL" textFill="#227f19" underline="true">
+                                                                                        <font>
+                                                                                            <Font size="10.0" />
+                                                                                        </font>
+                                                                                        <cursor>
+                                                                                            <Cursor fx:constant="HAND" />
+                                                                                        </cursor>
+                                                                                    </Label>
+                                                                                </children>
+                                                                            </Group>
+                                                                            <Label id="semesterCurrent" fx:id="lblSemester" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="29.0" layoutY="67.0" prefHeight="19.0" prefWidth="256.0" stylesheets="@assets/css/styles.css" text="First Semester A.Y. 2023-2024" textAlignment="RIGHT" />
+                                                                        </children>
+                                                         <cursor>
+                                                            <Cursor fx:constant="DEFAULT" />
+                                                         </cursor>
+                                                                    </Pane>
+                                                                    <Pane prefHeight="96.0" prefWidth="333.0" styleClass="dashboardPanes" stylesheets="@assets/css/styles.css">
+                                                                        <children>
+                                                                            <FontIcon iconColor="#9c0000" iconLiteral="eli-lock" iconSize="40" layoutX="22.0" layoutY="65.0" />
+                                                                            <Label layoutX="114.0" layoutY="9.0" text="Password and Security" textFill="#9c0000">
+                                                                                <font>
+                                                                                    <Font size="15.0" />
+                                                                                </font>
+                                                                            </Label>
+                                                                            <Button id="dashPaneSubText" layoutX="158.0" layoutY="26.0" mnemonicParsing="false" onAction="#onBtnChangePasswordAction" prefHeight="26.0" prefWidth="126.0" stylesheets="@assets/css/styles.css" text="Change Password" underline="true">
+                                                                                <font>
+                                                                                    <Font size="13.0" />
+                                                                                </font>
+                                                                            </Button>
+                                                                        </children>
+                                                                    </Pane>
+                                                                </children>
+                                                            </HBox>
+                                                                <GridPane layoutX="93.0" layoutY="273.0" prefHeight="450.0" prefWidth="1000.0">
+                                                                    <columnConstraints>
+                                                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                                    </columnConstraints>
+                                                                    <rowConstraints>
+                                                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                    </rowConstraints>
+                                                                    <children>
+                                                                        <VBox prefHeight="200.0" prefWidth="654.0">
+                                                                            <children>
+                                                                                <Label styleClass="profileFields" stylesheets="@assets/css/styles.css" text="First Name" />
+                                                                                <Label fx:id="lblFirstName" text="John Cena">
+                                                                                    <font>
+                                                                                        <Font size="20.0" />
+                                                                                    </font>
+                                                            </Label>
+                                                                            </children>
+                                                                        </VBox>
+                                                                        <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="1">
+                                                                            <children>
+                                                                                <Label styleClass="profileFields" stylesheets="@assets/css/styles.css" text="Last Name" />
+                                                                                <Label fx:id="lblLastName" text="Batumbakal">
+                                                                                    <font>
+                                                                                        <Font size="20.0" />
+                                                                                    </font>
+                                                            </Label>
+                                                                            </children>
+                                                                        </VBox>
+                                                                        <VBox prefHeight="200.0" prefWidth="1701.0" GridPane.rowIndex="3">
+                                                                            <children>
+                                                                                <Label styleClass="profileFields" stylesheets="@assets/css/styles.css" text="Birthday" />
+                                                                                <Label fx:id="lblBirthday" text="January 1, 2003">
+                                                                                    <font>
+                                                                                        <Font size="20.0" />
+                                                                                    </font>
+                                                            </Label>
+                                                                            </children>
+                                                                        </VBox>
+                                                                        <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="2">
+                                                                            <children>
+                                                                                <Label styleClass="profileFields" stylesheets="@assets/css/styles.css" text="Gender" />
+                                                                                <Label fx:id="lblGender" text="Male">
+                                                                                    <font>
+                                                                                        <Font size="20.0" />
+                                                                                    </font>
+                                                            </Label>
+                                                                            </children>
+                                                                        </VBox>
+                                                                        <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="4">
+                                                                            <children>
+                                                                                <Label styleClass="profileFields" stylesheets="@assets/css/styles.css" text="Age" />
+                                                                                <Label fx:id="lblAge" text="18">
+                                                                                    <font>
+                                                                                        <Font size="20.0" />
+                                                                                    </font>
+                                                            </Label>
+                                                                            </children>
+                                                                        </VBox>
+                                                                        <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="5">
+                                                                            <children>
+                                                                                <Label styleClass="profileFields" stylesheets="@assets/css/styles.css" text="Personal Email" />
+                                                                                <Label fx:id="lblEmail" text="jcbatumbakal@yahoo.com">
+                                                                                    <font>
+                                                                                        <Font size="20.0" />
+                                                                                    </font>
+                                                                                </Label>
+                                                                            </children>
+                                                                        </VBox>
+                                                                        <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1">
+                                                                            <children>
+                                                                                <Label styleClass="profileFields" text="Cellphone Number" />
+                                                                                <Label fx:id="lblCellphoneNumber" text="09123456789">
+                                                                                    <font>
+                                                                                        <Font size="20.0" />
+                                                                                    </font>
+                                                            </Label>
+                                                                            </children>
+                                                                        </VBox>
+                                                                        <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                                                            <children>
+                                                                                <Label styleClass="profileFields" stylesheets="@assets/css/styles.css" text="Employee ID" />
+                                                                                <Label fx:id="lblEmployeeID" text="2022-34000">
+                                                                                    <font>
+                                                                                        <Font size="20.0" />
+                                                                                    </font>
+                                                                                </Label>
+                                                                            </children>
+                                                                        </VBox>
+                                                                        <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                                                            <children>
+                                                                                <Label styleClass="profileFields" stylesheets="@assets/css/styles.css" text="Address" />
+                                                                                <Label fx:id="lblAddress" text="College of Engineering and Technology">
+                                                                                <font>
+                                                                                    <Font size="20.0" />
+                                                                                </font>
+                                                                                </Label>
+                                                                            </children>
+                                                                        </VBox>
+                                                                    </children>
+                                                                </GridPane>
+                                                                <Line endX="1054.0" layoutX="120.0" layoutY="75.0" startX="-63.0" stroke="#868686" />
+                                                                <FontIcon iconColor="#008000c9" iconLiteral="eli-leaf" iconSize="35" layoutX="71.0" layoutY="54.0" selectionEnd="1" stroke="BLACK" strokeWidth="0.5" />
+                                                                <Label fx:id="lblWelcome" layoutX="136.0" layoutY="17.0" text="Welcome John Cena!">
+                                                                    <font>
+                                                                        <Font size="30.0" />
+                                                                    </font>
+                                                                </Label>
+                                                                <Line endX="1011.0" layoutX="159.0" layoutY="250.0" startX="-100.0" stroke="#868686" />
+                                                                <Label layoutX="105.0" layoutY="207.0" text="General Information">
+                                                                    <font>
+                                                                        <Font size="25.0" />
+                                                                    </font>
+                                                                </Label>
+                                                <FontIcon iconColor="#0f0f0fca" iconLiteral="eli-tasks" iconSize="25" layoutX="64.0" layoutY="236.0" stroke="BLACK" strokeWidth="0.5" />
+                                                            </children>
+                                                        </AnchorPane>
+                                                    </center>
+                                                </BorderPane>
+                                            </children>
+                                        </AnchorPane>
+                              <AnchorPane fx:id="enrollContainer">
                                  <children>
                                               <AnchorPane layoutX="21.0" layoutY="11.0" prefHeight="848.0" prefWidth="1657.0" styleClass="loginContainer" stylesheets="@assets/css/styles.css">
                                                   <children>
@@ -111,7 +349,7 @@
                                                 <Label fx:id="txtName" layoutX="122.0" layoutY="52.0" prefHeight="25.0" prefWidth="263.0" text="Name" />
                                                 <Label layoutY="9.0" prefHeight="34.0" prefWidth="123.0" text="Student Number:" wrapText="true" />
                                                 <Label layoutX="61.0" layoutY="55.0" prefHeight="17.0" prefWidth="49.0" text="Name:" />
-                                                <TextField fx:id="txtSearchEnrollee" onAction="#onBtnFilterAction" layoutX="122.0" layoutY="10.0" prefHeight="27.0" prefWidth="191.0" />
+                                                <TextField fx:id="txtSearchEnrollee" layoutX="122.0" layoutY="10.0" onAction="#onBtnFilterAction" prefHeight="27.0" prefWidth="191.0" />
                                              </children>
                                           </Group>
                                           <Label layoutX="51.0" layoutY="92.0" prefHeight="17.0" prefWidth="55.0" text="College:" />
@@ -145,7 +383,7 @@
                                           <SearchableComboBox fx:id="comboBoxYear" layoutX="106.0" layoutY="166.0" prefHeight="27.0" prefWidth="188.0" promptText="Any" />
                                           <Label layoutX="63.0" layoutY="169.0" text="Year:" />
                                           <Button fx:id="btnFilterEnrollees" layoutX="639.0" layoutY="169.0" mnemonicParsing="false" onAction="#onBtnFilterAction" prefHeight="27.0" prefWidth="93.0" styleClass="btn-blue" stylesheets="@assets/css/styles.css" text="FILTER" />
-                                          <Label layoutX="71.0" layoutY="7.0" prefHeight="51.0" prefWidth="282.0" styleClass="titleText" stylesheets="@assets/css/styles.css" text="ENROLLMENT" />
+                                          <Label fx:id="lblAdminEnrollment" layoutX="71.0" layoutY="7.0" prefHeight="51.0" prefWidth="868.0" styleClass="titleText" stylesheets="@assets/css/styles.css" text="ENROLLMENT" />
                                           <Line endX="1525.0" layoutX="115.0" layoutY="59.0" startX="-87.0" stroke="#9c0000" />
                                           <FontIcon iconColor="#9c0000" iconLiteral="mdi2c-calendar" iconSize="35" layoutX="25.0" layoutY="47.0" />
                                           <Label fx:id="lblBlockSection" layoutX="1236.0" layoutY="131.0" text="Block/Section:" />
@@ -170,7 +408,7 @@
                                              </font>
                                           </Label>
                                           <Button layoutX="605.0" layoutY="103.0" mnemonicParsing="false" onAction="#onBtnLoadHistoryAction" prefHeight="27.0" prefWidth="71.0" styleClass="btn-blue" stylesheets="@assets/css/styles.css" text="FILTER" />
-                                          <TextField fx:id="txtSearchStudNoHistory" onAction="#onBtnLoadHistoryAction" layoutX="373.0" layoutY="104.0" prefHeight="27.0" prefWidth="224.0" promptText="Search for student number" />
+                                          <TextField fx:id="txtSearchStudNoHistory" layoutX="373.0" layoutY="104.0" onAction="#onBtnLoadHistoryAction" prefHeight="27.0" prefWidth="224.0" promptText="Search for student number" />
                                        </children>
                                     </AnchorPane>
                                  </children>
@@ -234,7 +472,7 @@
                                        <children>
                                           <TableView fx:id="tblStudentRecord" layoutX="47.0" layoutY="129.0" onMouseClicked="#onTblStudentRecordMouseClicked" prefHeight="661.0" prefWidth="743.0" />
                                           <TableView fx:id="tblStudentGradeRecord" editable="true" layoutX="809.0" layoutY="128.0" prefHeight="663.0" prefWidth="821.0" />
-                                          <TextField fx:id="txtStudentRecordSearch" onAction="#onBtnStudentRecordSearch" layoutX="75.0" layoutY="85.0" prefHeight="27.0" prefWidth="305.0" promptText="Search for a student number, name or course" />
+                                          <TextField fx:id="txtStudentRecordSearch" layoutX="75.0" layoutY="85.0" onAction="#onBtnStudentRecordSearch" prefHeight="27.0" prefWidth="305.0" promptText="Search for a student number, name or course" />
                                           <SearchableComboBox fx:id="choiceSYRecords" disable="true" layoutX="1332.0" layoutY="85.0" onAction="#onChoiceSYRecordsAction" prefHeight="27.0" prefWidth="178.0" promptText="Select a school year" />
                                           <Button fx:id="btnLoadStudentRecord" disable="true" layoutX="1539.0" layoutY="85.0" mnemonicParsing="false" onAction="#onBtnLoadStudentRecordAction" prefHeight="27.0" prefWidth="78.0" styleClass="btn-green" stylesheets="@assets/css/styles.css" text="LOAD" />
                                           <Label layoutX="93.0" layoutY="19.0" styleClass="titleText" stylesheets="@assets/css/styles.css" text="STUDENT RECORDS" />
@@ -273,7 +511,7 @@
                                                         <Label fx:id="lblCurrentMasterlist" layoutX="119.0" layoutY="26.0" styleClass="titleText" stylesheets="@assets/css/styles.css" text="STUDENT TABLE" />
                                                         <FontIcon iconColor="#9c0000" iconLiteral="mdal-list_alt" iconSize="50" layoutX="50.0" layoutY="76.0" />
                                           <TableView fx:id="tblStudents" editable="true" layoutX="22.0" layoutY="138.0" onMouseClicked="#onTblStudentsMouseClicked" prefHeight="679.0" prefWidth="1611.0" />
-                                          <TextField fx:id="txtStudentSearch" onAction="#onTxtStudentSearch" layoutX="56.0" layoutY="98.0" prefHeight="25.0" prefWidth="400.0" promptText="Search for a student by student number, name, course, or college." />
+                                          <TextField fx:id="txtStudentSearch" layoutX="56.0" layoutY="98.0" onAction="#onTxtStudentSearch" prefHeight="25.0" prefWidth="400.0" promptText="Search for a student by student number, name, course, or college." />
                                           <FontIcon iconColor="#9c0000" iconLiteral="mdmz-search" iconSize="27" layoutX="25.0" layoutY="124.0" />
                                           <Button layoutX="467.0" layoutY="96.0" mnemonicParsing="false" onAction="#onBtnSearchEntry" prefHeight="27.0" prefWidth="80.0" styleClass="btn-blue" stylesheets="@assets/css/styles.css" text="SEARCH" />
                                           <Line endX="1498.0" layoutX="131.0" layoutY="84.0" startX="-100.0" stroke="#9c0000" />
@@ -322,7 +560,7 @@
                                           <Button fx:id="btnManageDelete" disable="true" layoutX="868.0" layoutY="92.0" mnemonicParsing="false" onAction="#onBtnManageDelete" prefHeight="25.0" prefWidth="73.0" styleClass="btn-red" text="DELETE" />
                                           <Group fx:id="searchManageGroup" layoutX="69.0" layoutY="90.0">
                                              <children>
-                                                <TextField fx:id="txtSearchManage" onAction="#onBtnSearchManage" layoutX="37.0" prefHeight="27.0" prefWidth="408.0" />
+                                                <TextField fx:id="txtSearchManage" layoutX="37.0" onAction="#onBtnSearchManage" prefHeight="27.0" prefWidth="408.0" />
                                                 <FontIcon iconColor="#9c0000" iconLiteral="mdmz-search" iconSize="27" layoutX="1.0" layoutY="28.0" />
                                                 <Button layoutX="462.0" mnemonicParsing="false" onAction="#onBtnSearchManage" prefHeight="27.0" prefWidth="84.0" styleClass="btn-blue" stylesheets="@assets/css/styles.css" text="SEARCH" />
                                              </children>
@@ -336,7 +574,7 @@
                                  <children>
                                     <AnchorPane layoutX="32.0" layoutY="32.0" prefHeight="807.0" prefWidth="1640.0" styleClass="loginContainer" stylesheets="@assets/css/styles.css">
                                        <children>
-                                          <Label layoutX="36.0" layoutY="26.0" styleClass="titleText" stylesheets="@assets/css/styles.css" text="TUITION FEE" />
+                                          <Label layoutX="100.0" layoutY="26.0" styleClass="titleText" stylesheets="@assets/css/styles.css" text="TUITION FEE" />
                                           <Line endX="1428.0" layoutX="170.0" layoutY="85.0" startX="-133.0" stroke="#9c0000" />
                                           <TableView fx:id="tblTuitionFee" layoutX="426.0" layoutY="164.0" onMouseClicked="#onTblTuitionClick" prefHeight="606.0" prefWidth="784.0" />
                                           <Button layoutX="919.0" layoutY="117.0" mnemonicParsing="false" onAction="#onBtnAddTuition" prefHeight="25.0" prefWidth="76.0" styleClass="btn-green" text="ADD" />
@@ -346,247 +584,10 @@
                                           <TextField fx:id="txtTuitionDesc" layoutX="426.0" layoutY="123.0" prefHeight="25.0" prefWidth="255.0" text="Enter Description" />
                                           <Label layoutX="429.0" layoutY="101.0" text="DESCRIPTION:" />
                                           <Label layoutX="709.0" layoutY="100.0" text="PRICE:" />
+                                          <FontIcon iconColor="#9c0000" iconLiteral="eli-website" iconSize="35" layoutX="49.0" layoutY="65.0" />
                                        </children>
                                     </AnchorPane>
                                  </children></AnchorPane>
-                                        <AnchorPane fx:id="dashboardContainer" prefHeight="876.0" prefWidth="1701.0">
-                                            <children>
-                                                <BorderPane layoutX="27.0" layoutY="21.0" prefHeight="835.0" prefWidth="1652.0" styleClass="loginContainer" stylesheets="@assets/css/styles.css">
-                                                    <top>
-                                                        <AnchorPane prefHeight="46.0" prefWidth="1647.0" BorderPane.alignment="CENTER">
-                                                            <children>
-                                                                <Label id="studentDashboardText" layoutX="92.0" layoutY="11.0" prefHeight="73.0" prefWidth="496.0" stylesheets="@assets/css/styles.css" text="ADMIN DASHBOARD" textFill="#9c0000">
-                                                                    <font>
-                                                                        <Font size="35.0" />
-                                                                    </font>
-                                                                </Label>
-                                                                <FontIcon iconColor="#9c0000" iconLiteral="mdmz-search" iconSize="45" layoutX="28.0" layoutY="72.0" wrappingWidth="28.0" />
-                                                <Line endX="1469.0" layoutX="157.0" layoutY="84.0" startX="-118.0" stroke="#9c0000" />
-                                                            </children>
-                                                        </AnchorPane>
-                                                    </top>
-                                                    <left>
-                                                        <AnchorPane prefHeight="733.0" prefWidth="224.0" BorderPane.alignment="CENTER">
-                                                            <children>
-                                                                <Group layoutX="106.0" layoutY="83.0">
-                                                                    <children>
-                                                                        <Circle fx:id="imgContainer" fill="DODGERBLUE" layoutX="43.0" layoutY="9.0" radius="80.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="2.0" />
-                                                                        <Button id="cameraButton" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="0.0" layoutX="71.0" layoutY="44.0" mnemonicParsing="false" onAction="#onChangePictureAction" prefHeight="40.0" prefWidth="43.0">
-                                                                            <graphic>
-                                                                                <FontIcon iconColor="WHITE" iconLiteral="mdal-camera_alt" iconSize="18" tabSize="0" textAlignment="CENTER" wrappingWidth="18.0" />
-                                                                            </graphic>
-                                                                            <cursor>
-                                                                                <Cursor fx:constant="HAND" />
-                                                                            </cursor>
-                                                                        </Button>
-                                                                    </children>
-                                                                </Group>
-                                                                <Group layoutX="23.0" layoutY="177.0">
-                                                                    <children>
-                                                                        <Label fx:id="lblFullName" alignment="CENTER" layoutX="1.3859996795654297" prefHeight="29.0" prefWidth="241.0" styleClass="dashboardText" stylesheets="@assets/css/styles.css" text="John Cena Batumbakal" textAlignment="CENTER">
-                                                                            <font>
-                                                                                <Font size="20.0" />
-                                                                            </font>
-                                                                        </Label>
-                                                                        <Label id="emailText" fx:id="lblEmail1" alignment="CENTER" contentDisplay="CENTER" layoutX="3.0" layoutY="19.0" prefHeight="39.0" prefWidth="240.0" stylesheets="@assets/css/styles.css" text="jcmbatumbakal@plm.edu.ph" textAlignment="CENTER" wrapText="true">
-                                                                            <font>
-                                                                                <Font size="15.0" />
-                                                                            </font>
-                                                                        </Label>
-                                                                    </children>
-                                                                </Group>
-                                                            </children>
-                                                        </AnchorPane>
-                                                    </left>
-                                                    <center>
-                                                        <AnchorPane prefHeight="733.0" prefWidth="1389.0" stylesheets="@assets/css/styles.css" BorderPane.alignment="CENTER">
-                                                            <children>
-                                                                <HBox alignment="CENTER" layoutX="55.0" layoutY="80.0" prefHeight="96.0" prefWidth="1311.0" spacing="20.0">
-                                                                <children>
-                                                                    <Pane prefHeight="96.0" prefWidth="299.0" styleClass="dashboardPanes" stylesheets="@assets/css/styles.css">
-                                                                        <children>
-                                                                            <FontIcon iconColor="#9c0000" iconLiteral="mdmz-person" iconSize="55" layoutX="12.0" layoutY="74.0" />
-                                                                            <Label layoutX="155.0" layoutY="9.0" styleClass="dashboardPaneText" stylesheets="@assets/css/styles.css" text="Enrollment Status">
-                                                                                <font>
-                                                                                    <Font size="15.0" />
-                                                                                </font>
-                                                                            </Label>
-                                                                            <Group fx:id="enrolledGroup" layoutX="53.0" layoutY="33.0">
-                                                                                <children>
-                                                                                    <Label fx:id="lblTotalStudents" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="1.0" layoutY="-10.0" prefHeight="50.0" prefWidth="230.0" text="500/1000 Enrolled" textAlignment="RIGHT" textFill="#9c0000" wrapText="true">
-                                                                                        <font>
-                                                                                            <Font size="16.0" />
-                                                                                        </font>
-                                                                                    </Label>
-                                                                                </children>
-                                                                            </Group>
-                                                                            <Group fx:id="notEnrolledGroup" layoutX="53.0" layoutY="24.0" visible="false">
-                                                                                <children>
-                                                                                    <Label layoutX="60.0" layoutY="7.0" text="Not Enrolled">
-                                                                                        <font>
-                                                                                            <Font size="14.0" />
-                                                                                        </font>
-                                                                                    </Label>
-                                                                                    <FontIcon iconLiteral="mdal-error" iconSize="25" layoutX="-2.0" layoutY="29.0" />
-                                                                                    <Label layoutX="39.0" layoutY="26.0" style="-fx-font-style: italic;" text="CLICK HERE TO ENROLL" textFill="#227f19" underline="true">
-                                                                                        <font>
-                                                                                            <Font size="10.0" />
-                                                                                        </font>
-                                                                                        <cursor>
-                                                                                            <Cursor fx:constant="HAND" />
-                                                                                        </cursor>
-                                                                                    </Label>
-                                                                                </children>
-                                                                            </Group>
-                                                                            <Label id="semesterCurrent" fx:id="lblSemester" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="29.0" layoutY="67.0" prefHeight="19.0" prefWidth="256.0" stylesheets="@assets/css/styles.css" text="First Semester A.Y. 2023-2024" textAlignment="RIGHT" />
-                                                                        </children>
-                                                         <cursor>
-                                                            <Cursor fx:constant="DEFAULT" />
-                                                         </cursor>
-                                                                    </Pane>
-                                                                    <Pane prefHeight="96.0" prefWidth="281.0" styleClass="dashboardPanes" stylesheets="@assets/css/styles.css">
-                                                                        <children>
-                                                                            <FontIcon iconColor="#9c0000" iconLiteral="eli-lock" iconSize="40" layoutX="14.0" layoutY="65.0" />
-                                                                            <Label layoutX="106.0" layoutY="9.0" text="Password and Security" textFill="#9c0000">
-                                                                                <font>
-                                                                                    <Font size="15.0" />
-                                                                                </font>
-                                                                            </Label>
-                                                                            <Button id="dashPaneSubText" layoutX="150.0" layoutY="26.0" mnemonicParsing="false" onAction="#onBtnChangePasswordAction" prefHeight="26.0" prefWidth="126.0" stylesheets="@assets/css/styles.css" text="Change Password" underline="true">
-                                                                                <font>
-                                                                                    <Font size="13.0" />
-                                                                                </font>
-                                                                            </Button>
-                                                                        </children>
-                                                                    </Pane>
-                                                                </children>
-                                                            </HBox>
-                                                                <GridPane layoutX="66.0" layoutY="246.0" prefHeight="481.0" prefWidth="1299.0">
-                                                                    <columnConstraints>
-                                                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                                                    </columnConstraints>
-                                                                    <rowConstraints>
-                                                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                                    </rowConstraints>
-                                                                    <children>
-                                                                        <VBox prefHeight="200.0" prefWidth="654.0">
-                                                                            <children>
-                                                                                <Label styleClass="profileFields" stylesheets="@assets/css/styles.css" text="First Name" />
-                                                                                <Label fx:id="lblFirstName" text="John Cena">
-                                                                                    <font>
-                                                                                        <Font size="18.0" />
-                                                                                    </font>
-                                                            </Label>
-                                                                            </children>
-                                                                        </VBox>
-                                                                        <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="1">
-                                                                            <children>
-                                                                                <Label styleClass="profileFields" stylesheets="@assets/css/styles.css" text="Last Name" />
-                                                                                <Label fx:id="lblLastName" text="Batumbakal">
-                                                                                    <font>
-                                                                                        <Font size="18.0" />
-                                                                                    </font>
-                                                            </Label>
-                                                                            </children>
-                                                                        </VBox>
-                                                                        <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="3">
-                                                                            <children>
-                                                                                <Label styleClass="profileFields" stylesheets="@assets/css/styles.css" text="Birthday" />
-                                                                                <Label fx:id="lblBirthday" text="January 1, 2003">
-                                                                                    <font>
-                                                                                        <Font size="18.0" />
-                                                                                    </font>
-                                                            </Label>
-                                                                            </children>
-                                                                        </VBox>
-                                                                        <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="2">
-                                                                            <children>
-                                                                                <Label styleClass="profileFields" stylesheets="@assets/css/styles.css" text="Gender" />
-                                                                                <Label fx:id="lblGender" text="Male">
-                                                                                    <font>
-                                                                                        <Font size="18.0" />
-                                                                                    </font>
-                                                            </Label>
-                                                                            </children>
-                                                                        </VBox>
-                                                                        <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="4">
-                                                                            <children>
-                                                                                <Label styleClass="profileFields" stylesheets="@assets/css/styles.css" text="Age" />
-                                                                                <Label fx:id="lblAge" text="18">
-                                                                                    <font>
-                                                                                        <Font size="18.0" />
-                                                                                    </font>
-                                                            </Label>
-                                                                            </children>
-                                                                        </VBox>
-                                                                        <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="5">
-                                                                            <children>
-                                                                                <Label styleClass="profileFields" stylesheets="@assets/css/styles.css" text="Personal Email" />
-                                                                                <Label fx:id="lblEmail" text="jcbatumbakal@yahoo.com">
-                                                                                    <font>
-                                                                                        <Font size="18.0" />
-                                                                                    </font>
-                                                                                </Label>
-                                                                            </children>
-                                                                        </VBox>
-                                                                        <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1">
-                                                                            <children>
-                                                                                <Label styleClass="profileFields" text="Cellphone Number" />
-                                                                                <Label fx:id="lblCellphoneNumber" text="09123456789">
-                                                                                    <font>
-                                                                                        <Font size="18.0" />
-                                                                                    </font>
-                                                            </Label>
-                                                                            </children>
-                                                                        </VBox>
-                                                                        <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                                                                            <children>
-                                                                                <Label styleClass="profileFields" stylesheets="@assets/css/styles.css" text="Employee ID" />
-                                                                                <Label fx:id="lblEmployeeID" text="2022-34000">
-                                                                                    <font>
-                                                                                        <Font size="18.0" />
-                                                                                    </font>
-                                                                                </Label>
-                                                                            </children>
-                                                                        </VBox>
-                                                                        <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
-                                                                            <children>
-                                                                                <Label styleClass="profileFields" stylesheets="@assets/css/styles.css" text="Address" />
-                                                                                <Label fx:id="lblAddress" text="College of Engineering and Technology">
-                                                                                <font>
-                                                                                    <Font size="18.0" />
-                                                                                </font>
-                                                                                </Label>
-                                                                            </children>
-                                                                        </VBox>
-                                                                    </children>
-                                                                </GridPane>
-                                                                <Line endX="1238.0" layoutX="117.0" layoutY="58.0" startX="-63.0" stroke="#868686" />
-                                                                <FontIcon iconColor="WHITE" iconLiteral="eli-file" iconSize="20" layoutX="53.0" layoutY="45.0" stroke="BLACK" strokeWidth="0.5" />
-                                                                <Label fx:id="lblWelcome" layoutX="83.0" layoutY="17.0" text="Welcome John Cena!">
-                                                                    <font>
-                                                                        <Font size="25.0" />
-                                                                    </font>
-                                                                </Label>
-                                                                <Line endX="1193.0" layoutX="156.0" layoutY="233.0" startX="-100.0" stroke="#868686" />
-                                                                <FontIcon iconColor="WHITE" iconLiteral="eli-file" iconSize="20" layoutX="56.0" layoutY="217.0" stroke="BLACK" strokeWidth="0.5" />
-                                                                <Label layoutX="88.0" layoutY="190.0" text="General Information">
-                                                                    <font>
-                                                                        <Font size="25.0" />
-                                                                    </font>
-                                                                </Label>
-                                                            </children>
-                                                        </AnchorPane>
-                                                    </center>
-                                                </BorderPane>
-                                            </children>
-                                        </AnchorPane>
                                     </children>
                                 </StackPane>
                             </children>

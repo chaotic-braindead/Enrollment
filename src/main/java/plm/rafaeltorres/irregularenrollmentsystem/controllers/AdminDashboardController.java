@@ -324,6 +324,8 @@ public class AdminDashboardController extends Controller {
     private TextField txtTuitionDesc;
     @FXML
     private Label lblBlockSection;
+    @FXML
+    private Label lblAdminEnrollment;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -828,6 +830,7 @@ public class AdminDashboardController extends Controller {
         comboBoxBlock.setDisable(true);
         txtSearchEnrollee.setDisable(false);
         btnFilterEnrollees.setDisable(false);
+        lblAdminEnrollment.setText("ENROLLMENT");
         tblEnrollees.getSelectionModel().clearSelection();
         onEnroll(event);
     }
@@ -876,6 +879,7 @@ public class AdminDashboardController extends Controller {
         tblSubjects.setPlaceholder(new Label("Select a student."));
         irregularLabelGroup.setVisible(true);
         lblBlockSection.setVisible(false);
+        lblAdminEnrollment.setText("SCHEDULE APPROVAL");
         onEnroll(event);
 
 
