@@ -1,0 +1,21 @@
+CREATE TABLE tuition (
+    description VARCHAR(255) PRIMARY KEY NOT NULL,
+    amount DECIMAL(10,2) NOT NULL
+);
+
+INSERT INTO tuition (description, amount)
+VALUES
+    ('Tuition Fee (Price per Unit)', 1200.00),
+    ('Cultural Fee', 74.00),
+    ('Library Fee', 735.00),
+    ('Medical Fee', 295.00),
+    ('Guidance Fee', 245.00),
+    ('Athletic Fee with PE', 293.00),
+    ('Registration Fee', 74.00),
+    ('Laboratory Fee', 1800.00),
+    ('Development Fee', 146.00),
+    ('The Pamantasan Fee', 50.00),
+    ('Supreme Student Council', 50.00);
+
+-- Di ako marunong mag export ng database kaya ganyan nalang HAHHA
+-- kaw nalang bahala magupdate sa github

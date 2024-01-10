@@ -160,13 +160,8 @@
                                           <Label layoutX="80.0" layoutY="28.0" styleClass="titleText" stylesheets="@assets/css/styles.css" text="ENROLLMENT HISTORY" />
                                           <Line endX="1411.0" layoutX="167.0" layoutY="88.0" startX="-133.0" stroke="#9c0000" />
                                           <FontIcon iconColor="#9c0000" iconLiteral="mdal-history" iconSize="40" layoutX="34.0" layoutY="74.0" />
-                                          <TableView fx:id="tblEnrollmentHistory" layoutX="33.0" layoutY="138.0" onMouseClicked="#onTblEnrollmentHistoryMouseClicked" prefHeight="654.0" prefWidth="1535.0">
-                                            <columns>
-                                              <TableColumn prefWidth="75.0" text="C1" />
-                                              <TableColumn prefWidth="75.0" text="C2" />
-                                            </columns>
-                                          </TableView>
-                                          <Button fx:id="btnDeleteHistory" disable="true" layoutX="741.0" layoutY="103.0" mnemonicParsing="false" onAction="#onBtnDeleteHistoryAction" styleClass="btn-red" stylesheets="@assets/css/styles.css" text="DELETE" />
+                                          <TableView fx:id="tblEnrollmentHistory" layoutX="33.0" layoutY="138.0" onMouseClicked="#onTblEnrollmentHistoryMouseClicked" prefHeight="654.0" prefWidth="1535.0" />
+                                          <Button fx:id="btnDeleteHistory" disable="true" layoutX="762.0" layoutY="103.0" mnemonicParsing="false" onAction="#onBtnDeleteHistoryAction" prefHeight="27.0" prefWidth="77.0" styleClass="btn-red" stylesheets="@assets/css/styles.css" text="DELETE" />
                                           <SearchableComboBox fx:id="cmbSYHistory" layoutX="137.0" layoutY="104.0" prefHeight="27.0" prefWidth="121.0" />
                                           <SearchableComboBox fx:id="cmbSemHistory" layoutX="266.0" layoutY="104.0" prefHeight="27.0" prefWidth="91.0" />
                                           <Label layoutX="39.0" layoutY="107.0" text="SY/Semester:">
@@ -174,7 +169,7 @@
                                                 <Font size="14.0" />
                                              </font>
                                           </Label>
-                                          <Button layoutX="605.0" layoutY="103.0" mnemonicParsing="false" onAction="#onBtnLoadHistoryAction" styleClass="btn-blue" stylesheets="@assets/css/styles.css" text="FILTER" />
+                                          <Button layoutX="605.0" layoutY="103.0" mnemonicParsing="false" onAction="#onBtnLoadHistoryAction" prefHeight="27.0" prefWidth="71.0" styleClass="btn-blue" stylesheets="@assets/css/styles.css" text="FILTER" />
                                           <TextField fx:id="txtSearchStudNoHistory" layoutX="373.0" layoutY="104.0" prefHeight="27.0" prefWidth="224.0" promptText="Search for student number" />
                                        </children>
                                     </AnchorPane>
@@ -337,6 +332,23 @@
                                     <Label fx:id="lblManage" layoutX="97.0" layoutY="34.0" styleClass="titleText" stylesheets="@assets/css/styles.css" text="MANAGE SCHOOL YEAR" />
                                  </children>
                               </AnchorPane>
+                              <AnchorPane fx:id="tuitionContainer" prefHeight="200.0" prefWidth="200.0" visible="false">
+                                 <children>
+                                    <AnchorPane layoutX="32.0" layoutY="32.0" prefHeight="807.0" prefWidth="1640.0" styleClass="loginContainer" stylesheets="@assets/css/styles.css">
+                                       <children>
+                                          <Label layoutX="36.0" layoutY="26.0" styleClass="titleText" stylesheets="@assets/css/styles.css" text="TUITION FEE" />
+                                          <Line endX="1428.0" layoutX="170.0" layoutY="85.0" startX="-133.0" stroke="#9c0000" />
+                                          <TableView fx:id="tblTuitionFee" layoutX="426.0" layoutY="164.0" onMouseClicked="#onTblTuitionClick" prefHeight="606.0" prefWidth="784.0" />
+                                          <Button layoutX="919.0" layoutY="117.0" mnemonicParsing="false" onAction="#onBtnAddTuition" prefHeight="25.0" prefWidth="76.0" styleClass="btn-green" text="ADD" />
+                                          <Button layoutX="1021.0" layoutY="117.0" mnemonicParsing="false" onAction="#onBtnUpdateTuition" prefHeight="25.0" prefWidth="78.0" styleClass="btn-orange" text="UPDATE" />
+                                          <Button layoutX="1122.0" layoutY="117.0" mnemonicParsing="false" onAction="#onBtnDeleteTuition" prefHeight="25.0" prefWidth="78.0" styleClass="btn-red" text="DELETE" />
+                                          <TextField fx:id="txtTuitionAmount" layoutX="709.0" layoutY="122.0" prefHeight="25.0" prefWidth="109.0" promptText="Amount" text="Amount Due" />
+                                          <TextField fx:id="txtTuitionDesc" layoutX="426.0" layoutY="123.0" prefHeight="25.0" prefWidth="255.0" text="Enter Description" />
+                                          <Label layoutX="429.0" layoutY="101.0" text="DESCRIPTION:" />
+                                          <Label layoutX="709.0" layoutY="100.0" text="PRICE:" />
+                                       </children>
+                                    </AnchorPane>
+                                 </children></AnchorPane>
                                         <AnchorPane fx:id="dashboardContainer" prefHeight="876.0" prefWidth="1701.0">
                                             <children>
                                                 <BorderPane layoutX="27.0" layoutY="21.0" prefHeight="835.0" prefWidth="1652.0" styleClass="loginContainer" stylesheets="@assets/css/styles.css">
@@ -598,22 +610,23 @@
                                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                 </rowConstraints>
                                  <children>
-                                            <ToggleButton fx:id="btnEnrollment" mnemonicParsing="false" onAction="#onBtnEnrollmentAction" prefHeight="65.0" prefWidth="253.0" text="ENROLLMENT" textAlignment="RIGHT" textFill="WHITE" wrapText="true">
+                                            <ToggleButton fx:id="btnEnrollment" mnemonicParsing="false" onAction="#onBtnEnrollmentAction" prefHeight="65.0" prefWidth="253.0" text="Enrollment" textAlignment="RIGHT" textFill="WHITE" wrapText="true">
                                        <toggleGroup>
                                           <ToggleGroup fx:id="sideBar" />
                                        </toggleGroup>
                                     </ToggleButton>
-                                    <ToggleButton fx:id="btnApproval" mnemonicParsing="false" onAction="#onBtnApprovalAction" prefHeight="65.0" prefWidth="293.0" stylesheets="@assets/css/styles.css" text="SCHEDULE APPROVAL" textAlignment="CENTER" textFill="WHITE" toggleGroup="$sideBar" wrapText="true" GridPane.rowIndex="1">
+                                    <ToggleButton fx:id="btnApproval" mnemonicParsing="false" onAction="#onBtnApprovalAction" prefHeight="65.0" prefWidth="293.0" stylesheets="@assets/css/styles.css" text="Schedule Approval" textAlignment="CENTER" textFill="WHITE" toggleGroup="$sideBar" wrapText="true" GridPane.rowIndex="1">
                                        <font>
                                           <Font size="10.0" />
                                        </font>
                                     </ToggleButton>
-                                            <ToggleButton fx:id="btnSchedule" contentDisplay="TOP" mnemonicParsing="false" onAction="#onBtnScheduleAction" prefHeight="65.0" prefWidth="291.0" text="BLOCK SCHEDULING" textAlignment="CENTER" textFill="WHITE" toggleGroup="$sideBar" wrapText="true" GridPane.rowIndex="3" />
-                                    <ToggleButton fx:id="btnEnrollmentHistory" mnemonicParsing="false" onAction="#onBtnEnrollmentHistoryAction" prefHeight="101.0" prefWidth="216.0" text="ENROLLMENT HISTORY" textFill="WHITE" toggleGroup="$sideBar" GridPane.rowIndex="2">
+                                            <ToggleButton fx:id="btnSchedule" contentDisplay="TOP" mnemonicParsing="false" onAction="#onBtnScheduleAction" prefHeight="65.0" prefWidth="291.0" text="Block Scheduling" textAlignment="CENTER" textFill="WHITE" toggleGroup="$sideBar" wrapText="true" GridPane.rowIndex="3" />
+                                    <ToggleButton fx:id="btnEnrollmentHistory" mnemonicParsing="false" onAction="#onBtnEnrollmentHistoryAction" prefHeight="101.0" prefWidth="216.0" text="Enrollment History" textFill="WHITE" toggleGroup="$sideBar" GridPane.rowIndex="2">
                                        <font>
                                           <Font size="15.0" />
                                        </font>
                                     </ToggleButton>
+                                    <ToggleButton fx:id="btnTuition" contentDisplay="TOP" layoutX="10.0" layoutY="205.0" mnemonicParsing="false" onAction="#onBtnTuitionAction" prefHeight="65.0" prefWidth="291.0" text="Tuition Fees" textAlignment="CENTER" textFill="WHITE" toggleGroup="$sideBar" wrapText="true" GridPane.rowIndex="4" />
                                  </children>
                               </GridPane>
                               <GridPane fx:id="gridMaintenance" layoutX="10.0" layoutY="10.0" visible="false">
@@ -629,11 +642,11 @@
                                     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                  </rowConstraints>
                                  <children>
-                                    <ToggleButton fx:id="btnSY" mnemonicParsing="false" onAction="#onBtnSYAction" prefHeight="65.0" prefWidth="224.0" text="SCHOOL YEAR" textFill="WHITE" toggleGroup="$sideBar" />
-                                    <ToggleButton fx:id="btnSemester" mnemonicParsing="false" onAction="#onBtnSemesterAction" prefHeight="65.0" prefWidth="243.0" text="SEMESTER" textFill="WHITE" toggleGroup="$sideBar" GridPane.rowIndex="1" />
-                                    <ToggleButton fx:id="btnCollege" mnemonicParsing="false" onAction="#onBtnCollegeAction" prefHeight="65.0" prefWidth="243.0" text="COLLEGE" textFill="WHITE" toggleGroup="$sideBar" GridPane.rowIndex="2" />
-                                    <ToggleButton fx:id="btnCourse" mnemonicParsing="false" onAction="#onBtnCourseAction" prefHeight="65.0" prefWidth="256.0" text="COURSE" textFill="WHITE" toggleGroup="$sideBar" GridPane.rowIndex="3" />
-                                    <ToggleButton fx:id="btnSubject" mnemonicParsing="false" onAction="#onBtnSubjectAction" prefHeight="65.0" prefWidth="257.0" text="SUBJECT" textFill="WHITE" toggleGroup="$sideBar" GridPane.rowIndex="4" />
+                                    <ToggleButton fx:id="btnSY" mnemonicParsing="false" onAction="#onBtnSYAction" prefHeight="65.0" prefWidth="224.0" text="School Year" textFill="WHITE" toggleGroup="$sideBar" />
+                                    <ToggleButton fx:id="btnSemester" mnemonicParsing="false" onAction="#onBtnSemesterAction" prefHeight="65.0" prefWidth="243.0" text="Semester" textFill="WHITE" toggleGroup="$sideBar" GridPane.rowIndex="1" />
+                                    <ToggleButton fx:id="btnCollege" mnemonicParsing="false" onAction="#onBtnCollegeAction" prefHeight="65.0" prefWidth="243.0" text="College" textFill="WHITE" toggleGroup="$sideBar" GridPane.rowIndex="2" />
+                                    <ToggleButton fx:id="btnCourse" mnemonicParsing="false" onAction="#onBtnCourseAction" prefHeight="65.0" prefWidth="256.0" text="Course" textFill="WHITE" toggleGroup="$sideBar" GridPane.rowIndex="3" />
+                                    <ToggleButton fx:id="btnSubject" mnemonicParsing="false" onAction="#onBtnSubjectAction" prefHeight="65.0" prefWidth="257.0" text="Subject" textFill="WHITE" toggleGroup="$sideBar" GridPane.rowIndex="4" />
                                  </children>
                               </GridPane>
                               <GridPane fx:id="gridDataEntry" layoutX="10.0" layoutY="10.0" visible="false">
@@ -649,9 +662,9 @@
                                     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                  </rowConstraints>
                                  <children>
-                                            <ToggleButton fx:id="btnStudentEntry" contentDisplay="TOP" mnemonicParsing="false" onAction="#onBtnStudentEntryAction" prefHeight="65.0" prefWidth="232.0" text="STUDENT" textAlignment="CENTER" textFill="WHITE" toggleGroup="$sideBar" wrapText="true" />
-                                    <ToggleButton fx:id="btnEmployeeEntry" mnemonicParsing="false" onAction="#onBtnEmployeeEntryAction" prefHeight="65.0" prefWidth="225.0" text="EMPLOYEE" textAlignment="CENTER" textFill="WHITE" toggleGroup="$sideBar" wrapText="true" GridPane.rowIndex="1" />
-                                    <ToggleButton fx:id="btnGradesEntry" mnemonicParsing="false" onAction="#onBtnGradesEntryAction" prefHeight="60.0" prefWidth="218.0" stylesheets="@assets/css/styles.css" text="GRADES" textAlignment="CENTER" textFill="WHITE" toggleGroup="$sideBar" wrapText="true" GridPane.rowIndex="2" />
+                                            <ToggleButton fx:id="btnStudentEntry" contentDisplay="TOP" mnemonicParsing="false" onAction="#onBtnStudentEntryAction" prefHeight="65.0" prefWidth="232.0" text="Student" textAlignment="CENTER" textFill="WHITE" toggleGroup="$sideBar" wrapText="true" />
+                                    <ToggleButton fx:id="btnEmployeeEntry" mnemonicParsing="false" onAction="#onBtnEmployeeEntryAction" prefHeight="65.0" prefWidth="225.0" text="Employee" textAlignment="CENTER" textFill="WHITE" toggleGroup="$sideBar" wrapText="true" GridPane.rowIndex="1" />
+                                    <ToggleButton fx:id="btnGradesEntry" mnemonicParsing="false" onAction="#onBtnGradesEntryAction" prefHeight="60.0" prefWidth="218.0" stylesheets="@assets/css/styles.css" text="Grades" textAlignment="CENTER" textFill="WHITE" toggleGroup="$sideBar" wrapText="true" GridPane.rowIndex="2" />
                                  </children>
                               </GridPane>
                               <GridPane fx:id="gridRecords" layoutX="10.0" layoutY="10.0" visible="false">
@@ -667,8 +680,8 @@
                                     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                  </rowConstraints>
                                  <children>
-                                    <ToggleButton fx:id="btnStudentRecords" mnemonicParsing="false" onAction="#onBtnStudentRecordsAction" prefHeight="58.0" prefWidth="240.0" text="STUDENT RECORDS" textAlignment="CENTER" textFill="WHITE" toggleGroup="$sideBar" wrapText="true" />
-                                            <ToggleButton fx:id="btnClass" mnemonicParsing="false" onAction="#onBtnClassAction" prefHeight="60.0" prefWidth="268.0" text="CLASS LIST" textAlignment="CENTER" textFill="WHITE" toggleGroup="$sideBar" wrapText="true" GridPane.rowIndex="1" />
+                                    <ToggleButton fx:id="btnStudentRecords" mnemonicParsing="false" onAction="#onBtnStudentRecordsAction" prefHeight="58.0" prefWidth="240.0" text="Student Records" textAlignment="CENTER" textFill="WHITE" toggleGroup="$sideBar" wrapText="true" />
+                                            <ToggleButton fx:id="btnClass" mnemonicParsing="false" onAction="#onBtnClassAction" prefHeight="60.0" prefWidth="268.0" text="Class List" textAlignment="CENTER" textFill="WHITE" toggleGroup="$sideBar" wrapText="true" GridPane.rowIndex="1" />
                                  </children>
                               </GridPane>
                            </children>
@@ -684,10 +697,10 @@
                               <Font size="18.0" />
                            </font>
                         </ToggleButton>
-                        <ComboBox id="cmbSelectTableCategory" fx:id="cmbSelectTableCategory" layoutX="40.0" layoutY="227.0" onAction="#onSelectTableCategory" prefHeight="43.0" prefWidth="174.0" promptText="Table Category" stylesheets="@assets/css/styles.css" />
+                        <ComboBox id="cmbSelectTableCategory" fx:id="cmbSelectTableCategory" layoutX="31.0" layoutY="227.0" onAction="#onSelectTableCategory" prefHeight="43.0" prefWidth="183.0" promptText="TABLE CATEGORY" stylesheets="@assets/css/styles.css" />
                                 <Button id="logoutButton" fx:id="btnLogout" layoutY="792.0" mnemonicParsing="false" onAction="#onBtnLogoutAction" prefHeight="70.0" prefWidth="216.0" stylesheets="@assets/css/styles.css" text="Log Out" textFill="WHITE" />
                         <Circle fx:id="imgNavBar" fill="DODGERBLUE" layoutX="104.0" layoutY="87.0" radius="60.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="1.5" />
-                        <FontIcon fx:id="navIkonli" iconColor="WHITE" iconLiteral="eli-bookmark-empty" iconSize="25" layoutX="35.0" layoutY="259.0" wrappingWidth="25.0" />
+                        <FontIcon fx:id="navIkonli" iconColor="WHITE" iconLiteral="eli-bookmark-empty" iconSize="25" layoutX="20.0" layoutY="259.0" wrappingWidth="25.0" />
                      </children>
                   </AnchorPane>
                </left>
