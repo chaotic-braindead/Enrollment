@@ -6,9 +6,9 @@ The full documentation can be found [here](https://docs.google.com/document/d/1G
 <h3>Getting Started</h3>
 
 **A. Dependencies**
-The application requires dependencies in order to work properly. Ensure that the following are installed before proceeding to run the application:
+The application requires dependencies in order to work properly. Ensure that the following are installed before proceeding to the next steps:
 
-- MySQL Server 8.2 (https://dev.mysql.com/downloads/mysql/) - At the time of this release, the database for the enrollment system relies on a locally-hosted database due to limited resources. Note: The mysql bin folder must added to the system environment variables.
+- MySQL Server 8.2 (https://dev.mysql.com/downloads/mysql/) - At the time of this release, the enrollment system relies on a locally-hosted database due to limited resources. **Note: The mysql bin folder must be added to the system environment variables.**
 - Java (https://www.java.com/en/)
 
 **B. Download the application**
