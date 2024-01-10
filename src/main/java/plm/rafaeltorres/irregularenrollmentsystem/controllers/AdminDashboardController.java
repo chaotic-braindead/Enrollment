@@ -1628,7 +1628,7 @@ public class AdminDashboardController extends Controller {
         cmbSemHistory.getSelectionModel().select("Any");
 
         try{
-            ps = conn.prepareStatement("SELECT * FROM ENROLLMENT WHERE cast(substring(sy, 1, 4) as unsigned) <= ? ORDER BY TIMESTAMP DESC");
+            ps = conn.prepareStatement("SELECT e.sy, e.semester, e.student_no, concat(v.lastname, ', ', v.firstname) as name, v.registration_status, e.status, e.timestamp FROM ENROLLMENT e inner join vwstudentinfo v on e.student_no = v.student_no WHERE cast(substring(e.sy, 1, 4) as unsigned) <= ? ORDER BY e.TIMESTAMP DESC");
             ps.setInt(1, Integer.parseInt(currentSY.substring(0, 4)));
             rs = ps.executeQuery();
             TableViewUtils.generateTableFromResultSet(tblEnrollmentHistory, rs);
@@ -1671,20 +1671,20 @@ public class AdminDashboardController extends Controller {
 
     @FXML
     protected void onBtnLoadHistoryAction(ActionEvent event){
-        StringBuilder sb = new StringBuilder("SELECT * FROM ENROLLMENT WHERE cast(substring(sy, 1, 4) as unsigned) <= ? ");
+        StringBuilder sb = new StringBuilder("SELECT e.sy, e.semester, e.student_no, concat(v.lastname, ', ', v.firstname) as name, v.registration_status, e.status, e.timestamp FROM ENROLLMENT e inner join vwstudentinfo v on e.student_no = v.student_no  WHERE cast(substring(e.sy, 1, 4) as unsigned) <= ? ");
         String sy = cmbSYHistory.getSelectionModel().getSelectedItem();
         String sem = cmbSemHistory.getSelectionModel().getSelectedItem();
         btnDeleteHistory.setDisable(true);
         if(!sy.equalsIgnoreCase("Any"))
-            sb.append(" and SY = '" + sy + "'");
+            sb.append(" and e.SY = '" + sy + "'");
 
         if(!sem.equalsIgnoreCase("Any"))
-            sb.append(" and SEMESTER = '" + sem + "'");
+            sb.append(" and e.SEMESTER = '" + sem + "'");
 
         if(!txtSearchStudNoHistory.getText().isBlank())
-            sb.append(" and student_no regexp('"+txtSearchStudNoHistory.getText()+"')");
+            sb.append(" and (e.student_no regexp('"+txtSearchStudNoHistory.getText()+"') or concat(v.lastname, ', ', v.firstname) regexp('"+txtSearchStudNoHistory.getText()+"'))");
 
-        sb.append(" ORDER BY timestamp DESC");
+        sb.append(" ORDER BY e.timestamp DESC");
         try{
             ps = conn.prepareStatement(sb.toString());
             ps.setInt(1, Integer.parseInt(currentSY.substring(0, 4)));

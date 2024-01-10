@@ -570,6 +570,7 @@ public class StudentDashboardController extends Controller {
     }
     private void displaySched() {
         lblTotalUnits.setText("");
+        tblSchedule.setMouseTransparent(!student.getRegistrationStatus().equalsIgnoreCase("IRREGULAR"));
         if(student.getRegistrationStatus().equalsIgnoreCase("IRREGULAR")){
             try{
                 ps = conn.prepareStatement("SELECT status from enrollment where student_no = ? and sy = ? and semester = ?");
@@ -766,11 +767,11 @@ public class StudentDashboardController extends Controller {
 
             flTotalFee = flTuition+flSumFee;
 
-            lblTuitionF.setText(String.valueOf(flTuition));
-            lblMiscF.setText(String.valueOf(flSumFee));
+            lblTuitionF.setText(String.format("%,.2f", flTuition));
+            lblMiscF.setText(String.format("%,.2f", flSumFee));
             lblNumberUnits.setText("Tuition Fee x "+totalUnits+" Units");
 
-            lblTotalFee.setText("Total Fee: "+flTotalFee);
+            lblTotalFee.setText("Total Fee: "+String.format("%,.2f", flTotalFee));
         }
 
         catch(Exception e)
@@ -783,6 +784,8 @@ public class StudentDashboardController extends Controller {
         currentPane.setVisible(false);
         currentPane = gradesContainer;
         currentPane.setVisible(true);
+        tblGrades.setEditable(false);
+        tblGrades.setMouseTransparent(true);
 
     }
     @FXML
