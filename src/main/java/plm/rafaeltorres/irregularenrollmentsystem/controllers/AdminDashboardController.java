@@ -442,8 +442,8 @@ public class AdminDashboardController extends Controller {
         }
         else{
             // display default image
-            File f = new File(MainScene.class.getResource("assets/img/md-person-2.png").getPath());
-            Image defaultImage = new Image(f.toURI().toString(), false);
+            URL resource = MainScene.class.getResource("assets/img/md-person-2.png");
+            Image defaultImage = new Image(resource.toExternalForm(), false);
             ImagePattern pattern = new ImagePattern(defaultImage);
             imgContainer.setFill(pattern);
             imgNavBar.setFill(pattern);

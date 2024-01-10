@@ -26,7 +26,6 @@ public class Maintenance {
         }catch(Exception e){
             System.out.println(e);
         }
-        System.out.println(path);
         if(!f.exists()){
             try{
                 properties.load(MainScene.class.getResourceAsStream("app.properties"));
