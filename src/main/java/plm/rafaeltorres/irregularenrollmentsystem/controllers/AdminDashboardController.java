@@ -1663,7 +1663,7 @@ public class AdminDashboardController extends Controller {
         StringBuilder sb = new StringBuilder("SELECT * FROM ENROLLMENT WHERE cast(substring(sy, 1, 4) as unsigned) <= ? ");
         String sy = cmbSYHistory.getSelectionModel().getSelectedItem();
         String sem = cmbSemHistory.getSelectionModel().getSelectedItem();
-
+        btnDeleteHistory.setDisable(true);
         if(!sy.equalsIgnoreCase("Any"))
             sb.append(" and SY = '" + sy + "'");
 
