@@ -111,7 +111,7 @@
                                                 <Label fx:id="txtName" layoutX="122.0" layoutY="52.0" prefHeight="25.0" prefWidth="263.0" text="Name" />
                                                 <Label layoutY="9.0" prefHeight="34.0" prefWidth="123.0" text="Student Number:" wrapText="true" />
                                                 <Label layoutX="61.0" layoutY="55.0" prefHeight="17.0" prefWidth="49.0" text="Name:" />
-                                                <TextField fx:id="txtSearchEnrollee" layoutX="122.0" layoutY="10.0" prefHeight="27.0" prefWidth="191.0" />
+                                                <TextField fx:id="txtSearchEnrollee" onAction="#onBtnFilterAction" layoutX="122.0" layoutY="10.0" prefHeight="27.0" prefWidth="191.0" />
                                              </children>
                                           </Group>
                                           <Label layoutX="51.0" layoutY="92.0" prefHeight="17.0" prefWidth="55.0" text="College:" />
@@ -170,7 +170,7 @@
                                              </font>
                                           </Label>
                                           <Button layoutX="605.0" layoutY="103.0" mnemonicParsing="false" onAction="#onBtnLoadHistoryAction" prefHeight="27.0" prefWidth="71.0" styleClass="btn-blue" stylesheets="@assets/css/styles.css" text="FILTER" />
-                                          <TextField fx:id="txtSearchStudNoHistory" layoutX="373.0" layoutY="104.0" prefHeight="27.0" prefWidth="224.0" promptText="Search for student number" />
+                                          <TextField fx:id="txtSearchStudNoHistory" onAction="#onBtnLoadHistoryAction" layoutX="373.0" layoutY="104.0" prefHeight="27.0" prefWidth="224.0" promptText="Search for student number" />
                                        </children>
                                     </AnchorPane>
                                  </children>
@@ -234,7 +234,7 @@
                                        <children>
                                           <TableView fx:id="tblStudentRecord" layoutX="47.0" layoutY="129.0" onMouseClicked="#onTblStudentRecordMouseClicked" prefHeight="661.0" prefWidth="743.0" />
                                           <TableView fx:id="tblStudentGradeRecord" editable="true" layoutX="809.0" layoutY="128.0" prefHeight="663.0" prefWidth="821.0" />
-                                          <TextField fx:id="txtStudentRecordSearch" layoutX="75.0" layoutY="85.0" prefHeight="27.0" prefWidth="305.0" promptText="Search for a student number, name or course" />
+                                          <TextField fx:id="txtStudentRecordSearch" onAction="#onBtnStudentRecordSearch" layoutX="75.0" layoutY="85.0" prefHeight="27.0" prefWidth="305.0" promptText="Search for a student number, name or course" />
                                           <SearchableComboBox fx:id="choiceSYRecords" disable="true" layoutX="1332.0" layoutY="85.0" onAction="#onChoiceSYRecordsAction" prefHeight="27.0" prefWidth="178.0" promptText="Select a school year" />
                                           <Button fx:id="btnLoadStudentRecord" disable="true" layoutX="1539.0" layoutY="85.0" mnemonicParsing="false" onAction="#onBtnLoadStudentRecordAction" prefHeight="27.0" prefWidth="78.0" styleClass="btn-green" stylesheets="@assets/css/styles.css" text="LOAD" />
                                           <Label layoutX="93.0" layoutY="19.0" styleClass="titleText" stylesheets="@assets/css/styles.css" text="STUDENT RECORDS" />
@@ -273,7 +273,7 @@
                                                         <Label fx:id="lblCurrentMasterlist" layoutX="119.0" layoutY="26.0" styleClass="titleText" stylesheets="@assets/css/styles.css" text="STUDENT TABLE" />
                                                         <FontIcon iconColor="#9c0000" iconLiteral="mdal-list_alt" iconSize="50" layoutX="50.0" layoutY="76.0" />
                                           <TableView fx:id="tblStudents" editable="true" layoutX="22.0" layoutY="138.0" onMouseClicked="#onTblStudentsMouseClicked" prefHeight="679.0" prefWidth="1611.0" />
-                                          <TextField fx:id="txtStudentSearch" layoutX="56.0" layoutY="98.0" prefHeight="25.0" prefWidth="400.0" promptText="Search for a student by student number, name, course, or college." />
+                                          <TextField fx:id="txtStudentSearch" onAction="#onTxtStudentSearch" layoutX="56.0" layoutY="98.0" prefHeight="25.0" prefWidth="400.0" promptText="Search for a student by student number, name, course, or college." />
                                           <FontIcon iconColor="#9c0000" iconLiteral="mdmz-search" iconSize="27" layoutX="25.0" layoutY="124.0" />
                                           <Button layoutX="467.0" layoutY="96.0" mnemonicParsing="false" onAction="#onBtnSearchEntry" prefHeight="27.0" prefWidth="80.0" styleClass="btn-blue" stylesheets="@assets/css/styles.css" text="SEARCH" />
                                           <Line endX="1498.0" layoutX="131.0" layoutY="84.0" startX="-100.0" stroke="#9c0000" />
@@ -322,7 +322,7 @@
                                           <Button fx:id="btnManageDelete" disable="true" layoutX="868.0" layoutY="92.0" mnemonicParsing="false" onAction="#onBtnManageDelete" prefHeight="25.0" prefWidth="73.0" styleClass="btn-red" text="DELETE" />
                                           <Group fx:id="searchManageGroup" layoutX="69.0" layoutY="90.0">
                                              <children>
-                                                <TextField fx:id="txtSearchManage" layoutX="37.0" prefHeight="27.0" prefWidth="408.0" />
+                                                <TextField fx:id="txtSearchManage" onAction="#onBtnSearchManage" layoutX="37.0" prefHeight="27.0" prefWidth="408.0" />
                                                 <FontIcon iconColor="#9c0000" iconLiteral="mdmz-search" iconSize="27" layoutX="1.0" layoutY="28.0" />
                                                 <Button layoutX="462.0" mnemonicParsing="false" onAction="#onBtnSearchManage" prefHeight="27.0" prefWidth="84.0" styleClass="btn-blue" stylesheets="@assets/css/styles.css" text="SEARCH" />
                                              </children>

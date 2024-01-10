@@ -393,7 +393,7 @@ public class AdminDashboardController extends Controller {
 
         // initialize comboboxes
         try{
-            ps = conn.prepareStatement("SELECT college_code from college");
+            ps = conn.prepareStatement("SELECT college_code from college where status = 'A'");
             rs = ps.executeQuery();
             comboBoxCollege.getItems().add("Any");
             while(rs.next()){
@@ -403,7 +403,7 @@ public class AdminDashboardController extends Controller {
             }
 
             comboBoxCourse.getItems().add("Any");
-            ps = conn.prepareStatement("SELECT course_code from course");
+            ps = conn.prepareStatement("SELECT course_code from course where status = 'A'");
             rs = ps.executeQuery();
             while(rs.next()){
                 comboBoxCourse.getItems().add(rs.getString(1));
@@ -414,7 +414,7 @@ public class AdminDashboardController extends Controller {
             comboBoxYear.getSelectionModel().selectFirst();
             cmbSelectTableCategory.setItems(FXCollections.observableArrayList("TRANSACTION", "RECORDS", "DATA ENTRY", "MAINTENANCE"));
 
-            ps = conn.prepareStatement("SELECT subject_code from subject where subject_code <> '00000'");
+            ps = conn.prepareStatement("SELECT subject_code from subject where subject_code <> '00000' and status = 'A'");
             rs = ps.executeQuery();
             while(rs.next()){
                 comboBoxSubjectSchedule.getItems().add(rs.getString(1));
@@ -534,9 +534,9 @@ public class AdminDashboardController extends Controller {
 
         ObservableList<String> o = FXCollections.observableArrayList();
         try{
-            ps = conn.prepareStatement("SELECT course_code from course");
+            ps = conn.prepareStatement("SELECT course_code from course where status = 'A'");
             if(!comboBoxCollege.getSelectionModel().getSelectedItem().equalsIgnoreCase("Any")){
-                ps = conn.prepareStatement("SELECT course_code from course where college_code = ?");
+                ps = conn.prepareStatement("SELECT course_code from course where college_code = ? and status = 'A'");
                 ps.setString(1, comboBoxCollege.getSelectionModel().getSelectedItem());
             }
             rs = ps.executeQuery();
@@ -596,7 +596,7 @@ public class AdminDashboardController extends Controller {
         ObservableList<String> ob = FXCollections.observableArrayList();
 
         try{
-            ps = conn.prepareStatement("SELECT college_code from course where course_code = ? ");
+            ps = conn.prepareStatement("SELECT college_code from course where course_code = ? and status = 'A'");
             ps.setString(1, comboBoxCourse.getSelectionModel().getSelectedItem());
             rs = ps.executeQuery();
             if(rs.next())
@@ -999,12 +999,12 @@ public class AdminDashboardController extends Controller {
                                 Field.ofStringType(student.last_nameProperty())
                                         .bind(student.last_nameProperty())
                                         .required("Student must have a last name.")
-                                        .validate(RegexValidator.forPattern("^[A-Z]{1}([a-z]+)?( )?([A-Z]{1}[a-z]+)?", "Must have a valid name format ex: Dela Cruz"))
+                                        .validate(RegexValidator.forPattern("^[A-Za-z ,.'-]{1,100}", "Must have a valid name format ex: Dela Cruz"))
                                         .label("Last Name"),
                                 Field.ofStringType(student.first_nameProperty())
                                         .bind(student.first_nameProperty())
                                         .required("Student must have a first name.")
-                                        .validate(RegexValidator.forPattern("^[A-Z]{1}([a-z]+)?( )?([A-Z]{1}[a-z]+)?", "Must have a valid name format (uppercase start of name/s) ex: Juan"))
+                                        .validate(RegexValidator.forPattern("^[A-Za-z ,.'-]{1,100}", "Must have a valid name format (uppercase start of name/s) ex: Juan"))
                                         .label("First Name"),
                                 Field.ofSingleSelectionType(student.genderListProperty())
                                         .bind(student.genderListProperty(), student.genderProperty())
@@ -1025,6 +1025,7 @@ public class AdminDashboardController extends Controller {
                                 Field.ofStringType(student.addressProperty())
                                         .bind(student.addressProperty())
                                         .label("Address")
+                                        .validate(RegexValidator.forPattern("^.{1,100}$", "Must only contain 1 to 100 characters"))
                                         .required("Must have an address"),
                                 Field.ofSingleSelectionType(student.courseListProperty())
                                         .bind(student.courseListProperty(), student.course_codeProperty())
@@ -1088,12 +1089,12 @@ public class AdminDashboardController extends Controller {
                                 Field.ofStringType(employee.last_nameProperty())
                                         .bind(employee.last_nameProperty())
                                         .required("Employee must have a last name.")
-                                        .validate(RegexValidator.forPattern("^[A-Z]{1}([a-z]+)?( )?([A-Z]{1}[a-z]+)?", "Must have a valid name format ex: Dela Cruz"))
+                                        .validate(RegexValidator.forPattern("^[A-Za-z ,.'-]{1,100}", "Must have a valid name format ex: Dela Cruz"))
                                         .label("Last Name"),
                                 Field.ofStringType(employee.first_nameProperty())
                                         .bind(employee.first_nameProperty())
                                         .required("Employee must have a first name.")
-                                        .validate(RegexValidator.forPattern("^[A-Z]{1}([a-z]+)?( )?([A-Z]{1}[a-z]+)?", "Must have a valid name format (uppercase start of name/s) ex: Juan"))
+                                        .validate(RegexValidator.forPattern("^[A-Za-z ,.'-]{1,100}", "Must have a valid name format (uppercase start of name/s) ex: Juan"))
                                         .label("First Name"),
                                 Field.ofSingleSelectionType(employee.genderListProperty())
                                         .bind(employee.genderListProperty(), employee.genderProperty())
@@ -1115,6 +1116,7 @@ public class AdminDashboardController extends Controller {
                                 Field.ofStringType(employee.addressProperty())
                                         .bind(employee.addressProperty())
                                         .label("Address")
+                                        .validate(RegexValidator.forPattern("^.{1,100}$", "Must have a length of 1 to 100 only."))
                                         .required("Must have an address")
                         )
         )
@@ -1253,7 +1255,7 @@ public class AdminDashboardController extends Controller {
             }
             comboBoxCourseSchedule.setItems(courses);
 
-            ps = conn.prepareStatement("SELECT subject_code from subject where college_code = ? and subject_code <> '00000'");
+            ps = conn.prepareStatement("SELECT subject_code from subject where college_code = ? and subject_code <> '00000' and status = 'A'");
             ps.setString(1, comboBoxCollegeSchedule.getSelectionModel().getSelectedItem());
             rs = ps.executeQuery();
             while(rs.next()){
@@ -1420,23 +1422,29 @@ public class AdminDashboardController extends Controller {
     @FXML
     protected void onBtnClearScheduleAction(ActionEvent event){
         try{
-            ps = conn.prepareStatement("SELECT college_code from college");
+            ps = conn.prepareStatement("SELECT college_code from college where status = 'A'");
             rs = ps.executeQuery();
+            ObservableList<String> colleges = FXCollections.observableArrayList();
             while(rs.next()){
-                comboBoxCollegeSchedule.getItems().add(rs.getString(1));
+                colleges.add(rs.getString(1));
             }
+            comboBoxCollegeSchedule.setItems(colleges);
 
-            ps = conn.prepareStatement("SELECT course_code from course");
+            ObservableList<String> courses = FXCollections.observableArrayList();
+            ps = conn.prepareStatement("SELECT course_code from course where status = 'A'");
             rs = ps.executeQuery();
             while(rs.next()){
-                comboBoxCourseSchedule.getItems().add(rs.getString(1).replace("BS", ""));
+                courses.add(rs.getString(1).replace("BS", ""));
             }
+            comboBoxCourseSchedule.setItems(courses);
 
-            ps = conn.prepareStatement("SELECT subject_code from subject where subject_code <> '00000'");
+            ObservableList<String> subjects = FXCollections.observableArrayList();
+            ps = conn.prepareStatement("SELECT subject_code from subject where subject_code <> '00000' and status = 'A'");
             rs = ps.executeQuery();
             while(rs.next()){
-                comboBoxSubjectSchedule.getItems().add(rs.getString(1));
+                subjects.add(rs.getString(1));
             }
+            comboBoxSubjectSchedule.setItems(subjects);
         }catch (Exception e){
             System.out.println(e);
         }
@@ -1462,6 +1470,7 @@ public class AdminDashboardController extends Controller {
         txtNameProf.clear();
         btnUpdateSchedule.setDisable(true);
         btnRemoveSchedule.setDisable(true);
+        tblSubjectScheduling.getItems().clear();
     }
     @FXML
     protected void onBtnAddScheduleAction(ActionEvent event){
@@ -2277,7 +2286,7 @@ public class AdminDashboardController extends Controller {
         SimpleStringProperty course_code = new SimpleStringProperty();
         SimpleStringProperty description = new SimpleStringProperty();
         SimpleListProperty<String> college_codeList = new SimpleListProperty<>();
-        college_codeList.set(FXCollections.observableArrayList(Database.fetch("SELECT COLLEGE_CODE FROM COLLEGE")));
+        college_codeList.set(FXCollections.observableArrayList(Database.fetch("SELECT COLLEGE_CODE FROM COLLEGE WHERE STATUS = 'A'")));
         ObjectProperty<String> college_code = new SimpleObjectProperty<>();
 
         Form course = Form.of(
@@ -2341,7 +2350,7 @@ public class AdminDashboardController extends Controller {
         SimpleIntegerProperty units = new SimpleIntegerProperty();
         SimpleStringProperty curriculum = new SimpleStringProperty();
         SimpleListProperty<String> college_codeList = new SimpleListProperty<>();
-        college_codeList.set(FXCollections.observableArrayList(Database.fetch("SELECT COLLEGE_CODE FROM COLLEGE")));
+        college_codeList.set(FXCollections.observableArrayList(Database.fetch("SELECT COLLEGE_CODE FROM COLLEGE WHERE STATUS = 'A'")));
         ObjectProperty<String> college_code = new SimpleObjectProperty<>();
         Form course = Form.of(
                         Group.of(
@@ -2357,11 +2366,13 @@ public class AdminDashboardController extends Controller {
                                         .validate(RegexValidator.forPattern("^.{1,100}$", "Length must be between 1 and 100")),
                                 Field.ofIntegerType(units)
                                         .bind(units)
+                                        .validate(IntegerRangeValidator.between(1, 9, "Value must range between 1-9 only"))
                                         .required("Units is required.")
                                         .label("Units"),
                                 Field.ofStringType("")
                                         .bind(curriculum)
                                         .label("Curriculum")
+                                        .validate(RegexValidator.forPattern("^.{1,10}$",  "Must have a length of 1 to 10 only"))
                                         .required("Curriculum is required"),
                                 Field.ofSingleSelectionType(college_codeList)
                                         .bind(college_codeList, college_code)

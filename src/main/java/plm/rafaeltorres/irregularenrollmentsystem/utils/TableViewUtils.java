@@ -76,9 +76,8 @@ public class TableViewUtils {
 
                             if(rs.getMetaData().getColumnName(j+1).equalsIgnoreCase("STATUS") && !args[0].equalsIgnoreCase("STUDENT") && !args[0].equalsIgnoreCase("SUBJECT")){
                                 String query = "UPDATE " + args[0] + " SET DATE_CLOSED = '" + DateTimeFormatter.ISO_LOCAL_DATE.format(LocalDate.now()) + "' WHERE " + args[1] + " = ?";
-                                if(o.get(j).equalsIgnoreCase("A"))
+                                if(t.getNewValue().toString().equalsIgnoreCase("A"))
                                     query = "UPDATE " + args[0] + " SET DATE_CLOSED = '9999-12-31' WHERE " + args[1] + " = ?";
-
                                 ps = conn.prepareStatement(query);
                                 ps.setString(1, o.get(0));
                                 ps.executeUpdate();
