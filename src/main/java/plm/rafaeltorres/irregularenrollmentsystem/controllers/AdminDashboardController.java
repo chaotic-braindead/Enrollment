@@ -27,7 +27,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.converter.DefaultStringConverter;
-import org.controlsfx.control.SearchableComboBox;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import plm.rafaeltorres.irregularenrollmentsystem.MainScene;
@@ -38,7 +37,6 @@ import plm.rafaeltorres.irregularenrollmentsystem.model.StudentProperty;
 import plm.rafaeltorres.irregularenrollmentsystem.model.User;
 import plm.rafaeltorres.irregularenrollmentsystem.utils.*;
 
-import javax.swing.*;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.math.BigDecimal;
