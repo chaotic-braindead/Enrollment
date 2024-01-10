@@ -44,6 +44,9 @@ public class LoginController implements Initializable {
 
     @FXML
     protected void onBtnLoginAction(ActionEvent event) {
+        if(btnLogin.isDisable()){
+            return;
+        }
         String password = (showPassword.isSelected()) ? txtShowPassword.getText() : txtPassword.getText();
         try {
             ps = conn.prepareStatement(Database.Query.getAccount);
