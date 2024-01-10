@@ -707,7 +707,7 @@ public class StudentDashboardController extends Controller {
         }
     }
     @FXML
-    protected void onBtnTuitionAction(ActionEvent event) throws IllegalAccessException{
+    protected void onBtnTuitionAction(ActionEvent event){
         String strTuitionFeeQuery = "SELECT* FROM tuition";
         float flTotalFee = 0.00F, flUnitPrice = 0.00F, flSumFee = 0.00F, flSum = 0.00F, flTuition = 0.00F;
 
@@ -739,12 +739,7 @@ public class StudentDashboardController extends Controller {
             }
 
             ps = conn.prepareStatement("select " +
-                    "v.subject_code, " +
-                    "v.description, " +
-                    "v.block, " +
-                    "v.SCHEDULE, " +
-                    "v.CREDITS, " +
-                    "v.professor "+
+                    "v.CREDITS " +
                     "from student_schedule s " +
                     "inner join vwSubjectSchedules v on " +
                     "s.subject_code = v.subject_code " +
@@ -759,7 +754,7 @@ public class StudentDashboardController extends Controller {
             int totalUnits = 0;
             while(rs.next())
             {
-                totalUnits += rs.getInt(5);
+                totalUnits += rs.getInt(1);
             }
 
             flTuition = totalUnits*flUnitPrice;
@@ -775,8 +770,41 @@ public class StudentDashboardController extends Controller {
 
         catch(Exception e)
         {
+            AlertMessage.showErrorAlert("An error occurred while generating your tuition invoice: " + e);
+        }
+    }
+
+    @FXML
+    protected void onBtnSaveTuitionAction(ActionEvent event) throws IOException {
+        if(tblTuitionFees.getItems().isEmpty())
+            return;
+        Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        int totalUnits = 0;
+
+        try{
+            ps = conn.prepareStatement("select " +
+                    "v.CREDITS " +
+                    "from student_schedule s " +
+                    "inner join vwSubjectSchedules v on " +
+                    "s.subject_code = v.subject_code " +
+                    "and s.sy = v.sy " +
+                    "and s.semester = v.semester " +
+                    "and s.block_no = concat(v.course, v.year, v.block) where s.student_no = ? and s.sy = ? and s.semester = ? ");
+            ps.setString(1, student.getStudentNo());
+            ps.setString(2, currentSY);
+            ps.setString(3, currentSem);
+            rs = ps.executeQuery();
+
+            while(rs.next())
+            {
+                totalUnits += rs.getInt(1);
+            }
+        }catch(Exception e){
             System.out.println(e);
         }
+
+        PDFGenerator.generateTuitionSummary(stage, student, tblTuitionFees, totalUnits);
+        AlertMessage.showInformationAlert("Successfully downloaded invoice!");
     }
     @FXML
     protected void onBtnGradesAction(ActionEvent event) throws IllegalAccessException{

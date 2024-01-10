@@ -520,7 +520,7 @@
                                                 <Font size="32.0" />
                                              </font>
                                           </FontIcon>
-                                          <Button layoutX="771.0" layoutY="440.0" mnemonicParsing="false" prefHeight="65.0" prefWidth="279.0" styleClass="btn-blue" text="SAVE A COPY">
+                                          <Button layoutX="771.0" layoutY="440.0" mnemonicParsing="false" onAction="#onBtnSaveTuitionAction" prefHeight="65.0" prefWidth="279.0" styleClass="btn-blue" text="SAVE A COPY">
                                              <font>
                                                 <Font size="30.0" />
                                              </font>
