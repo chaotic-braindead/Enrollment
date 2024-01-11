@@ -1671,6 +1671,12 @@ public class AdminDashboardController extends Controller {
             ps.setString(3, tblEnrollmentHistory.getSelectionModel().getSelectedItem().get(2));
             ps.executeUpdate();
 
+            ps = conn.prepareStatement("DELETE FROM GRADE WHERE SY = ? AND SEMESTER = ? AND STUDENT_NO = ?");
+            ps.setString(1, tblEnrollmentHistory.getSelectionModel().getSelectedItem().get(0));
+            ps.setString(2, tblEnrollmentHistory.getSelectionModel().getSelectedItem().get(1));
+            ps.setString(3, tblEnrollmentHistory.getSelectionModel().getSelectedItem().get(2));
+            ps.executeUpdate();
+
             AlertMessage.showInformationAlert("Successfully deleted enrollment record.");
             btnEnrollmentHistory.fire();
         }catch(Exception e){
