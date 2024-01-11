@@ -26,6 +26,7 @@ The application requires dependencies in order to work properly. Ensure that the
 **D. Run the application**
 
 - Run the application by clicking on the **EnrollmentSystem.jar** file.
+- **If the application window exceeds your monitor's bounds, set your display scaling to 100% on your device's display settings.**
 
 
 **For more information on how to use the system, read the full [documentation](https://docs.google.com/document/d/1Gpzc03ZOnkGq1zpKNtq1-i8FeeYzOCMeGNJhKNWNRIw/edit).**
