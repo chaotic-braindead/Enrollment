@@ -841,7 +841,7 @@ public class AdminDashboardController extends Controller {
         String registrationStatus = (!btnApprove.isVisible()) ? "Regular" : "Irregular";
         String query = "SELECT STUDENT_No, concat(LASTNAME, ', ', FIRSTNAME) as NAME, COURSE_CODE, REGISTRATION_STATUS FROM VWSTUDENTINFO WHERE status = 'A' and REGISTRATION_STATUS = ? and student_no not in(select student_no from enrollment where SY = ? and semester = ? and status in ('Enrolled', 'Pending')) and (cast(substring(?, 1, 4) as signed) - cast(substring(student_no, 1, 4) as signed)) >= 0";
         if(registrationStatus.equalsIgnoreCase("IRREGULAR")){
-            query = "SELECT STUDENT_No, concat(LASTNAME, ', ', FIRSTNAME) as NAME, COURSE_CODE, REGISTRATION_STATUS FROM VWSTUDENTINFO WHERE status = 'A' REGISTRATION_STATUS = ? and student_no in(select student_no from enrollment where SY = ? and semester = ? and status = 'Pending') and (cast(substring(?, 1, 4) as signed) - cast(substring(student_no, 1, 4) as signed)) >= 0";
+            query = "SELECT STUDENT_No, concat(LASTNAME, ', ', FIRSTNAME) as NAME, COURSE_CODE, REGISTRATION_STATUS FROM VWSTUDENTINFO WHERE status = 'A' and REGISTRATION_STATUS = ? and student_no in(select student_no from enrollment where SY = ? and semester = ? and status = 'Pending') and (cast(substring(?, 1, 4) as signed) - cast(substring(student_no, 1, 4) as signed)) >= 0";
         }
         try{
             ps = conn.prepareStatement(query);
@@ -881,6 +881,7 @@ public class AdminDashboardController extends Controller {
         tblSubjects.setPlaceholder(new Label("Select a student."));
         irregularLabelGroup.setVisible(true);
         lblBlockSection.setVisible(false);
+        tblEnrollees.getItems().clear();
         lblAdminEnrollment.setText("SCHEDULE APPROVAL");
         onEnroll(event);
 
