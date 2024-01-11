@@ -40,7 +40,9 @@ public class TableViewUtils {
                         Connection conn = Database.connect();
                         PreparedStatement ps = null;
                         try{
-                            if(rs.getMetaData().getColumnName(j+1).equalsIgnoreCase("COURSE_CODE") && args[0].equalsIgnoreCase("STUDENT")){
+                            if(rs.getMetaData().getColumnName(j+1).equalsIgnoreCase("COURSE_CODE") && args[0].equalsIgnoreCase("STUDENT") && o.get(o.size()-1).equalsIgnoreCase("Regular")){
+                                if(t.getOldValue().equals(t.getNewValue()))
+                                    return;
                                 Optional<ButtonType> confirm = AlertMessage.showConfirmationAlert("Warning: Changing the course of the student will result in he/she being irregular. This action is irreversible. Do you wish to continue?");
                                 if(confirm.isEmpty() || (confirm.get().equals(ButtonType.NO))){
                                     AlertMessage.showInformationAlert("Cancelled transaction.");
@@ -56,22 +58,6 @@ public class TableViewUtils {
                                 }catch(Exception e){
                                     AlertMessage.showErrorAlert("An error occurred while shifting courses: " + e);
                                 }
-                            }
-
-                            List<String> pk = List.of("STUDENT_NO", "EMPLOYEE_ID", "COLLEGE_CODE", "COURSE_CODE", "SUBJECT_CODE");
-
-                            if(pk.contains(rs.getMetaData().getColumnName(j+1))){
-                                Optional<ButtonType> confirm = AlertMessage.showConfirmationAlert("Warning: Editing this value will cascade to all other records in the database which uses this value. Do you wish to proceed?");
-                                if(confirm.isEmpty() || confirm.get() == ButtonType.NO){
-                                    AlertMessage.showInformationAlert("Cancelled edit.");
-                                    callback.run();
-                                    return;
-                                }
-                                ps = conn.prepareStatement("UPDATE ACCOUNT SET ACCOUNT_NO = ? WHERE ACCOUNT_NO = ?");
-                                ps.setString(1, t.getNewValue().toString());
-                                ps.setString(2, o.get(0));
-                                ps.executeUpdate();
-                                AlertMessage.showInformationAlert("Successfully edited all records involving this field.");
                             }
 
                             if(rs.getMetaData().getColumnName(j+1).equalsIgnoreCase("STATUS") && !args[0].equalsIgnoreCase("STUDENT") && !args[0].equalsIgnoreCase("SUBJECT")){
@@ -128,7 +114,7 @@ public class TableViewUtils {
                         col.setCellFactory(
                                 new Callback<TableColumn, TableCell>() {
                                     public TableCell call(TableColumn p) {
-                                        return new WrappingTextFieldTableCell<ObservableList<String>>("^E[0-9]{3}", "Enter a valid employee id format. Ex: E001");
+                                        return new WrappingTextFieldTableCell<ObservableList<String>>("^E[0-9]{3}", "Enter a valid employee id format. Ex: E001", true);
                                     }
                                 }
                         );
@@ -137,7 +123,7 @@ public class TableViewUtils {
                         col.setCellFactory(
                                 new Callback<TableColumn, TableCell>() {
                                     public TableCell call(TableColumn p) {
-                                        return new WrappingTextFieldTableCell<ObservableList<String>>("^[0-9]{4}-[0-9]{5}", "Enter a valid student number format. Ex: 2022-34000");
+                                        return new WrappingTextFieldTableCell<ObservableList<String>>("^[0-9]{4}-[0-9]{5}", "Enter a valid student number format. Ex: 2022-34000", true);
                                     }
                                 }
                         );
@@ -215,12 +201,12 @@ public class TableViewUtils {
                             col.setCellFactory(
                                     new Callback<TableColumn, TableCell>() {
                                         public TableCell call(TableColumn p) {
-                                            return new WrappingTextFieldTableCell("^.{1,20}$", "Length must be between 1 and 20");
+                                            return new WrappingTextFieldTableCell("^.{1,20}$", "Length must be between 1 and 20", true);
                                         }
                                     }
                             );
                         }
-                        else{
+                        else if(!args[0].equalsIgnoreCase("STUDENT")){
                             ObservableList<String> comboBoxItems = FXCollections.observableArrayList(Database.fetch("SELECT COLLEGE_CODE FROM COLLEGE"));
                             col.setCellFactory(
                                     new Callback<TableColumn, TableCell>() {
@@ -238,7 +224,7 @@ public class TableViewUtils {
                             col.setCellFactory(
                                     new Callback<TableColumn, TableCell>() {
                                         public TableCell call(TableColumn p) {
-                                            return new WrappingTextFieldTableCell("^.{1,20}$", "Length must be between 1 and 20");
+                                            return new WrappingTextFieldTableCell("^.{1,20}$", "Length must be between 1 and 20", true);
                                         }
                                     }
                             );
@@ -270,7 +256,7 @@ public class TableViewUtils {
                             col.setCellFactory(
                                     new Callback<TableColumn, TableCell>() {
                                         public TableCell call(TableColumn p) {
-                                            return new WrappingTextFieldTableCell("^.{1,20}$", "Length must be between 1 and 20");
+                                            return new WrappingTextFieldTableCell("^.{1,20}$", "Length must be between 1 and 20", true);
                                         }
                                     }
                             );

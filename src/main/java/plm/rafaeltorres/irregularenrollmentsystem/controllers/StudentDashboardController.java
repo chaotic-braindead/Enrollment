@@ -156,10 +156,8 @@ public class StudentDashboardController extends Controller {
     private Label lblMiscF;
     @FXML
     private Label lblNumberUnits;
-
-
-
-
+    @FXML
+    private Label lblGWA;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -170,6 +168,8 @@ public class StudentDashboardController extends Controller {
             if (newVal == null)
                 oldVal.setSelected(true);
         });
+
+        lblGWA.setText("");
         SimpleDateFormat formatter = new SimpleDateFormat("EEEEE, MMMMM dd, yyyy");
         lblDateNow.setText("Today is "+ formatter.format(new Date()));
         btnDashboard.setSelected(true);
@@ -905,11 +905,20 @@ public class StudentDashboardController extends Controller {
                 tblGrades.setPlaceholder(new Label("No grades yet for this SY/Sem"));
             }
             tblGrades.getColumns().clear();
-
             TableViewUtils.generateTableFromResultSet(tblGrades, rs);
 
         }catch(Exception e){
             AlertMessage.showErrorAlert("An error occurred while fetching your grades.");
+        }
+        try{
+            ps = conn.prepareStatement("SELECT GWA FROM VWSTUDENTSEMESTRALSUMMARY WHERE SCHOOL_YEAR = ? AND SEMESTER = ?");
+            ps.setString(1, choiceSY.getSelectionModel().getSelectedItem());
+            ps.setString(2, choiceSemester.getSelectionModel().getSelectedItem());
+            rs = ps.executeQuery();
+            if(rs.next())
+                lblGWA.setText("GWA: " + rs.getString(1));
+        }catch (Exception e){
+            AlertMessage.showErrorAlert("An error occurred while computing your GWA: " + e);
         }
     }
 

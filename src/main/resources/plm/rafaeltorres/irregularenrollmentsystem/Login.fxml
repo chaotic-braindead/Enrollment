@@ -114,7 +114,7 @@
                                                 </Label>
                                                 <StackPane layoutX="18.0" layoutY="180.0" prefWidth="558.0">
                                                    <children>
-                                                      <TextField fx:id="txtShowPassword" onAction="#onTxtFieldAction" onKeyTyped="#onTxtShowPasswordKeyTyped" prefHeight="36.0" prefWidth="558.0" visible="false" />
+                                                      <TextField fx:id="txtShowPassword" onAction="#onBtnLoginAction" onKeyTyped="#onTxtShowPasswordKeyTyped" prefHeight="36.0" prefWidth="558.0" visible="false" />
                                                       <PasswordField fx:id="txtPassword" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#onBtnLoginAction" onKeyTyped="#onTxtPasswordKeyTyped" prefHeight="36.0" prefWidth="558.0" />
                                                    </children>
                                                 </StackPane>

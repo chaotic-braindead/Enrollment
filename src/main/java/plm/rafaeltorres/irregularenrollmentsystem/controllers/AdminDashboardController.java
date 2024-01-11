@@ -648,9 +648,9 @@ public class AdminDashboardController extends Controller {
             comboBoxBlock.setValue(null);
             txtSearchEnrollee.clear();
             comboBoxBlock.setDisable(true);
-            String query = "SELECT STUDENT_No, concat(LASTNAME, ', ', FIRSTNAME) as NAME, COURSE_CODE, REGISTRATION_STATUS FROM VWSTUDENTINFO WHERE REGISTRATION_STATUS = ? and student_no not in(select student_no from enrollment where SY = ? and semester = ? and status in ('Enrolled', 'Pending'))  and (cast(substring(?, 1, 4) as signed) - cast(substring(student_no, 1, 4) as signed)) >= 0";
+            String query = "SELECT STUDENT_No, concat(LASTNAME, ', ', FIRSTNAME) as NAME, COURSE_CODE, REGISTRATION_STATUS FROM VWSTUDENTINFO WHERE STATUS = 'A' and REGISTRATION_STATUS = ? and student_no not in(select student_no from enrollment where SY = ? and semester = ? and status in ('Enrolled', 'Pending'))  and (cast(substring(?, 1, 4) as signed) - cast(substring(student_no, 1, 4) as signed)) >= 0";
             if(registrationStatus.equalsIgnoreCase("IRREGULAR")){
-                query = "SELECT STUDENT_No, concat(LASTNAME, ', ', FIRSTNAME) as NAME, COURSE_CODE, REGISTRATION_STATUS FROM VWSTUDENTINFO WHERE REGISTRATION_STATUS = ? and student_no in(select student_no from enrollment where SY = ? and semester = ? and status = 'Pending')  and (cast(substring(?, 1, 4) as signed) - cast(substring(student_no, 1, 4) as signed)) >= 0";
+                query = "SELECT STUDENT_No, concat(LASTNAME, ', ', FIRSTNAME) as NAME, COURSE_CODE, REGISTRATION_STATUS FROM VWSTUDENTINFO WHERE STATUS = 'A' and REGISTRATION_STATUS = ? and student_no in(select student_no from enrollment where SY = ? and semester = ? and status = 'Pending')  and (cast(substring(?, 1, 4) as signed) - cast(substring(student_no, 1, 4) as signed)) >= 0";
             }
             try{
                 ps = conn.prepareStatement(query);
@@ -839,9 +839,9 @@ public class AdminDashboardController extends Controller {
     private void onEnroll(ActionEvent event) {
         txtName.setText("");
         String registrationStatus = (!btnApprove.isVisible()) ? "Regular" : "Irregular";
-        String query = "SELECT STUDENT_No, concat(LASTNAME, ', ', FIRSTNAME) as NAME, COURSE_CODE, REGISTRATION_STATUS FROM VWSTUDENTINFO WHERE REGISTRATION_STATUS = ? and student_no not in(select student_no from enrollment where SY = ? and semester = ? and status in ('Enrolled', 'Pending')) and (cast(substring(?, 1, 4) as signed) - cast(substring(student_no, 1, 4) as signed)) >= 0";
+        String query = "SELECT STUDENT_No, concat(LASTNAME, ', ', FIRSTNAME) as NAME, COURSE_CODE, REGISTRATION_STATUS FROM VWSTUDENTINFO WHERE status = 'A' and REGISTRATION_STATUS = ? and student_no not in(select student_no from enrollment where SY = ? and semester = ? and status in ('Enrolled', 'Pending')) and (cast(substring(?, 1, 4) as signed) - cast(substring(student_no, 1, 4) as signed)) >= 0";
         if(registrationStatus.equalsIgnoreCase("IRREGULAR")){
-            query = "SELECT STUDENT_No, concat(LASTNAME, ', ', FIRSTNAME) as NAME, COURSE_CODE, REGISTRATION_STATUS FROM VWSTUDENTINFO WHERE REGISTRATION_STATUS = ? and student_no in(select student_no from enrollment where SY = ? and semester = ? and status = 'Pending') and (cast(substring(?, 1, 4) as signed) - cast(substring(student_no, 1, 4) as signed)) >= 0";
+            query = "SELECT STUDENT_No, concat(LASTNAME, ', ', FIRSTNAME) as NAME, COURSE_CODE, REGISTRATION_STATUS FROM VWSTUDENTINFO WHERE status = 'A' REGISTRATION_STATUS = ? and student_no in(select student_no from enrollment where SY = ? and semester = ? and status = 'Pending') and (cast(substring(?, 1, 4) as signed) - cast(substring(student_no, 1, 4) as signed)) >= 0";
         }
         try{
             ps = conn.prepareStatement(query);
@@ -860,7 +860,7 @@ public class AdminDashboardController extends Controller {
         currentPane.setVisible(true);
     }
     @FXML
-    protected void onBtnApprovalAction(ActionEvent event) throws IllegalAccessException {
+    protected void onBtnApprovalAction(ActionEvent event){
         btnApprove.setVisible(true);
         btnDisapprove.setVisible(true);
         btnApprove.setDisable(true);
@@ -1171,7 +1171,7 @@ public class AdminDashboardController extends Controller {
         try{
             ps = conn.prepareStatement("INSERT INTO ACCOUNT VALUES(?, ?, null, ?)");
             ps.setString(1, accountNumber);
-            ps.setString(2, BCrypt.hashpw(accountNumber, BCrypt.gensalt()));
+            ps.setString(2, BCrypt.hashpw("password", BCrypt.gensalt()));
             ps.setString(3, type);
             ps.executeUpdate();
         }catch(Exception e){
