@@ -146,7 +146,7 @@
                                                             <children>
                                                                 <HBox alignment="CENTER" layoutX="58.0" layoutY="97.0" prefHeight="96.0" prefWidth="1093.0" spacing="20.0">
                                                                 <children>
-                                                                    <Pane prefHeight="96.0" prefWidth="332.0" styleClass="dashboardPanes" stylesheets="@assets/css/styles.css">
+                                                                    <Pane prefHeight="96.0" prefWidth="307.0" styleClass="dashboardPanes" stylesheets="@assets/css/styles.css">
                                                                         <children>
                                                                             <FontIcon iconColor="#9c0000" iconLiteral="mdmz-person" iconSize="55" layoutX="19.0" layoutY="74.0" />
                                                                             <Label layoutX="155.0" layoutY="9.0" styleClass="dashboardPaneText" stylesheets="@assets/css/styles.css" text="Enrollment Status">
@@ -187,7 +187,7 @@
                                                             <Cursor fx:constant="DEFAULT" />
                                                          </cursor>
                                                                     </Pane>
-                                                                    <Pane prefHeight="96.0" prefWidth="333.0" styleClass="dashboardPanes" stylesheets="@assets/css/styles.css">
+                                                                    <Pane prefHeight="96.0" prefWidth="291.0" styleClass="dashboardPanes" stylesheets="@assets/css/styles.css">
                                                                         <children>
                                                                             <FontIcon iconColor="#9c0000" iconLiteral="eli-lock" iconSize="40" layoutX="22.0" layoutY="65.0" />
                                                                             <Label layoutX="114.0" layoutY="9.0" text="Password and Security" textFill="#9c0000">
