@@ -413,6 +413,8 @@ public class AdminDashboardController extends Controller {
             comboBoxYear.setItems(FXCollections.observableArrayList("Any", "1", "2", "3", "4", "5"));
             comboBoxYear.getSelectionModel().selectFirst();
             cmbSelectTableCategory.setItems(FXCollections.observableArrayList("TRANSACTION", "RECORDS", "DATA ENTRY", "MAINTENANCE"));
+            cmbSelectTableCategory.getSelectionModel().select("TRANSACTION");
+            navIkonli.setIconLiteral("mdal-credit_card");
 
             ps = conn.prepareStatement("SELECT subject_code from subject where subject_code <> '00000' and status = 'A'");
             rs = ps.executeQuery();
