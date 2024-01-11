@@ -807,13 +807,12 @@ public class StudentDashboardController extends Controller {
         AlertMessage.showInformationAlert("Successfully downloaded invoice!");
     }
     @FXML
-    protected void onBtnGradesAction(ActionEvent event) throws IllegalAccessException{
+    protected void onBtnGradesAction(ActionEvent event){
         currentPane.setVisible(false);
         currentPane = gradesContainer;
         currentPane.setVisible(true);
         tblGrades.setEditable(false);
         tblGrades.setMouseTransparent(true);
-
     }
     @FXML
     protected void onTblSubjectsMouseClicked(MouseEvent event) {
@@ -851,7 +850,6 @@ public class StudentDashboardController extends Controller {
     @FXML
     protected void onSYComboAction(ActionEvent event){
         String sy = choiceSY.getSelectionModel().getSelectedItem();
-        String semester = choiceSemester.getSelectionModel().getSelectedItem();
         if(sy == null)
             return;
 
@@ -879,8 +877,13 @@ public class StudentDashboardController extends Controller {
     @FXML
     protected void onBtnLoadGradesAction(ActionEvent event){
         String semester = choiceSemester.getSelectionModel().getSelectedItem();
-        if(semester == null){
+        String sy = choiceSY.getSelectionModel().getSelectedItem();
+        if(sy == null){
             AlertMessage.showErrorAlert("Select a valid school year.");
+            return;
+        }
+        if(semester == null){
+            AlertMessage.showErrorAlert("Select a valid semester.");
             return;
         }
         try{

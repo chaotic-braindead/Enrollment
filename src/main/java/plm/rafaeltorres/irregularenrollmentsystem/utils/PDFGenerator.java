@@ -312,7 +312,7 @@ public class PDFGenerator {
             }
         }
 
-        Table remarks = new Table(5).setWidth(525f);
+        Table remarks = new Table(4).setWidth(525f);
         remarks.addCell(new Cell()
                 .add(new Paragraph("Remarks: This enrollment becomes official until all requirements are complied with")
                         .setFontSize(7)
@@ -361,19 +361,6 @@ public class PDFGenerator {
                         .setFontSize(7f))
                 .setBorder(Border.NO_BORDER));
 
-        Table amountDue = new Table(1);
-        amountDue.addCell(new Cell()
-                .add(new Paragraph("Amount Due:")
-                        .setFontSize(6f)
-                        .setFont(timesNewRoman)
-                )
-                .setBorder(Border.NO_BORDER));
-        amountDue.addCell(new Cell()
-                .add(new Paragraph("0.00 (Covered by CHED Unifast)")
-                        .setFontSize(7f))
-                .setBorder(Border.NO_BORDER));
-
-        remarks.addHeaderCell(amountDue);
         remarks.addCell(encoder);
 
         document.add(table);
