@@ -428,8 +428,11 @@ public class StudentDashboardController extends Controller {
         ps.setString(2, currentSY);
         ps.setString(3, currentSem);
         rs = ps.executeQuery();
-        PDFGenerator.generateSER(stage, student, rs);
-        AlertMessage.showInformationAlert("Successfully downloaded your SER!");
+        boolean success = PDFGenerator.generateSER(stage, student, rs);
+        if(success)
+            AlertMessage.showInformationAlert("Successfully downloaded your SER!");
+        else
+            AlertMessage.showErrorAlert("An error occurred while generating your SER. Please try restarting the application.");
     }
 
     @FXML
@@ -706,10 +709,22 @@ public class StudentDashboardController extends Controller {
             AlertMessage.showErrorAlert("An error occurred while removing "+sched.getSubjectCode()+" from your schedule: "+e.toString());
         }
     }
+    private void generateTuitionTable(){
+        int totalUnits = 0;
+        String strTuitionFeeQuery = "SELECT * FROM tuition";
+        try {
+            ps = conn.prepareStatement(strTuitionFeeQuery);
+            rs = ps.executeQuery();
+            TableViewUtils.generateTableFromResultSet(tblTuitionFees, rs);
+        }catch (Exception e){
+            System.out.println(e);
+        }
+    }
     @FXML
     protected void onBtnTuitionAction(ActionEvent event){
-        String strTuitionFeeQuery = "SELECT* FROM tuition";
+        String strTuitionFeeQuery = "SELECT * FROM tuition";
         float flTotalFee = 0.00F, flUnitPrice = 0.00F, flSumFee = 0.00F, flSum = 0.00F, flTuition = 0.00F;
+        int totalUnits = 0;
 
         currentPane.setVisible(false);
         currentPane = tuitionContainer;
@@ -717,23 +732,17 @@ public class StudentDashboardController extends Controller {
         tblTuitionFees.setEditable(false);
         tblTuitionFees.setMouseTransparent(true);
 
-        try
-        {
-            ps = conn.prepareStatement(strTuitionFeeQuery);
-            rs = ps.executeQuery();
-            TableViewUtils.generateTableFromResultSet(tblTuitionFees, rs);
+        try {
+            generateTuitionTable();
 
             ps = conn.prepareStatement("SELECT amount FROM enrollment_system.tuition WHERE description = \"Tuition Fee (Price per Unit)\"");
             rs = ps.executeQuery();
             if(rs.next())
-            {
                 flUnitPrice = rs.getFloat(1);
-            }
 
             ps = conn.prepareStatement("SELECT amount FROM enrollment_system.tuition WHERE description <> '* Except Tuition Fee (Price per Unit)';");
             rs = ps.executeQuery();
-            while(rs.next())
-            {
+            while(rs.next()) {
                 flSum = rs.getFloat(1);
                 flSumFee += flSum;
             }
@@ -751,36 +760,29 @@ public class StudentDashboardController extends Controller {
             ps.setString(3, currentSem);
             rs = ps.executeQuery();
 
-            int totalUnits = 0;
-            while(rs.next())
-            {
+            while(rs.next()) {
                 totalUnits += rs.getInt(1);
             }
-
-            flTuition = totalUnits*flUnitPrice;
-
-            flTotalFee = flTuition+flSumFee;
-
-            lblTuitionF.setText(String.format("%,.2f", flTuition));
-            lblMiscF.setText(String.format("%,.2f", flSumFee));
-            lblNumberUnits.setText("Tuition Fee x "+totalUnits+" Units");
-
-            lblTotalFee.setText("Amount Due: "+String.format("%,.2f", flTotalFee));
-        }
-
-        catch(Exception e)
-        {
+        } catch(Exception e) {
             AlertMessage.showErrorAlert("An error occurred while generating your tuition invoice: " + e);
         }
+
+        flTuition = totalUnits*flUnitPrice;
+        flTotalFee = flTuition+flSumFee;
+        lblTuitionF.setText(String.format("%,.2f", flTuition));
+        lblMiscF.setText(String.format("%,.2f", flSumFee));
+        lblNumberUnits.setText("Tuition Fee x "+totalUnits+" Units");
+
+        lblTotalFee.setText("Amount Due: "+String.format("%,.2f", flTotalFee));
     }
 
     @FXML
     protected void onBtnSaveTuitionAction(ActionEvent event) throws IOException {
-        if(tblTuitionFees.getItems().isEmpty())
-            return;
         Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
         int totalUnits = 0;
 
+        if(tblTuitionFees.getItems().isEmpty())
+            return;
         try{
             ps = conn.prepareStatement("select " +
                     "v.CREDITS " +
@@ -795,16 +797,17 @@ public class StudentDashboardController extends Controller {
             ps.setString(3, currentSem);
             rs = ps.executeQuery();
 
-            while(rs.next())
-            {
+            while(rs.next()) {
                 totalUnits += rs.getInt(1);
             }
         }catch(Exception e){
             System.out.println(e);
         }
-
-        PDFGenerator.generateTuitionSummary(stage, student, tblTuitionFees, totalUnits);
-        AlertMessage.showInformationAlert("Successfully downloaded invoice!");
+        boolean success = PDFGenerator.generateTuitionSummary(stage, student, tblTuitionFees, totalUnits);
+        if(success)
+            AlertMessage.showInformationAlert("Successfully downloaded invoice!");
+        else
+            AlertMessage.showErrorAlert("An error occurred while generating your invoice. Please try restarting the application.");
     }
     @FXML
     protected void onBtnGradesAction(ActionEvent event){

@@ -36,7 +36,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 public class PDFGenerator {
-    public static void generateSER(Stage stage, Student student, ResultSet rs) throws IOException, SQLException {
+    public static boolean generateSER(Stage stage, Student student, ResultSet rs) throws IOException, SQLException {
         DirectoryChooser dc = new DirectoryChooser();
         dc.setInitialDirectory(new File(System.getProperty("user.home")+"/Downloads/"));
         File directory = dc.showDialog(stage);
@@ -50,7 +50,7 @@ public class PDFGenerator {
         pdfDocument.setDefaultPageSize(PageSize.A4);
         Document document = new Document(pdfDocument);
         PdfFont timesNewRoman = PdfFontFactory.createFont(StandardFonts.TIMES_ROMAN);
-
+        document.setFont(timesNewRoman);
 
         float x = pdfDocument.getDefaultPageSize().getWidth()/2;
         float y = pdfDocument.getDefaultPageSize().getHeight()/2;
@@ -63,189 +63,10 @@ public class PDFGenerator {
         float col150 = col+150f;
         float[] colWidth = {col150, col};
 
-        Table table = new Table(3).setWidth(525f);
-        Table plm = new Table(new float[]{10f});
-        plm.addCell(new Cell().add(new Paragraph("PAMANTASAN NG LUNGSOD NG MAYNILA")).setBorder(Border.NO_BORDER).setFontSize(8f).setFont(timesNewRoman).setBold().setMargin(2f));
-        plm.addCell(new Cell().add(new Paragraph("(University of the City of Manila)").setFontSize(7f).setFont(timesNewRoman)).setBorder(Border.NO_BORDER));
-        plm.addCell(new Cell().add(new Paragraph("Intramuros, Manila").setFontSize(7f).setFont(timesNewRoman)).setBorder(Border.NO_BORDER));
-        table.addCell(new Cell().add(plm).setBorder(Border.NO_BORDER));
-
-
-        Table ser = new Table(1);
-        ser.addCell(new Cell().add(new Paragraph("STUDENT ENROLLMENT RECORD")
-                        .setFontSize(10f)
-                        .setFont(timesNewRoman)
-                        .setBold())
-                .setBorder(Border.NO_BORDER));
-        Table sySem = new Table(new float[]{10f, 10f, 10f, 10f, 10f});
-        sySem.addCell(new Cell()
-                .add(new Paragraph(""))
-                .setBorder(Border.NO_BORDER));
-        sySem.addCell(new Cell()
-                .add(new Paragraph(StringUtils.integerToPlace(Integer.parseInt(Maintenance.getInstance().getCurrentSem())) + " Semester")
-                        .setFontSize(7f)
-                        .setFont(timesNewRoman)
-                )
-                .setBorder(Border.NO_BORDER));
-        sySem.addCell(new Cell()
-                .add(new Paragraph("School Year")
-                        .setFontSize(7f)
-                        .setFont(timesNewRoman)
-                )
-                .setBorder(Border.NO_BORDER));
-        sySem.addCell(new Cell()
-                .add(new Paragraph(Maintenance.getInstance().getCurrentSY())
-                        .setFontSize(7f)
-                        .setFont(timesNewRoman)
-                        .setBold())
-                .setBorder(Border.NO_BORDER));
-        sySem.addCell(new Cell()
-                .add(new Paragraph(""))
-                .setBorder(Border.NO_BORDER));
-        ser.addCell(new Cell()
-                .add(sySem)
-                .setBorder(Border.NO_BORDER)
-                .setHorizontalAlignment(HorizontalAlignment.CENTER));
-
-        table.addCell(new Cell()
-                .add(ser)
-                .setBorder(Border.NO_BORDER)
-                .setHorizontalAlignment(HorizontalAlignment.CENTER));
-        table.addCell(new Cell()
-                .add(new Paragraph("Student's Copy")
-                        .setTextAlignment(TextAlignment.CENTER)
-                        .setFont(timesNewRoman)
-                        .setBold())
-                .setBackgroundColor(DeviceGray.GRAY)
-                .setHorizontalAlignment(HorizontalAlignment.CENTER)
-                .setVerticalAlignment(VerticalAlignment.MIDDLE));
-
-        Table divider = new Table(new float[] {190*3});
-        divider.setBorder(new SolidBorder(DeviceGray.GRAY, 1f/2));
-
-        Table studentInfo = new Table(5).setWidth(525f);
-        Table studentNo = new Table(1);
-        studentNo.addCell(new Cell()
-                .add(new Paragraph("Student No")
-                        .setFontSize(6f)
-                        .setFont(timesNewRoman)
-                )
-                .setBorder(Border.NO_BORDER));
-        studentNo.addCell(new Cell()
-                .add(new Paragraph(student.getStudentNo())
-                        .setFontSize(8f)
-                        .setFont(timesNewRoman)
-                )
-                .setBold()
-                .setBorder(Border.NO_BORDER));
-
-        studentInfo.addCell(new Cell()
-                .add(studentNo));
-
-        Table studentName = new Table(1);
-        studentName.addCell(new Cell()
-                .add(new Paragraph("Student Name")
-                        .setFontSize(6f)
-                        .setFont(timesNewRoman)
-                )
-                .setBorder(Border.NO_BORDER));
-        studentName.addCell(new Cell()
-                .add(new Paragraph((student.getLastName() +", "+student.getFirstName()).toUpperCase())
-                        .setFontSize(8f)
-                        .setFont(timesNewRoman)
-                )
-                .setBold()
-                .setBorder(Border.NO_BORDER));
-        studentInfo.addCell(new Cell()
-                .add(studentName));
-
-        Table type = new Table(1);
-        type.addCell(new Cell()
-                .add(new Paragraph("Student Type")
-                        .setFontSize(6f)
-                        .setFont(timesNewRoman)
-                )
-                .setBorder(Border.NO_BORDER));
-        type.addCell(new Cell()
-                .add(new Paragraph((Integer.parseInt(student.getStudentNo().substring(0, 4)) == Integer.parseInt(Maintenance.getInstance().getCurrentSY().substring(0,4))) ? "New" : "Old")
-                        .setFontSize(8f)
-                        .setFont(timesNewRoman)
-                )
-                .setBold()
-                .setBorder(Border.NO_BORDER));
-        studentInfo.addCell(new Cell()
-                .add(type));
-
-        Table year = new Table(1);
-        year.addCell(new Cell()
-                .add(new Paragraph("Year")
-                        .setFontSize(6f)
-                        .setFont(timesNewRoman)
-                )
-                .setBorder(Border.NO_BORDER));
-        year.addCell(new Cell()
-                .add(new Paragraph(""+(1+Integer.parseInt(Maintenance.getInstance().getCurrentSY().substring(0,4)) - Integer.parseInt(student.getStudentNo().substring(0, 4))))
-                        .setFontSize(8f)
-                        .setFont(timesNewRoman)
-                )
-                .setBold()
-                .setBorder(Border.NO_BORDER));
-        studentInfo.addCell(new Cell()
-                .add(year));
-
-
-        Table registrationStatus = new Table(1);
-        registrationStatus.addCell(new Cell()
-                .add(new Paragraph("Registration Status")
-                        .setFontSize(6f)
-                        .setFont(timesNewRoman)
-                )
-                .setBorder(Border.NO_BORDER));
-        registrationStatus.addCell(new Cell()
-                .add(new Paragraph(student.getRegistrationStatus())
-                        .setFontSize(8f)
-                        .setFont(timesNewRoman)
-                )
-                .setBold()
-                .setBorder(Border.NO_BORDER));
-        studentInfo.addCell(new Cell()
-                .add(registrationStatus));
-
-        Table studentInfoRow2 = new Table(2).setWidth(525f);
-
-        Table college = new Table(1);
-        college.addCell(new Cell()
-                .add(new Paragraph("College")
-                        .setFontSize(6f)
-                        .setFont(timesNewRoman)
-                )
-                .setBorder(Border.NO_BORDER));
-        college.addCell(new Cell()
-                .add(new Paragraph(student.getCollege())
-                        .setFontSize(8f)
-                        .setFont(timesNewRoman)
-                )
-                .setBold()
-                .setBorder(Border.NO_BORDER));
-        studentInfoRow2.addCell(new Cell()
-                .add(college));
-
-        Table course = new Table(1);
-        course.addCell(new Cell()
-                .add(new Paragraph("Course")
-                        .setFontSize(6f)
-                        .setFont(timesNewRoman)
-                )
-                .setBorder(Border.NO_BORDER));
-        course.addCell(new Cell()
-                .add(new Paragraph(student.getCourse())
-                        .setFontSize(8f)
-                        .setFont(timesNewRoman)
-                )
-                .setBold()
-                .setBorder(Border.NO_BORDER));
-        studentInfoRow2.addCell(new Cell()
-                .add(course));
+        Table table = getHeader("STUDENT ENROLLMENT RECORD");
+        Table studentInfo = getStudentInfoRow1(student);
+        Table studentInfoRow2 = getStudentInfoRow2(student);
+        Table divider = createDivider();
 
         Table grades = new Table(6).setWidth(525f);
         float headerSize = 8.5f;
@@ -253,7 +74,7 @@ public class PDFGenerator {
                 .add(new Paragraph("Subject Code")
                         .setFontSize(headerSize)
                         .setBold()
-                        .setFont(timesNewRoman)
+
                 )
                 .setBackgroundColor(DeviceGray.GRAY)
         );
@@ -267,7 +88,6 @@ public class PDFGenerator {
                 .add(new Paragraph("Subject Title")
                         .setFontSize(headerSize)
                         .setBold()
-                        .setFont(timesNewRoman)
                 )
                 .setBackgroundColor(DeviceGray.GRAY)
         );
@@ -275,7 +95,6 @@ public class PDFGenerator {
                 .add(new Paragraph("Units")
                         .setFontSize(headerSize)
                         .setBold()
-                        .setFont(timesNewRoman)
                 )
                 .setBackgroundColor(DeviceGray.GRAY)
         );
@@ -283,7 +102,6 @@ public class PDFGenerator {
                 .add(new Paragraph("Schedule")
                         .setFontSize(headerSize)
                         .setBold()
-                        .setFont(timesNewRoman)
                 )
                 .setBackgroundColor(DeviceGray.GRAY)
         );
@@ -291,7 +109,6 @@ public class PDFGenerator {
                 .add(new Paragraph("Professor")
                         .setFontSize(headerSize)
                         .setBold()
-                        .setFont(timesNewRoman)
                 )
                 .setBackgroundColor(DeviceGray.GRAY)
         );
@@ -307,7 +124,6 @@ public class PDFGenerator {
                 grades.addCell(new Cell()
                         .add(new Paragraph(rs.getString(i))
                                 .setFontSize(7)
-                                .setFont(timesNewRoman)
                                 ));
             }
         }
@@ -316,19 +132,19 @@ public class PDFGenerator {
         remarks.addCell(new Cell()
                 .add(new Paragraph("Remarks: This enrollment becomes official until all requirements are complied with")
                         .setFontSize(7)
-                        .setFont(timesNewRoman)
+
                 ));
         Table unitsLabel = new Table(1);
         unitsLabel.addCell(new Cell()
                 .add(new Paragraph("Total Units:")
                         .setFontSize(6f)
-                        .setFont(timesNewRoman)
+
                 )
                 .setBorder(Border.NO_BORDER));
         unitsLabel.addCell(new Cell()
                 .add(new Paragraph(totalUnits+"")
                     .setFontSize(7f)
-                    .setFont(timesNewRoman)
+
                     .setBold())
                 .setBorder(Border.NO_BORDER));
         remarks.addCell(new Cell().add(unitsLabel));
@@ -337,14 +153,14 @@ public class PDFGenerator {
         date.addCell(new Cell()
                 .add(new Paragraph("Date:")
                         .setFontSize(6f)
-                        .setFont(timesNewRoman)
+
                 )
                 .setBorder(Border.NO_BORDER));
         date.addCell(new Cell()
                 .add(new Paragraph(DateTimeFormatter.ofPattern("yyyy-MM-dd").format(LocalDate.now()))
                         .setFontSize(7f)
                         .setBold()
-                        .setFont(timesNewRoman)
+
                 )
                 .setBorder(Border.NO_BORDER));
         remarks.addCell(date);
@@ -353,7 +169,6 @@ public class PDFGenerator {
         encoder.addCell(new Cell()
                 .add(new Paragraph("Encoder:")
                         .setFontSize(6f)
-                        .setFont(timesNewRoman)
                 )
                 .setBorder(Border.NO_BORDER));
         encoder.addCell(new Cell()
@@ -373,44 +188,21 @@ public class PDFGenerator {
         document.add(grades);
         document.add(remarks);
         document.close();
+
+        return pdfDocument.isClosed();
     }
-
-    // TODO: generate tuition summary
-    public static void generateTuitionSummary(Stage stage, Student student, TableView<ObservableList<String>> tblTuitionFees, int totalUnits) throws IOException {
-        DirectoryChooser dc = new DirectoryChooser();
-        dc.setInitialDirectory(new File(System.getProperty("user.home")+"/Downloads/"));
-        File directory = dc.showDialog(stage);
-        String path = directory.getAbsolutePath() + "/tuition_invoice_" + student.getStudentNo() + "_"+DateTimeFormatter.ofPattern("yyyy-MM-dd").format(LocalDate.now()) + ".pdf";
-        ImageData imageData = ImageDataFactory.create(MainScene.class.getResource("assets/img/PLM_Seal_2013.png"));
-        com.itextpdf.layout.element.Image image = new Image(imageData);
-
-
-        PdfWriter pdfWriter = new PdfWriter(path);
-        PdfDocument pdfDocument = new PdfDocument(pdfWriter);
-        pdfDocument.setDefaultPageSize(PageSize.A4);
-        Document document = new Document(pdfDocument);
-        PdfFont timesNewRoman = PdfFontFactory.createFont(StandardFonts.TIMES_ROMAN);
-
-
-        float x = pdfDocument.getDefaultPageSize().getWidth()/2;
-        float y = pdfDocument.getDefaultPageSize().getHeight()/2;
-        image.setFixedPosition(x - image.getImageWidth() / 2, y);
-        image.setOpacity(0.1f);
-
-        document.add(image);
-
+    private static Table getHeader(String title){
         Table table = new Table(3).setWidth(525f);
         Table plm = new Table(new float[]{10f});
-        plm.addCell(new Cell().add(new Paragraph("PAMANTASAN NG LUNGSOD NG MAYNILA")).setBorder(Border.NO_BORDER).setFontSize(8f).setFont(timesNewRoman).setBold().setMargin(2f));
-        plm.addCell(new Cell().add(new Paragraph("(University of the City of Manila)").setFontSize(7f).setFont(timesNewRoman)).setBorder(Border.NO_BORDER));
-        plm.addCell(new Cell().add(new Paragraph("Intramuros, Manila").setFontSize(7f).setFont(timesNewRoman)).setBorder(Border.NO_BORDER));
+        plm.addCell(new Cell().add(new Paragraph("PAMANTASAN NG LUNGSOD NG MAYNILA")).setBorder(Border.NO_BORDER).setFontSize(8f).setBold().setMargin(2f));
+        plm.addCell(new Cell().add(new Paragraph("(University of the City of Manila)").setFontSize(7f)).setBorder(Border.NO_BORDER));
+        plm.addCell(new Cell().add(new Paragraph("Intramuros, Manila").setFontSize(7f)).setBorder(Border.NO_BORDER));
         table.addCell(new Cell().add(plm).setBorder(Border.NO_BORDER));
 
-
         Table ser = new Table(1);
-        ser.addCell(new Cell().add(new Paragraph("STUDENT TUITION INVOICE")
+        ser.addCell(new Cell().add(new Paragraph(title)
                         .setFontSize(10f)
-                        .setFont(timesNewRoman)
+
                         .setBold())
                 .setBorder(Border.NO_BORDER));
         Table sySem = new Table(new float[]{10f, 10f, 10f, 10f, 10f});
@@ -420,19 +212,19 @@ public class PDFGenerator {
         sySem.addCell(new Cell()
                 .add(new Paragraph(StringUtils.integerToPlace(Integer.parseInt(Maintenance.getInstance().getCurrentSem())) + " Semester")
                         .setFontSize(7f)
-                        .setFont(timesNewRoman)
+
                 )
                 .setBorder(Border.NO_BORDER));
         sySem.addCell(new Cell()
                 .add(new Paragraph("School Year")
                         .setFontSize(7f)
-                        .setFont(timesNewRoman)
+
                 )
                 .setBorder(Border.NO_BORDER));
         sySem.addCell(new Cell()
                 .add(new Paragraph(Maintenance.getInstance().getCurrentSY())
                         .setFontSize(7f)
-                        .setFont(timesNewRoman)
+
                         .setBold())
                 .setBorder(Border.NO_BORDER));
         sySem.addCell(new Cell()
@@ -450,25 +242,26 @@ public class PDFGenerator {
         table.addCell(new Cell()
                 .add(new Paragraph("Student's Copy")
                         .setTextAlignment(TextAlignment.CENTER)
-                        .setFont(timesNewRoman)
+
                         .setBold())
                 .setBackgroundColor(DeviceGray.GRAY)
                 .setHorizontalAlignment(HorizontalAlignment.CENTER)
                 .setVerticalAlignment(VerticalAlignment.MIDDLE));
-
-
+        return table;
+    }
+    private static Table getStudentInfoRow1(Student student){
         Table studentInfo = new Table(5).setWidth(525f);
         Table studentNo = new Table(1);
         studentNo.addCell(new Cell()
                 .add(new Paragraph("Student No")
                         .setFontSize(6f)
-                        .setFont(timesNewRoman)
+
                 )
                 .setBorder(Border.NO_BORDER));
         studentNo.addCell(new Cell()
                 .add(new Paragraph(student.getStudentNo())
                         .setFontSize(8f)
-                        .setFont(timesNewRoman)
+
                 )
                 .setBold()
                 .setBorder(Border.NO_BORDER));
@@ -480,13 +273,13 @@ public class PDFGenerator {
         studentName.addCell(new Cell()
                 .add(new Paragraph("Student Name")
                         .setFontSize(6f)
-                        .setFont(timesNewRoman)
+
                 )
                 .setBorder(Border.NO_BORDER));
         studentName.addCell(new Cell()
                 .add(new Paragraph((student.getLastName() +", "+student.getFirstName()).toUpperCase())
                         .setFontSize(8f)
-                        .setFont(timesNewRoman)
+
                 )
                 .setBold()
                 .setBorder(Border.NO_BORDER));
@@ -497,13 +290,13 @@ public class PDFGenerator {
         type.addCell(new Cell()
                 .add(new Paragraph("Student Type")
                         .setFontSize(6f)
-                        .setFont(timesNewRoman)
+
                 )
                 .setBorder(Border.NO_BORDER));
         type.addCell(new Cell()
                 .add(new Paragraph((Integer.parseInt(student.getStudentNo().substring(0, 4)) == Integer.parseInt(Maintenance.getInstance().getCurrentSY().substring(0,4))) ? "New" : "Old")
                         .setFontSize(8f)
-                        .setFont(timesNewRoman)
+
                 )
                 .setBold()
                 .setBorder(Border.NO_BORDER));
@@ -514,13 +307,13 @@ public class PDFGenerator {
         year.addCell(new Cell()
                 .add(new Paragraph("Year")
                         .setFontSize(6f)
-                        .setFont(timesNewRoman)
+
                 )
                 .setBorder(Border.NO_BORDER));
         year.addCell(new Cell()
                 .add(new Paragraph(""+(1+Integer.parseInt(Maintenance.getInstance().getCurrentSY().substring(0,4)) - Integer.parseInt(student.getStudentNo().substring(0, 4))))
                         .setFontSize(8f)
-                        .setFont(timesNewRoman)
+
                 )
                 .setBold()
                 .setBorder(Border.NO_BORDER));
@@ -532,32 +325,33 @@ public class PDFGenerator {
         registrationStatus.addCell(new Cell()
                 .add(new Paragraph("Registration Status")
                         .setFontSize(6f)
-                        .setFont(timesNewRoman)
+
                 )
                 .setBorder(Border.NO_BORDER));
         registrationStatus.addCell(new Cell()
                 .add(new Paragraph(student.getRegistrationStatus())
                         .setFontSize(8f)
-                        .setFont(timesNewRoman)
+
                 )
                 .setBold()
                 .setBorder(Border.NO_BORDER));
         studentInfo.addCell(new Cell()
                 .add(registrationStatus));
 
+        return studentInfo;
+    }
+    private static Table getStudentInfoRow2(Student student){
         Table studentInfoRow2 = new Table(2).setWidth(525f);
 
         Table college = new Table(1);
         college.addCell(new Cell()
                 .add(new Paragraph("College")
                         .setFontSize(6f)
-                        .setFont(timesNewRoman)
                 )
                 .setBorder(Border.NO_BORDER));
         college.addCell(new Cell()
                 .add(new Paragraph(student.getCollege())
                         .setFontSize(8f)
-                        .setFont(timesNewRoman)
                 )
                 .setBold()
                 .setBorder(Border.NO_BORDER));
@@ -568,37 +362,39 @@ public class PDFGenerator {
         course.addCell(new Cell()
                 .add(new Paragraph("Course")
                         .setFontSize(6f)
-                        .setFont(timesNewRoman)
                 )
                 .setBorder(Border.NO_BORDER));
         course.addCell(new Cell()
                 .add(new Paragraph(student.getCourse())
                         .setFontSize(8f)
-                        .setFont(timesNewRoman)
                 )
                 .setBold()
                 .setBorder(Border.NO_BORDER));
         studentInfoRow2.addCell(new Cell()
                 .add(course));
 
+        return studentInfoRow2;
+    }
 
+    private static Table createDivider(){
         Table divider = new Table(new float[] {190*3});
         divider.setBorder(new SolidBorder(DeviceGray.GRAY, 1f/2));
-
+        return divider;
+    }
+    private static Table getTuitionInvoice(TableView<ObservableList<String>> tblTuitionFees, int totalUnits){
+        double total = 0.00;
         Table tuition = new Table(2).setWidth(525f);
         tuition.addHeaderCell(new Cell()
                 .add(new Paragraph("Description")
                         .setFontSize(7f)
-                        .setFont(timesNewRoman)
                         .setBold())
                 .setBackgroundColor(DeviceGray.GRAY));
         tuition.addHeaderCell(new Cell()
                 .add(new Paragraph("Amount")
                         .setFontSize(7f)
-                        .setFont(timesNewRoman)
                         .setBold())
                 .setBackgroundColor(DeviceGray.GRAY));
-        double total = 0.00;
+        tuition.getHeader().setTextAlignment(TextAlignment.CENTER);
 
         for(ObservableList<String> item : tblTuitionFees.getItems()){
             if(item.get(0).equalsIgnoreCase("Tuition Fee (Price per Unit)")){
@@ -656,6 +452,39 @@ public class PDFGenerator {
                         .setBold())
                 .setBorder(Border.NO_BORDER));
 
+        return tuition;
+    }
+
+    public static boolean generateTuitionSummary(Stage stage, Student student, TableView<ObservableList<String>> tblTuitionFees, int totalUnits) throws IOException {
+        DirectoryChooser dc = new DirectoryChooser();
+        dc.setInitialDirectory(new File(System.getProperty("user.home")+"/Downloads/"));
+        File directory = dc.showDialog(stage);
+        String path = directory.getAbsolutePath() + "/tuition_invoice_" + student.getStudentNo() + "_"+DateTimeFormatter.ofPattern("yyyy-MM-dd").format(LocalDate.now()) + ".pdf";
+        ImageData imageData = ImageDataFactory.create(MainScene.class.getResource("assets/img/PLM_Seal_2013.png"));
+        com.itextpdf.layout.element.Image image = new Image(imageData);
+
+
+        PdfWriter pdfWriter = new PdfWriter(path);
+        PdfDocument pdfDocument = new PdfDocument(pdfWriter);
+        pdfDocument.setDefaultPageSize(PageSize.A4);
+        Document document = new Document(pdfDocument);
+        PdfFont timesNewRoman = PdfFontFactory.createFont(StandardFonts.TIMES_ROMAN);
+        document.setFont(timesNewRoman);
+
+
+        float x = pdfDocument.getDefaultPageSize().getWidth()/2;
+        float y = pdfDocument.getDefaultPageSize().getHeight()/2;
+        image.setFixedPosition(x - image.getImageWidth() / 2, y);
+        image.setOpacity(0.1f);
+
+        document.add(image);
+
+        Table table = getHeader("STUDENT TUITION INVOICE");
+        Table studentInfo = getStudentInfoRow1(student);
+        Table studentInfoRow2 = getStudentInfoRow2(student);
+        Table divider = createDivider();
+        Table tuition = getTuitionInvoice(tblTuitionFees, totalUnits);
+
         document.add(table);
         document.add(studentInfo);
         document.add(studentInfoRow2);
@@ -664,5 +493,6 @@ public class PDFGenerator {
         document.add(new Paragraph("\n").setFontSize(2f));
         document.add(tuition);
         document.close();
+        return pdfDocument.isClosed();
     }
 }

@@ -147,7 +147,7 @@ public class TableViewUtils {
                         col.setCellFactory(
                                 new Callback<TableColumn, TableCell>() {
                                     public TableCell call(TableColumn p) {
-                                        return new WrappingTextFieldTableCell<ObservableList<String>>("^[A-Z]{1}([a-z]+)?( )?([A-Z]{1}[a-z]+)?", "Must have a valid name format ex: Dela Cruz");
+                                        return new WrappingTextFieldTableCell<ObservableList<String>>("^[A-Za-z ,.'-]{1,100}", "Must have a length between 1 to 100 and a valid name format ex: Dela Cruz ");
                                     }
                                 }
                         );
@@ -301,7 +301,7 @@ public class TableViewUtils {
                         col.setCellFactory(
                                 new Callback<TableColumn, TableCell>() {
                                     public TableCell call(TableColumn p) {
-                                        return new WrappingTextFieldTableCell<ObservableList<String>>();
+                                        return new WrappingTextFieldTableCell<ObservableList<String>>("^.{1,100}$", "Must only contain 1 to 100 characters");
                                     }
                                 }
                         );
