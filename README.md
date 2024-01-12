@@ -29,7 +29,7 @@ The application requires dependencies in order to work properly. Ensure that the
 - **If the application window exceeds your monitor's bounds, set your display scaling to 100% on your device's display settings.**
 
 
-**For more information on how to use the system, read the full [documentation](https://docs.google.com/document/d/1Gpzc03ZOnkGq1zpKNtq1-i8FeeYzOCMeGNJhKNWNRIw/edit).**
+**For more information on how to use the system, read the full [documentation](https://docs.google.com/document/d/1itPqxyenrfDFt8h3w7Pib5SJiQDqPmY6PcynlKeB9uo/edit?usp=sharing).**
 
 
 
