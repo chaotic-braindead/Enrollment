@@ -2,6 +2,7 @@ package plm.rafaeltorres.irregularenrollmentsystem.controllers;
 
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.transform.Scale;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import plm.rafaeltorres.irregularenrollmentsystem.db.Database;
 

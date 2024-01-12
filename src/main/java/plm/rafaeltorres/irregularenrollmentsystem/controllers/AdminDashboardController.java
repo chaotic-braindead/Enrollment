@@ -1413,6 +1413,7 @@ public class AdminDashboardController extends Controller {
         String[] strSchedules = null, strSplit = null;
         String strDay = null;
         StringBuilder room = new StringBuilder();
+        boolean blFirst = false;
 
         checkBoxSunday.setSelected(false);
         checkBoxMonday.setSelected(false);
@@ -1486,11 +1487,12 @@ public class AdminDashboardController extends Controller {
             }
             txtTime.setText(strSplit[1]);
             comboBoxMode.getSelectionModel().select(strSplit[2]);
-            for(int i = 3; i < strSplit.length; ++i)
+            for(int i = 3; i < strSplit.length && !blFirst; ++i){
                 room.append(strSplit[i]);
-
+            }
             txtRoom.setText(room.toString());
             txtNameProf.setText(o.get(o.size()-1));
+            blFirst = true;
         }
     }
     @FXML
