@@ -714,9 +714,9 @@ public class StudentDashboardController extends Controller {
 
         if(intTotalUnits < 12 &&
                 (Maintenance.getInstance().getCurrentSem().equals("1")
-                        || Maintenance.getInstance().getCurrentSem().equals("2")
-                        || 1+Integer.parseInt(currentSY.substring(0, 4))
-                            -Integer.parseInt(student.getStudentNo().substring(0, 4)) > 3)){
+                        || Maintenance.getInstance().getCurrentSem().equals("2"))
+                        && (1+Integer.parseInt(currentSY.substring(0, 4))
+                            -Integer.parseInt(student.getStudentNo().substring(0, 4)) <= 3)){
             AlertMessage.showErrorAlert("You must have a minimum of 12 units to enroll. Please add more subjects to your schedule.");
             return;
         }
