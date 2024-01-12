@@ -712,6 +712,11 @@ public class StudentDashboardController extends Controller {
             l.add(item.get(0));
         }
 
+        if(intTotalUnits == 0){
+            AlertMessage.showErrorAlert("You cannot submit if you have no subjects in your schedule.");
+            return;
+        }
+
         if(intTotalUnits < 12 &&
                 (Maintenance.getInstance().getCurrentSem().equals("1")
                         || Maintenance.getInstance().getCurrentSem().equals("2"))
@@ -720,6 +725,7 @@ public class StudentDashboardController extends Controller {
             AlertMessage.showErrorAlert("You must have a minimum of 12 units to enroll. Please add more subjects to your schedule.");
             return;
         }
+
 
         confirm = AlertMessage.showConfirmationAlert("You won't be able to add/remove subjects once you have submitted your schedule for approval. Do you wish to proceed?");
         if(confirm.isEmpty() || confirm.get().equals(ButtonType.NO)){
