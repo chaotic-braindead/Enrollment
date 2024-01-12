@@ -39,17 +39,18 @@ public class PDFGenerator {
     public static boolean generateSER(Stage stage, Student student, ResultSet rs) throws IOException, SQLException {
         DirectoryChooser dc = new DirectoryChooser();
         dc.setInitialDirectory(new File(System.getProperty("user.home")+"/Downloads/"));
+
         File directory = dc.showDialog(stage);
         String path = directory.getAbsolutePath() + "/registration_form_" + student.getStudentNo() + "_"+DateTimeFormatter.ofPattern("yyyy-MM-dd").format(LocalDate.now()) + ".pdf";
+        PdfWriter pdfWriter = new PdfWriter(path);
+        PdfDocument pdfDocument = new PdfDocument(pdfWriter);
+        Document document = new Document(pdfDocument);
+        PdfFont timesNewRoman = PdfFontFactory.createFont(StandardFonts.TIMES_ROMAN);
+
         ImageData imageData = ImageDataFactory.create(MainScene.class.getResource("assets/img/PLM_Seal_2013.png"));
         com.itextpdf.layout.element.Image image = new Image(imageData);
 
-
-        PdfWriter pdfWriter = new PdfWriter(path);
-        PdfDocument pdfDocument = new PdfDocument(pdfWriter);
         pdfDocument.setDefaultPageSize(PageSize.A4);
-        Document document = new Document(pdfDocument);
-        PdfFont timesNewRoman = PdfFontFactory.createFont(StandardFonts.TIMES_ROMAN);
         document.setFont(timesNewRoman);
 
         float x = pdfDocument.getDefaultPageSize().getWidth()/2;
@@ -58,10 +59,6 @@ public class PDFGenerator {
         image.setOpacity(0.1f);
 
         document.add(image);
-
-        float col = 285f;
-        float col150 = col+150f;
-        float[] colWidth = {col150, col};
 
         Table table = getHeader("STUDENT ENROLLMENT RECORD");
         Table studentInfo = getStudentInfoRow1(student);
@@ -191,6 +188,47 @@ public class PDFGenerator {
 
         return pdfDocument.isClosed();
     }
+    public static boolean generateTuitionSummary(Stage stage, Student student, TableView<ObservableList<String>> tblTuitionFees, int totalUnits) throws IOException {
+        DirectoryChooser dc = new DirectoryChooser();
+        dc.setInitialDirectory(new File(System.getProperty("user.home")+"/Downloads/"));
+        File directory = dc.showDialog(stage);
+        String path = directory.getAbsolutePath() + "/tuition_invoice_" + student.getStudentNo() + "_"+DateTimeFormatter.ofPattern("yyyy-MM-dd").format(LocalDate.now()) + ".pdf";
+        PdfWriter pdfWriter = new PdfWriter(path);
+        PdfDocument pdfDocument = new PdfDocument(pdfWriter);
+        Document document = new Document(pdfDocument);
+        PdfFont timesNewRoman = PdfFontFactory.createFont(StandardFonts.TIMES_ROMAN);
+
+        ImageData imageData = ImageDataFactory.create(MainScene.class.getResource("assets/img/PLM_Seal_2013.png"));
+        com.itextpdf.layout.element.Image image = new Image(imageData);
+
+        pdfDocument.setDefaultPageSize(PageSize.A4);
+        document.setFont(timesNewRoman);
+
+
+        float x = pdfDocument.getDefaultPageSize().getWidth()/2;
+        float y = pdfDocument.getDefaultPageSize().getHeight()/2;
+        image.setFixedPosition(x - image.getImageWidth() / 2, y);
+        image.setOpacity(0.1f);
+
+        document.add(image);
+
+        Table table = getHeader("STUDENT TUITION INVOICE");
+        Table studentInfo = getStudentInfoRow1(student);
+        Table studentInfoRow2 = getStudentInfoRow2(student);
+        Table divider = createDivider();
+        Table tuition = getTuitionInvoice(tblTuitionFees, totalUnits);
+
+        document.add(table);
+        document.add(studentInfo);
+        document.add(studentInfoRow2);
+        document.add(new Paragraph("\n").setFontSize(2f));
+        document.add(divider);
+        document.add(new Paragraph("\n").setFontSize(2f));
+        document.add(tuition);
+        document.close();
+        return pdfDocument.isClosed();
+    }
+
     private static Table getHeader(String title){
         Table table = new Table(3).setWidth(525f);
         Table plm = new Table(new float[]{10f});
@@ -249,6 +287,7 @@ public class PDFGenerator {
                 .setVerticalAlignment(VerticalAlignment.MIDDLE));
         return table;
     }
+
     private static Table getStudentInfoRow1(Student student){
         Table studentInfo = new Table(5).setWidth(525f);
         Table studentNo = new Table(1);
@@ -453,46 +492,5 @@ public class PDFGenerator {
                 .setBorder(Border.NO_BORDER));
 
         return tuition;
-    }
-
-    public static boolean generateTuitionSummary(Stage stage, Student student, TableView<ObservableList<String>> tblTuitionFees, int totalUnits) throws IOException {
-        DirectoryChooser dc = new DirectoryChooser();
-        dc.setInitialDirectory(new File(System.getProperty("user.home")+"/Downloads/"));
-        File directory = dc.showDialog(stage);
-        String path = directory.getAbsolutePath() + "/tuition_invoice_" + student.getStudentNo() + "_"+DateTimeFormatter.ofPattern("yyyy-MM-dd").format(LocalDate.now()) + ".pdf";
-        ImageData imageData = ImageDataFactory.create(MainScene.class.getResource("assets/img/PLM_Seal_2013.png"));
-        com.itextpdf.layout.element.Image image = new Image(imageData);
-
-
-        PdfWriter pdfWriter = new PdfWriter(path);
-        PdfDocument pdfDocument = new PdfDocument(pdfWriter);
-        pdfDocument.setDefaultPageSize(PageSize.A4);
-        Document document = new Document(pdfDocument);
-        PdfFont timesNewRoman = PdfFontFactory.createFont(StandardFonts.TIMES_ROMAN);
-        document.setFont(timesNewRoman);
-
-
-        float x = pdfDocument.getDefaultPageSize().getWidth()/2;
-        float y = pdfDocument.getDefaultPageSize().getHeight()/2;
-        image.setFixedPosition(x - image.getImageWidth() / 2, y);
-        image.setOpacity(0.1f);
-
-        document.add(image);
-
-        Table table = getHeader("STUDENT TUITION INVOICE");
-        Table studentInfo = getStudentInfoRow1(student);
-        Table studentInfoRow2 = getStudentInfoRow2(student);
-        Table divider = createDivider();
-        Table tuition = getTuitionInvoice(tblTuitionFees, totalUnits);
-
-        document.add(table);
-        document.add(studentInfo);
-        document.add(studentInfoRow2);
-        document.add(new Paragraph("\n").setFontSize(2f));
-        document.add(divider);
-        document.add(new Paragraph("\n").setFontSize(2f));
-        document.add(tuition);
-        document.close();
-        return pdfDocument.isClosed();
     }
 }

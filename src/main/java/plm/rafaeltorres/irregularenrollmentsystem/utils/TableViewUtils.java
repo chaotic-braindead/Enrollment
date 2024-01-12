@@ -17,17 +17,17 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 import java.util.Optional;
 
 public class TableViewUtils {
     public static void generateEditableTableFromResultSet(TableView tbl, ResultSet rs, String[] args, Runnable callback){
+        TableColumn col = null;
         try{
             tbl.getColumns().clear();
             tbl.getItems().clear();
             for(int i = 0; i < rs.getMetaData().getColumnCount(); ++i){
                 final int j = i;
-                TableColumn col = new TableColumn(rs.getMetaData().getColumnName(i+1).toUpperCase());
+                col = new TableColumn(rs.getMetaData().getColumnName(i+1).toUpperCase());
                 col.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<ObservableList,String>, ObservableValue<String>>(){
                     public ObservableValue<String> call(TableColumn.CellDataFeatures<ObservableList, String> param) {
                         return (param.getValue().get(j) == null) ? new SimpleStringProperty("-") : new SimpleStringProperty(param.getValue().get(j).toString());
@@ -474,11 +474,11 @@ public class TableViewUtils {
                 r.hoverProperty().addListener((observable) -> {
                     final ObservableList<String> current = r.getItem();
 
-                    if (r.isHover() && current != null) {
+                    if (r.isHover() && current != null)
                         r.setStyle("-fx-background-color: #dbdbdb");
-                    } else {
+                    else
                         r.setStyle("");
-                    }
+
                 });
                 return r;
             });

@@ -46,13 +46,15 @@ public final class Database {
     }
     public static List<String> fetch(String query){
         List<String> res = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
         try{
-            Connection conn = connect();
-            PreparedStatement ps = conn.prepareStatement(query);
-            ResultSet rs = ps.executeQuery();
-            while(rs.next()){
+            conn = connect();
+            ps = conn.prepareStatement(query);
+            rs = ps.executeQuery();
+            while(rs.next())
                 res.add(rs.getString(1));
-            }
         } catch(Exception e){
             System.out.println(e);
         }

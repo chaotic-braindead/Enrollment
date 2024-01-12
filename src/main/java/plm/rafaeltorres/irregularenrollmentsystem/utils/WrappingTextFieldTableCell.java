@@ -13,9 +13,9 @@ import java.util.Optional;
 public class WrappingTextFieldTableCell<S> extends TextFieldTableCell<S, String> {
 
     private final Text cellText;
-    private String regex;
-    private String errorMessage;
-    boolean isPrimaryKey;
+    private String strRegex;
+    private String strErrorMsg;
+    boolean blPrimaryKey;
 
 
     public WrappingTextFieldTableCell() {
@@ -23,18 +23,18 @@ public class WrappingTextFieldTableCell<S> extends TextFieldTableCell<S, String>
         this.cellText = createText();
     }
 
-    public WrappingTextFieldTableCell(String regex, String errorMessage) {
+    public WrappingTextFieldTableCell(String strRegex, String strErrorMsg) {
         super(new DefaultStringConverter());
         this.cellText = createText();
-        this.regex = regex;
-        this.errorMessage = errorMessage;
+        this.strRegex = strRegex;
+        this.strErrorMsg = strErrorMsg;
     }
-    public WrappingTextFieldTableCell(String regex, String errorMessage, boolean isPrimaryKey) {
+    public WrappingTextFieldTableCell(String strRegex, String strErrorMsg, boolean blPrimaryKey) {
         super(new DefaultStringConverter());
         this.cellText = createText();
-        this.regex = regex;
-        this.errorMessage = errorMessage;
-        this.isPrimaryKey = isPrimaryKey;
+        this.strRegex = strRegex;
+        this.strErrorMsg = strErrorMsg;
+        this.blPrimaryKey = blPrimaryKey;
     }
 
     @Override
@@ -56,27 +56,32 @@ public class WrappingTextFieldTableCell<S> extends TextFieldTableCell<S, String>
     }
     @Override
     public void commitEdit(String newValue) {
-        if(regex != null && !newValue.matches(regex)){
-            AlertMessage.showErrorAlert(errorMessage);
+        Connection conn = null;
+        PreparedStatement ps = null;
+        Optional<ButtonType> confirm = null;
+        if(strRegex != null && !newValue.matches(strRegex)){
+            AlertMessage.showErrorAlert(strErrorMsg);
             return;
         }
-        if(isPrimaryKey && !this.cellText.getText().equals(newValue)){
-            Optional<ButtonType> confirm = AlertMessage.showConfirmationAlert(
+
+        if(blPrimaryKey && !this.cellText.getText().equals(newValue)){
+            confirm = AlertMessage.showConfirmationAlert(
                     "Warning: Editing this value will cascade to all other records in the database " +
                             "which uses this value. Do you wish to proceed?");
             if(confirm.isEmpty() || confirm.get() == ButtonType.NO) {
                 AlertMessage.showInformationAlert("Cancelled edit.");
                 return;
             }
-
             try{
-                Connection conn = Database.connect();
-                PreparedStatement ps = conn.prepareStatement("UPDATE ACCOUNT SET ACCOUNT_NO = ? WHERE ACCOUNT_NO = ?");
+                conn = Database.connect();
+                ps = conn.prepareStatement("UPDATE ACCOUNT SET ACCOUNT_NO = ? WHERE ACCOUNT_NO = ?");
                 ps.setString(1, newValue);
                 ps.setString(2, this.cellText.getText());
                 ps.executeUpdate();
             }catch(Exception e){
                 AlertMessage.showErrorAlert("An error occurred while updating value.");
+                cancelEdit();
+                return;
             }
         }
         super.commitEdit(newValue);

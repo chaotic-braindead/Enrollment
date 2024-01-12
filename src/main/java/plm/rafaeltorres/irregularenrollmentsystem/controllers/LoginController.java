@@ -37,23 +37,23 @@ public class LoginController implements Initializable {
     private TextField txtShowPassword;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        conn = Database.connect();
         SimpleDateFormat formatter = new SimpleDateFormat("EEEEE, MMMMM dd, yyyy");
+        conn = Database.connect();
         lblDateNow.setText("Today is "+ formatter.format(new Date()));
     }
 
     @FXML
     protected void onBtnLoginAction(ActionEvent event) {
+        String strPassword = (showPassword.isSelected()) ? txtShowPassword.getText() : txtPassword.getText();
         if(btnLogin.isDisable()){
             return;
         }
-        String password = (showPassword.isSelected()) ? txtShowPassword.getText() : txtPassword.getText();
         try {
             ps = conn.prepareStatement(Database.Query.getAccount);
             ps.setString(1, txtStudentNo.getText());
             rs = ps.executeQuery();
 
-            if(!rs.next() || !BCrypt.checkpw(password, rs.getString("password"))){
+            if(!rs.next() || !BCrypt.checkpw(strPassword, rs.getString("password"))){
                 AlertMessage.showErrorAlert("Incorrect student number/password.");
                 return;
             }

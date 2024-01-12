@@ -161,6 +161,7 @@ public class StudentDashboardController extends Controller {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        SimpleDateFormat formatter = new SimpleDateFormat("EEEEE, MMMMM dd, yyyy");
         currentSY = Maintenance.getInstance().getCurrentSY();
         currentSem = Maintenance.getInstance().getCurrentSem();
 
@@ -170,7 +171,6 @@ public class StudentDashboardController extends Controller {
         });
 
         lblGWA.setText("");
-        SimpleDateFormat formatter = new SimpleDateFormat("EEEEE, MMMMM dd, yyyy");
         lblDateNow.setText("Today is "+ formatter.format(new Date()));
         btnDashboard.setSelected(true);
         currentPane = dashboardContainer;
@@ -182,15 +182,19 @@ public class StudentDashboardController extends Controller {
             lblSemester.setText("Summer Semester A.Y. " + currentSY);
         }
 
-
         // set default text for empty tables
         tblSchedule.setPlaceholder(new Label("You currently have no subjects in your schedule. Please enroll now."));
         tblGrades.setPlaceholder(new Label("Select a valid school year and semester from the drop down boxes provided."));
-
-
     }
     public void setUser(User user){
         Student student = (Student) user;
+        SimpleDateFormat format = new SimpleDateFormat("MMMMM dd, yyyy");
+        ObservableList<String> sy = FXCollections.observableArrayList();
+        boolean blRes = false;
+        URL resource = null;
+        Image defaultImage = null;
+        ImagePattern pattern = null;
+
         this.student = student;
         if(student.getRegistrationStatus().equalsIgnoreCase("REGULAR")) {
             btnSubmit.setVisible(false);
@@ -204,7 +208,7 @@ public class StudentDashboardController extends Controller {
             tblSubjects.setPlaceholder(new Label("No schedules to display."));
 
             try{
-                ps = conn.prepareStatement("SELECT * FROM student_schedule where student_no = ? and sy = ? and semester = ?");
+                ps = conn.prepareStatement("SELECT * FROM student_schedule WHERE student_no = ? AND sy = ? AND semester = ?");
                 ps.setString(1, student.getStudentNo());
                 ps.setString(2, currentSY);
                 ps.setString(3, currentSem);
@@ -214,20 +218,17 @@ public class StudentDashboardController extends Controller {
             }
         }
         try{
-            ps = conn.prepareStatement("select status from enrollment where student_no = ? and sy = ? and semester = ?");
+            ps = conn.prepareStatement("SELECT status FROM ENROLLMENT WHERE student_no = ? AND sy = ? AND semester = ?");
             ps.setString(1, student.getStudentNo());
             ps.setString(2, currentSY);
             ps.setString(3, currentSem);
             rs = ps.executeQuery();
-            boolean res = rs.next();
+            blRes = rs.next();
             String status = "";
-            if(res)
+            if(blRes)
                 status = rs.getString(1);
-
-            if(status.equalsIgnoreCase("DECLINED")){
+            if(status.equalsIgnoreCase("DECLINED"))
                 AlertMessage.showInformationAlert("Your schedule was not approved by the chairperson. Please submit a new schedule.");
-            }
-
 
             btnTuition.setDisable(!status.equalsIgnoreCase("ENROLLED"));
             btnEnroll.setDisable(status.equalsIgnoreCase("ENROLLED"));
@@ -248,7 +249,6 @@ public class StudentDashboardController extends Controller {
         lblLastName.setText(student.getLastName());
         lblGender.setText(student.getGender());
 
-        SimpleDateFormat format = new SimpleDateFormat("MMMMM dd, yyyy");
 
         lblBirthday.setText(format.format(student.getBirthday()));
 
@@ -265,10 +265,9 @@ public class StudentDashboardController extends Controller {
 
         // initialize grade comboboxes
         try{
-            ps = conn.prepareStatement("SELECT DISTINCT SY FROM GRADE WHERE STUDENT_NO = ? and subject_code <> '00000'");
+            ps = conn.prepareStatement("SELECT DISTINCT SY FROM GRADE WHERE STUDENT_NO = ? AND subject_code <> '00000'");
             ps.setString(1, student.getStudentNo());
             rs = ps.executeQuery();
-            ObservableList<String> sy = FXCollections.observableArrayList();
             while(rs.next()){
                 sy.add(rs.getString(1));
             }
@@ -283,18 +282,19 @@ public class StudentDashboardController extends Controller {
         }
         else{
             // display default image
-            URL resource = MainScene.class.getResource("assets/img/md-person-2.png");
-            Image defaultImage = new Image(resource.toExternalForm(), false);
-            ImagePattern pattern = new ImagePattern(defaultImage);
+            resource = MainScene.class.getResource("assets/img/md-person-2.png");
+            defaultImage = new Image(resource.toExternalForm(), false);
+            pattern = new ImagePattern(defaultImage);
             imgContainer.setFill(pattern);
             imgDashboardContainer.setFill(pattern);
         }
     }
     public void setImage(Blob img){;
         Image newImg = null;
+        byte[] byteImg = null;
         try{
-            byte[] imgBytes = img.getBytes(1, (int)img.length());
-            newImg = new Image((new ByteArrayInputStream(imgBytes)));
+            byteImg = img.getBytes(1, (int)img.length());
+            newImg = new Image((new ByteArrayInputStream(byteImg)));
         } catch(Exception e){
             System.out.println(e);
         }
@@ -307,12 +307,13 @@ public class StudentDashboardController extends Controller {
     }
     public void onChangePictureAction(ActionEvent event) {
         Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        File img = null;
         FileChooser fc = new FileChooser();
         fc.getExtensionFilters().add(
                 new FileChooser.ExtensionFilter("Image formats (.jpg, .png)",
                         "*.jpg", "*.jpeg", "*.png"));
         fc.setTitle("Select Image");
-        File img = fc.showOpenDialog(stage);
+        img = fc.showOpenDialog(stage);
         try{
             byte[] imgBytes = Files.readAllBytes(img.toPath());
             ps = conn.prepareStatement(Database.Query.updateImage);
@@ -366,8 +367,10 @@ public class StudentDashboardController extends Controller {
         FormRenderer formRenderer = new FormRenderer(newPassword);
         formRenderer.setPrefWidth(700);
         Dialog dialog = new Dialog();
-        dialog.setTitle("Change Password");
         ButtonType saveConfigButtonType = new ButtonType("Change Password", ButtonBar.ButtonData.OK_DONE);
+        Optional<List<SimpleStringProperty>> changePass = null;
+
+        dialog.setTitle("Change Password");
         dialog.getDialogPane().getButtonTypes().addAll(saveConfigButtonType, ButtonType.CANCEL);
         dialog.getDialogPane().setContent(formRenderer);
         dialog.getDialogPane()
@@ -381,7 +384,7 @@ public class StudentDashboardController extends Controller {
             return null;
         });
 
-        Optional<List<SimpleStringProperty>> changePass = dialog.showAndWait();
+       changePass = dialog.showAndWait();
         if(changePass.isEmpty())
             return;
 
@@ -391,7 +394,7 @@ public class StudentDashboardController extends Controller {
         }
 
         try{
-            ps = conn.prepareStatement("SELECT password from account where account_no = ?");
+            ps = conn.prepareStatement("SELECT password FROM ACCOUNT WHERE account_no = ?");
             ps.setString(1, student.getStudentNo());
             rs = ps.executeQuery();
             if(rs.next() && !BCrypt.checkpw(changePass.get().get(0).get(), rs.getString(1))){
@@ -399,7 +402,7 @@ public class StudentDashboardController extends Controller {
                 return;
             }
 
-            ps = conn.prepareStatement("UPDATE account set password = ? where account_no = ?");
+            ps = conn.prepareStatement("UPDATE account SET password = ? WHERE account_no = ?");
             ps.setString(1, BCrypt.hashpw(changePass.get().get(1).get(), BCrypt.gensalt()));
             ps.setString(2, student.getStudentNo());
             ps.executeUpdate();
@@ -411,25 +414,27 @@ public class StudentDashboardController extends Controller {
     @FXML
     protected void btnDownloadOnMouseClicked(MouseEvent event) throws IOException, SQLException {
         Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-        ps = conn.prepareStatement("select " +
+        boolean blSuccess = false;
+        ps = conn.prepareStatement("SELECT " +
                 "v.subject_code, " +
                 "v.block, " +
                 "v.description, " +
                 "v.CREDITS, " +
                 "v.schedule, " +
                 "v.professor "+
-                "from student_schedule s " +
-                "inner join vwSubjectSchedules v on " +
+                "FROM student_schedule s " +
+                "INNER JOIN vwSubjectSchedules v ON " +
                 "s.subject_code = v.subject_code " +
-                "and s.sy = v.sy " +
-                "and s.semester = v.semester " +
-                "and s.block_no = concat(v.course, v.year, v.block) where s.student_no = ? and s.sy = ? and s.semester = ? ");
+                "AND s.sy = v.sy " +
+                "AND s.semester = v.semester " +
+                "AND s.block_no = CONCAT(v.course, v.year, v.block) " +
+                "WHERE s.student_no = ? AND s.sy = ? AND s.semester = ? ");
         ps.setString(1, student.getStudentNo());
         ps.setString(2, currentSY);
         ps.setString(3, currentSem);
         rs = ps.executeQuery();
-        boolean success = PDFGenerator.generateSER(stage, student, rs);
-        if(success)
+        blSuccess = PDFGenerator.generateSER(stage, student, rs);
+        if(blSuccess)
             AlertMessage.showInformationAlert("Successfully downloaded your SER!");
         else
             AlertMessage.showErrorAlert("An error occurred while generating your SER. Please try restarting the application.");
@@ -442,7 +447,30 @@ public class StudentDashboardController extends Controller {
             return;
         }
         try{
-            ps = conn.prepareStatement("SELECT subject_code, course, year, block, description, schedule, credits, professor, 20-total_students as available_slots, case when 30-total_students = 0 then 'CLOSED' else 'OPEN' end as status from vwsubjectscheduleswithtotalstudents where sy = ? and semester = ? and college_code = ? and subject_code not in (select subject_code from student_schedule where sy = ? and semester = ? and student_no = ?) and course = ? and (subject_code regexp(?) or description regexp(?))");
+            ps = conn.prepareStatement("SELECT " +
+                    "subject_code, " +
+                    "course, " +
+                    "year, " +
+                    "block, " +
+                    "description, " +
+                    "schedule, " +
+                    "credits, " +
+                    "professor, " +
+                    "20-total_students as available_slots, " +
+                    "CASE " +
+                    "   WHEN 30-total_students = 0 THEN 'CLOSED' " +
+                    "   ELSE 'OPEN' " +
+                    "END AS status " +
+                    "FROM VWSUBJECTSCHEDULESWITHTOTALSTUDENTS " +
+                    "WHERE sy = ? AND semester = ? " +
+                    "AND college_code = ? " +
+                    "AND subject_code NOT IN " +
+                    "   (SELECT subject_code FROM student_schedule " +
+                    "       WHERE sy = ? " +
+                    "       AND semester = ? " +
+                    "       AND student_no = ?) " +
+                    "AND course = ? " +
+                    "AND (subject_code REGEXP(?) OR description REGEXP(?))");
             ps.setString(1, currentSY);
             ps.setString(2, currentSem);
             ps.setString(3, student.getCollege());
@@ -476,7 +504,27 @@ public class StudentDashboardController extends Controller {
         }
 
         try{
-            ps = conn.prepareStatement("SELECT subject_code, course, year, block, description, schedule, credits, professor, 20-total_students as available_slots, case when 30-total_students = 0 then 'CLOSED' else 'OPEN' end as status from vwsubjectscheduleswithtotalstudents where sy = ? and semester = ? and college_code = ? and subject_code not in (select subject_code from student_schedule where sy = ? and semester = ? and student_no = ?) and course = ?");
+            ps = conn.prepareStatement("SELECT " +
+                    "subject_code, " +
+                    "course, " +
+                    "year, " +
+                    "block, " +
+                    "description, " +
+                    "schedule, " +
+                    "credits, " +
+                    "professor, " +
+                    "20-total_students as available_slots, " +
+                    "CASE " +
+                    "   WHEN 30-total_students = 0 THEN 'CLOSED' " +
+                    "   ELSE 'OPEN' " +
+                    "END AS status " +
+                    "FROM VWSUBJECTSCHEDULESWITHTOTALSTUDENTS " +
+                    "WHERE sy = ? " +
+                    "AND semester = ? " +
+                    "AND college_code = ? " +
+                    "AND subject_code " +
+                    "NOT IN (SELECT subject_code FROM STUDENT_SCHEDULE WHERE sy = ? AND semester = ? AND student_no = ?) AND course = ?");
+
             ps.setString(1, currentSY);
             ps.setString(2, currentSem);
             ps.setString(3, student.getCollege());
@@ -497,7 +545,7 @@ public class StudentDashboardController extends Controller {
         currentPane = dashboardContainer;
         currentPane.setVisible(true);
         try{
-            ps = conn.prepareStatement("select * from enrollment where student_no = ? and sy = ? and semester = ? and status = 'Enrolled'");
+            ps = conn.prepareStatement("SELECT * FROM ENROLLMENT WHERE student_no = ? AND sy = ? AND semester = ? AND status = 'Enrolled'");
             ps.setString(1, student.getStudentNo());
             ps.setString(2, currentSY);
             ps.setString(3, currentSem);
@@ -536,8 +584,19 @@ public class StudentDashboardController extends Controller {
             currentPane.setVisible(true);
             btnAdd.setVisible(false);
             try {
-                ps = conn.prepareStatement("select v.subject_code, v.description, v.block, v.SCHEDULE, v.CREDITS, v.PROFESSOR from vwsubjectschedules v inner join student_schedule s on v.sy = s.sy and v.semester = s.semester and concat(v.course, v.year, v.block) = s.block_no and v.subject_code = s.subject_code "
-                     +  "where s.student_no = ? and v.sy = ? and v.semester = ?");
+                ps = conn.prepareStatement("SELECT " +
+                        "v.subject_code, " +
+                        "v.description, " +
+                        "v.block, " +
+                        "v.SCHEDULE, " +
+                        "v.CREDITS, " +
+                        "v.PROFESSOR " +
+                        "FROM VWSUBJECTSCHEDULES v " +
+                        "INNER JOIN STUDENT_SCHEDULE s " +
+                        "ON v.sy = s.sy AND v.semester = s.semester " +
+                        "AND CONCAT(v.course, v.year, v.block) = s.block_no " +
+                        "AND v.subject_code = s.subject_code "
+                     +  "WHERE s.student_no = ? AND v.sy = ? AND v.semester = ?");
                 ps.setString(1, student.getStudentNo());
                 ps.setString(2, currentSY);
                 ps.setString(3, currentSem);;
@@ -553,7 +612,7 @@ public class StudentDashboardController extends Controller {
     @FXML
     protected void onBtnEnrollRegularAction(ActionEvent event){
         try{
-            ps = conn.prepareStatement("UPDATE ENROLLMENT SET status = 'Enrolled', timestamp = ? where sy = ? and semester = ? and student_no = ?");
+            ps = conn.prepareStatement("UPDATE ENROLLMENT SET status = 'Enrolled', timestamp = ? WHERE sy = ? AND semester = ? AND student_no = ?");
             ps.setString(1, new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
             ps.setString(2, currentSY);
             ps.setString(3, currentSem);
@@ -575,7 +634,7 @@ public class StudentDashboardController extends Controller {
         tblSchedule.setMouseTransparent(!student.getRegistrationStatus().equalsIgnoreCase("IRREGULAR"));
         if(student.getRegistrationStatus().equalsIgnoreCase("IRREGULAR")){
             try{
-                ps = conn.prepareStatement("SELECT status from enrollment where student_no = ? and sy = ? and semester = ?");
+                ps = conn.prepareStatement("SELECT status FROM ENROLLMENT WHERE student_no = ? AND sy = ? AND semester = ?");
                 ps.setString(1, student.getStudentNo());
                 ps.setString(2, currentSY);
                 ps.setString(3, currentSem);
@@ -596,19 +655,20 @@ public class StudentDashboardController extends Controller {
             }
         }
         try{
-            ps = conn.prepareStatement("select " +
+            ps = conn.prepareStatement("SELECT " +
                     "v.subject_code, " +
                     "v.description, " +
                     "v.block, " +
                     "v.SCHEDULE, " +
                     "v.CREDITS, " +
                     "v.professor "+
-                    "from student_schedule s " +
-                    "inner join vwSubjectSchedules v on " +
+                    "FROM STUDENT_SCHEDULE s " +
+                    "INNER JOIN vwSubjectSchedules v ON " +
                     "s.subject_code = v.subject_code " +
-                    "and s.sy = v.sy " +
-                    "and s.semester = v.semester " +
-                    "and s.block_no = concat(v.course, v.year, v.block) where s.student_no = ? and s.sy = ? and s.semester = ? ");
+                    "AND s.sy = v.sy " +
+                    "AND s.semester = v.semester " +
+                    "AND s.block_no = CONCAT(v.course, v.year, v.block) " +
+                    "WHERE s.student_no = ? AND s.sy = ? AND s.semester = ? ");
             ps.setString(1, student.getStudentNo());
             ps.setString(2, currentSY);
             ps.setString(3, currentSem);
@@ -627,7 +687,7 @@ public class StudentDashboardController extends Controller {
         }
     }
     @FXML
-    protected void onBtnScheduleAction(ActionEvent event) throws IllegalAccessException{
+    protected void onBtnScheduleAction(ActionEvent event){
         currentPane.setVisible(false);
         currentPane = scheduleContainer;
         currentPane.setVisible(true);
@@ -642,38 +702,27 @@ public class StudentDashboardController extends Controller {
     @FXML
     protected void onBtnSubmitAction(ActionEvent event) {
         // schedule validation
-        int totalUnits = 0;
-
-        Map<String, String> map = new HashMap<>();
+        int intTotalUnits = 0;
+        Optional<ButtonType> confirm = null;
         List<String> l = new ArrayList<>();
 
         for(ObservableList<String> item : tblSchedule.getItems()){
-            totalUnits += Integer.parseInt(item.get(4));
+            intTotalUnits += Integer.parseInt(item.get(4));
             l.add(item.get(0));
-            if(item.get(1).contains("(lab)"))
-                map.put(item.get(0), item.get(0).replace(".1", ""));
-            if(item.get(1).contains("(lec)"))
-                map.put(item.get(0).replace(".1", ""), item.get(0)+".1");
-        }
-        for(ObservableList<String> item : tblSchedule.getItems()){
-            if(map.containsKey(item.get(0)) && !l.contains(map.get(item.get(0)))){
-                AlertMessage.showErrorAlert("You are required to take the respective laboratory/lecture class for " + item.get(0));
-                return;
-            }
         }
 
-        if(totalUnits < 15){
+        if(intTotalUnits < 15){
             AlertMessage.showErrorAlert("You must have a minimum of 15 units to enroll. Please add more subjects to your schedule.");
             return;
         }
 
-        Optional<ButtonType> confirm = AlertMessage.showConfirmationAlert("You won't be able to add/remove subjects once you have submitted your schedule for approval. Do you wish to proceed?");
+        confirm = AlertMessage.showConfirmationAlert("You won't be able to add/remove subjects once you have submitted your schedule for approval. Do you wish to proceed?");
         if(confirm.isEmpty() || confirm.get().equals(ButtonType.NO)){
             AlertMessage.showInformationAlert("Cancelled submission.");
             return;
         }
         try{
-            ps = conn.prepareStatement("replace into enrollment values(?, ?, ?, 'Pending', ?)");
+            ps = conn.prepareStatement("REPLACE INTO ENROLLMENT VALUES(?, ?, ?, 'Pending', ?)");
             ps.setString(1, currentSY);
             ps.setString(2, currentSem);
             ps.setString(3, student.getStudentNo());
@@ -710,7 +759,6 @@ public class StudentDashboardController extends Controller {
         }
     }
     private void generateTuitionTable(){
-        int totalUnits = 0;
         String strTuitionFeeQuery = "SELECT * FROM tuition";
         try {
             ps = conn.prepareStatement(strTuitionFeeQuery);
@@ -722,9 +770,8 @@ public class StudentDashboardController extends Controller {
     }
     @FXML
     protected void onBtnTuitionAction(ActionEvent event){
-        String strTuitionFeeQuery = "SELECT * FROM tuition";
-        float flTotalFee = 0.00F, flUnitPrice = 0.00F, flSumFee = 0.00F, flSum = 0.00F, flTuition = 0.00F;
-        int totalUnits = 0;
+        float flTotalFee = 0.00f, flUnitPrice = 0.00f, flSumFee = 0.00f, flSum = 0.00f, flTuition = 0.00f;
+        int intTotalUnits = 0;
 
         currentPane.setVisible(false);
         currentPane = tuitionContainer;
@@ -747,31 +794,32 @@ public class StudentDashboardController extends Controller {
                 flSumFee += flSum;
             }
 
-            ps = conn.prepareStatement("select " +
+            ps = conn.prepareStatement("SELECT " +
                     "v.CREDITS " +
-                    "from student_schedule s " +
-                    "inner join vwSubjectSchedules v on " +
+                    "FROM STUDENT_SCHEDULE s " +
+                    "INNER JOIN vwSubjectSchedules v ON " +
                     "s.subject_code = v.subject_code " +
-                    "and s.sy = v.sy " +
-                    "and s.semester = v.semester " +
-                    "and s.block_no = concat(v.course, v.year, v.block) where s.student_no = ? and s.sy = ? and s.semester = ? ");
+                    "AND s.sy = v.sy " +
+                    "AND s.semester = v.semester " +
+                    "AND s.block_no = CONCAT(v.course, v.year, v.block) " +
+                    "WHERE s.student_no = ? AND s.sy = ? AND s.semester = ? ");
             ps.setString(1, student.getStudentNo());
             ps.setString(2, currentSY);
             ps.setString(3, currentSem);
             rs = ps.executeQuery();
 
             while(rs.next()) {
-                totalUnits += rs.getInt(1);
+                intTotalUnits += rs.getInt(1);
             }
         } catch(Exception e) {
             AlertMessage.showErrorAlert("An error occurred while generating your tuition invoice: " + e);
         }
 
-        flTuition = totalUnits*flUnitPrice;
+        flTuition = intTotalUnits*flUnitPrice;
         flTotalFee = flTuition+flSumFee;
         lblTuitionF.setText(String.format("%,.2f", flTuition));
         lblMiscF.setText(String.format("%,.2f", flSumFee));
-        lblNumberUnits.setText("Tuition Fee x "+totalUnits+" Units");
+        lblNumberUnits.setText("Tuition Fee x "+intTotalUnits+" Units");
 
         lblTotalFee.setText("Amount Due: "+String.format("%,.2f", flTotalFee));
     }
@@ -779,7 +827,8 @@ public class StudentDashboardController extends Controller {
     @FXML
     protected void onBtnSaveTuitionAction(ActionEvent event) throws IOException {
         Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-        int totalUnits = 0;
+        int intTotalUnits = 0;
+        boolean blSuccess = false;
 
         if(tblTuitionFees.getItems().isEmpty())
             return;
@@ -798,13 +847,13 @@ public class StudentDashboardController extends Controller {
             rs = ps.executeQuery();
 
             while(rs.next()) {
-                totalUnits += rs.getInt(1);
+                intTotalUnits += rs.getInt(1);
             }
         }catch(Exception e){
             System.out.println(e);
         }
-        boolean success = PDFGenerator.generateTuitionSummary(stage, student, tblTuitionFees, totalUnits);
-        if(success)
+        blSuccess = PDFGenerator.generateTuitionSummary(stage, student, tblTuitionFees, intTotalUnits);
+        if(blSuccess)
             AlertMessage.showInformationAlert("Successfully downloaded invoice!");
         else
             AlertMessage.showErrorAlert("An error occurred while generating your invoice. Please try restarting the application.");
@@ -857,7 +906,7 @@ public class StudentDashboardController extends Controller {
             return;
 
         try{
-            ps = conn.prepareStatement("SELECT DISTINCT SEMESTER FROM GRADE WHERE STUDENT_NO = ? AND SY = ?");
+            ps = conn.prepareStatement("SELECT DISTINCT semester FROM GRADE WHERE student_no = ? AND sy = ?");
             ps.setString(1, student.getStudentNo());
             ps.setString(2, sy);
             rs = ps.executeQuery();
@@ -871,12 +920,7 @@ public class StudentDashboardController extends Controller {
         }
         choiceSemester.setDisable(false);
     }
-    @FXML
-    protected void onSemesterComboAction(ActionEvent event){
 
-
-
-    }
     @FXML
     protected void onBtnLoadGradesAction(ActionEvent event){
         String semester = choiceSemester.getSelectionModel().getSelectedItem();
@@ -890,12 +934,13 @@ public class StudentDashboardController extends Controller {
             return;
         }
         try{
-            ps = conn.prepareStatement("select " +
-                    "ss.subject_code as `SUBJECT CODE`," +
-                    "    ss.description as `SUBJECT DESCRIPTION`," +
-                    "    ss.units as UNITS," +
-                    "    ss.grade as GRADE, ss.remark " +
-                    "from vwStudentGradeForSYAndSem ss where ss.student_no = ? and ss.sy = ? and ss.semester = ?");
+            ps = conn.prepareStatement("SELECT " +
+                    "ss.subject_code AS `SUBJECT CODE`," +
+                    "    ss.description AS `SUBJECT DESCRIPTION`," +
+                    "    ss.units AS UNITS," +
+                    "    ss.grade AS GRADE, " +
+                    "ss.remark " +
+                    "from vwStudentGradeForSYAndSem ss WHERE ss.student_no = ? AND ss.sy = ? AND ss.semester = ?");
             ps.setString(1, student.getStudentNo());
             ps.setString(2, choiceSY.getSelectionModel().getSelectedItem());
             ps.setString(3, semester);
@@ -911,9 +956,10 @@ public class StudentDashboardController extends Controller {
             AlertMessage.showErrorAlert("An error occurred while fetching your grades.");
         }
         try{
-            ps = conn.prepareStatement("SELECT GWA FROM VWSTUDENTSEMESTRALSUMMARY WHERE SCHOOL_YEAR = ? AND SEMESTER = ?");
+            ps = conn.prepareStatement("SELECT GWA FROM VWSTUDENTSEMESTRALSUMMARY WHERE school_year = ? AND semester = ? AND student_no = ?");
             ps.setString(1, choiceSY.getSelectionModel().getSelectedItem());
             ps.setString(2, choiceSemester.getSelectionModel().getSelectedItem());
+            ps.setString(3, student.getStudentNo());
             rs = ps.executeQuery();
             if(rs.next())
                 lblGWA.setText("GWA: " + rs.getString(1));
