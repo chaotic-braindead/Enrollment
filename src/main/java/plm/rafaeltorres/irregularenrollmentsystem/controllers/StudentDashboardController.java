@@ -630,6 +630,8 @@ public class StudentDashboardController extends Controller {
         }
     }
     private void displaySched() {
+        int totalUnits = 0;
+
         lblTotalUnits.setText("");
         tblSchedule.setMouseTransparent(!student.getRegistrationStatus().equalsIgnoreCase("IRREGULAR"));
         if(student.getRegistrationStatus().equalsIgnoreCase("IRREGULAR")){
@@ -675,7 +677,6 @@ public class StudentDashboardController extends Controller {
             rs = ps.executeQuery();
             TableViewUtils.generateTableFromResultSet(tblSchedule, rs);
 
-            int totalUnits = 0;
             for(ObservableList<String> item : tblSchedule.getItems()){
                 totalUnits += Integer.parseInt(item.get(4));
             }
@@ -711,8 +712,8 @@ public class StudentDashboardController extends Controller {
             l.add(item.get(0));
         }
 
-        if(intTotalUnits < 15){
-            AlertMessage.showErrorAlert("You must have a minimum of 15 units to enroll. Please add more subjects to your schedule.");
+        if(intTotalUnits < 12 && (Maintenance.getInstance().getCurrentSem().equals("1") || Maintenance.getInstance().getCurrentSem().equals("2"))){
+            AlertMessage.showErrorAlert("You must have a minimum of 12 units to enroll. Please add more subjects to your schedule.");
             return;
         }
 
