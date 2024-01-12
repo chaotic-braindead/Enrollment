@@ -179,7 +179,7 @@ public class StudentDashboardController extends Controller {
             Integer.parseInt(currentSem);
             lblSemester.setText(StringUtils.integerToPlace(Integer.parseInt(currentSem)) + " Semester A.Y. " + currentSY);
         }catch(NumberFormatException e){
-            lblSemester.setText("Summer Semester A.Y. " + currentSY);
+            lblSemester.setText("Summer A.Y. " + currentSY);
         }
 
         // set default text for empty tables
@@ -712,7 +712,11 @@ public class StudentDashboardController extends Controller {
             l.add(item.get(0));
         }
 
-        if(intTotalUnits < 12 && (Maintenance.getInstance().getCurrentSem().equals("1") || Maintenance.getInstance().getCurrentSem().equals("2"))){
+        if(intTotalUnits < 12 &&
+                (Maintenance.getInstance().getCurrentSem().equals("1")
+                        || Maintenance.getInstance().getCurrentSem().equals("2")
+                        || 1+Integer.parseInt(currentSY.substring(0, 4))
+                            -Integer.parseInt(student.getStudentNo().substring(0, 4)) > 3)){
             AlertMessage.showErrorAlert("You must have a minimum of 12 units to enroll. Please add more subjects to your schedule.");
             return;
         }
@@ -735,7 +739,6 @@ public class StudentDashboardController extends Controller {
         }catch(Exception e){
             AlertMessage.showErrorAlert("An error occurred while processing your schedule:\n"+e);
         }
-
     }
     @FXML
     protected void onBtnRemoveAction(ActionEvent event) {

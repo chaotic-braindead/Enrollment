@@ -354,7 +354,7 @@ public class AdminDashboardController extends Controller {
             Integer.parseInt(currentSem);
             lblSemester.setText(StringUtils.integerToPlace(Integer.parseInt(currentSem)) + " Semester A.Y. " + currentSY);
         }catch(NumberFormatException e){
-            lblSemester.setText("Summer Semester A.Y. " + currentSY);
+            lblSemester.setText("Summer A.Y. " + currentSY);
         }
 
         txtSchoolYearSchedule.setText(currentSY);
@@ -1945,7 +1945,7 @@ public class AdminDashboardController extends Controller {
             Integer.parseInt(currentSem);
             lblSemester.setText(StringUtils.integerToPlace(Integer.parseInt(currentSem)) + " Semester A.Y. " + currentSY);
         }catch(NumberFormatException e){
-            lblSemester.setText("Summer Semester A.Y. " + currentSY);
+            lblSemester.setText("Summer A.Y. " + currentSY);
         }
 
         try{
@@ -2185,7 +2185,6 @@ public class AdminDashboardController extends Controller {
         currentPane.setVisible(false);
         currentPane = gradesEntryContainer;
         currentPane.setVisible(true);
-
     }
 
     @FXML
@@ -2215,7 +2214,7 @@ public class AdminDashboardController extends Controller {
             return;
         }
         try{
-            ps = conn.prepareStatement("SELECT DISTINCT subject_code FROM STUDENT_SCHEDULE WHERE block_no = ? AND sy = ? AND semester = ?");
+            ps = conn.prepareStatement("SELECT DISTINCT subject_code FROM STUDENT_SCHEDULE WHERE subject_code <> '00000' AND block_no = ? AND sy = ? AND semester = ?");
             ps.setString(1, comboBoxYearBlock.getSelectionModel().getSelectedItem());
             ps.setString(2, currentSY);
             ps.setString(3, currentSem);
