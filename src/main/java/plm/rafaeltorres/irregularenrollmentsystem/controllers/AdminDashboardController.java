@@ -829,7 +829,8 @@ public class AdminDashboardController extends Controller {
                     "registration_status " +
                     "FROM VWSTUDENTINFO " +
                     "WHERE course_code = ? " +
-                    "AND registration_status = 'REGULAR' " +
+                    "and status = 'A' " +
+                    "AND registration_status = 'Regular' " +
                     "AND student_no NOT IN " +
                     "   (SELECT student_no FROM ENROLLMENT " +
                     "       WHERE SY = ? " +
@@ -844,6 +845,13 @@ public class AdminDashboardController extends Controller {
             rs = ps.executeQuery();
             TableViewUtils.generateTableFromResultSet(tblEnrollees, rs);
             tblSubjects.getItems().clear();
+
+            comboBoxCourse.setDisable(false);
+            comboBoxCollege.setDisable(false);
+            comboBoxYear.setDisable(false);
+            txtSearchEnrollee.setDisable(false);
+            txtName.setText(null);
+            btnFilterEnrollees.setDisable(false);
 
         }catch(Exception e){
             AlertMessage.showErrorAlert("An error occurred while enrolling student: " + e);
@@ -1708,6 +1716,7 @@ public class AdminDashboardController extends Controller {
                     "e.semester, " +
                     "e.student_no, " +
                     "CONCAT(v.lastname, ', ', v.firstname) as name, " +
+                    "v.course_code, " +
                     "v.registration_status, " +
                     "e.status, " +
                     "e.timestamp " +
@@ -1769,6 +1778,7 @@ public class AdminDashboardController extends Controller {
                 "e.semester, " +
                 "e.student_no, " +
                 "CONCAT(v.lastname, ', ', v.firstname) AS name, " +
+                "v.course_code, " +
                 "v.registration_status, " +
                 "e.status, " +
                 "e.timestamp FROM ENROLLMENT e " +
