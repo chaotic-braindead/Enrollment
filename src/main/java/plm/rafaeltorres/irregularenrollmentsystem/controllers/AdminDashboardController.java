@@ -1569,6 +1569,10 @@ public class AdminDashboardController extends Controller {
     }
     @FXML
     protected void onBtnAddScheduleAction(ActionEvent event){
+        if(!txtTime.getText().matches("^([0-1]?[0-9]|2[0-3]):[0-5][0-9]( )?-( )?([0-1]?[0-9]|2[0-3]):[0-5][0-9]$")){
+            AlertMessage.showErrorAlert("Enter all required fields with the correct format, especially time ex: 14:00-15:00");
+            return;
+        }
         List<String> selected = getSelectedDays();
         try{
             int res = 0;
@@ -1601,6 +1605,10 @@ public class AdminDashboardController extends Controller {
     }
     @FXML
     protected void onBtnUpdateScheduleAction(ActionEvent event){
+        if(!txtTime.getText().matches("^([0-1]?[0-9]|2[0-3]):[0-5][0-9]( )?-( )?([0-1]?[0-9]|2[0-3]):[0-5][0-9]$")){
+            AlertMessage.showErrorAlert("Enter all required fields with the correct format, especially time ex: 14:00-15:00");
+            return;
+        }
         List<String> selected = getSelectedDays();
         try {
             int res = 0;
